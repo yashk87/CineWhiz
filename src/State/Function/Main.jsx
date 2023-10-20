@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { createContext } from "react";
+import React, { createContext, useContext } from "react";
 import { UseContext } from "../UseState/UseContext";
 
 const TestContext = createContext();
