@@ -9,11 +9,13 @@ const Login = () => {
         width: "100%",
         height: "100%",
         justifyContent: "center",
-        padding: "30px 40px",
+        padding: "60px 40px",
         boxSizing: "border-box",
       }}
     >
-      <Card style={{ width: "95%" }}>" alksdjf</Card>
+      <Card style={{ width: "95%", height: 450 }}>
+        "<div></div>
+      </Card>
     </div>
   );
 };
