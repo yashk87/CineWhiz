@@ -1,19 +1,20 @@
-import TestState from "./State/Function/Main";
-import { BrowserRouter } from "react-router-dom";
-import Route from "./Route";
-import UseEffectState from "./State/UseEffect/UseEffectContext";
-import UseState from "./State/UseState/UseContext";
-import AppLoader from "./utils/AppLoader/AppLoader";
-import AppAlert from "./utils/AppAlert/AppAlert";
-import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
-import TopNav from "./utils/TopNav/TopNav";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import Route from "./Route";
+import TestState from "./State/Function/Main";
+import UseEffectState from "./State/UseEffect/UseEffectContext";
+import UseState from "./State/UseState/UseContext";
+import AppAlert from "./utils/AppAlert/AppAlert";
+import AppLoader from "./utils/AppLoader/AppLoader";
+import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
+import TopNav from "./utils/TopNav/TopNav";
 // mulitple screen size xs,sm,md,lg,xl
 
 function App() {
   const [first, setfirst] = useState([
-    { primary: "#0e1630", secondary: "#01d293", mode: "dark" },
+    { primary: "rgb(29, 110, 183)", secondary: "#01d293", mode: "light" },
+    { primary: "#ffff", secondary: "#01d293", mode: "light" },
   ]);
   // Get the value of a CSS variable
   // const variableValue = getComputedStyle(

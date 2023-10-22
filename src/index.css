@@ -16,7 +16,7 @@ code {
 }
 a {
   text-decoration: none;
-  color: white;
+  color: black;
 }
 *::-webkit-scrollbar-track {
   border-radius: 10px;
@@ -26,8 +26,8 @@ a {
   width: 14px;
 }
 body {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: white;
+  color: black;
 }
 
 *::-webkit-scrollbar-thumb {

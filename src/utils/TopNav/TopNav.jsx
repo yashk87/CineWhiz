@@ -1,71 +1,19 @@
-import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { Person } from "@mui/icons-material";
+import AppsIcon from "@mui/icons-material/Apps";
+import CorporateFareIcon from "@mui/icons-material/CorporateFare";
+import GroupsIcon from "@mui/icons-material/Groups";
 import {
-  IconButton,
-  Toolbar,
-  Box,
   AppBar,
-  Typography,
-  InputBase,
-  MenuItem,
+  Box,
+  IconButton,
   Menu,
-  Avatar,
-  ListItemIcon,
-  Divider,
+  MenuItem,
+  Toolbar,
+  Typography,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Search as SearchIcon,
-  AccountCircle,
-  Person,
-  Settings,
-  Logout,
-  Login,
-} from "@mui/icons-material";
-import { Link } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-
-// ...
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import * as React from "react";
+import { Link } from "react-router-dom";
 
 export default function TopNav() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -108,23 +56,32 @@ export default function TopNav() {
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
     >
       <MenuItem onClick={handleMenuClose}>
-        <Avatar /> Profile
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <GroupsIcon />
+          <div style={{ fontSize: "10px", fontWeight: "bold" }}>
+            Create Your Own Organization
+          </div>
+        </div>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Avatar /> My account
-      </MenuItem>
-      <Divider />
-      <MenuItem onClick={handleMenuClose}>
-        <ListItemIcon>
-          <Settings fontSize="small" />
-        </ListItemIcon>
-        Settings
-      </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
-        <ListItemIcon>
-          <Login fontSize="small" />
-        </ListItemIcon>
-        Login
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <CorporateFareIcon />
+          <div style={{ fontSize: "10px", fontWeight: "bold" }}>
+            Create New Department
+          </div>
+        </div>
       </MenuItem>
     </Menu>
   );
@@ -132,28 +89,8 @@ export default function TopNav() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar color="transparent" position="sticky" enableColorOnDark>
-        <Toolbar>
-          <Link>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: "none", sm: "block" } }}
-            >
-              MUI
-            </Typography>
-          </Link>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box>
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <IconButton
               size="large"
               edge="end"
@@ -163,9 +100,28 @@ export default function TopNav() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <AppsIcon color="primary" />
             </IconButton>
-          </Box>
+            <Typography
+              variant="body1"
+              style={{ color: "#1D6EB7", fontWeight: "bold" }}
+              component="h2"
+            >
+              AEGi's Software
+            </Typography>
+          </div>
+          <Link
+            style={{ display: "flex", alignItems: "flex-end", gap: 4 }}
+            to={"/login"}
+          >
+            <Person color="primary" />
+            <Typography
+              style={{ fontSize: 14, fontWeight: "bold" }}
+              color={"#1D6EB7"}
+            >
+              Login/Signup
+            </Typography>
+          </Link>
         </Toolbar>
       </AppBar>
       {renderMenu}
