@@ -1,6 +1,8 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import MiniDrawer from "./components/app-layout/components/appdrawer";
+import SwipeableTemporaryDrawer from "./components/app-layout/components/swipable-drawer";
 import Route from "./Route";
 import TestState from "./State/Function/Main";
 import UseEffectState from "./State/UseEffect/UseEffectContext";
@@ -8,7 +10,6 @@ import UseState from "./State/UseState/UseContext";
 import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
-import TopNav from "./utils/TopNav/TopNav";
 
 // mulitple screen size xs,sm,md,lg,xl
 
@@ -45,9 +46,18 @@ function App() {
               <TopLoadingBar />
               <AppLoader />
               <AppAlert />
-              <TopNav />
-              <div style={{ height: "100%", width: "100%" }}>
-                <Route />
+              <div className="block sm:hidden lg:hidden xl:hidden">
+                <SwipeableTemporaryDrawer />
+                <div style={{ height: "100%", width: "100%" }}>
+                  <Route />
+                </div>
+              </div>
+              <div className="hidden sm:block lg:block xl:block">
+                <MiniDrawer>
+                  <div style={{ height: "100%", width: "100%" }}>
+                    <Route />
+                  </div>
+                </MiniDrawer>
               </div>
             </UseEffectState>
           </TestState>
