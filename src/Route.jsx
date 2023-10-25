@@ -4,6 +4,7 @@ import About from "./pages/About/About";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import DateRangeCalendarValue from "./pages/Test/test2";
+import Department from "./pages/Department_page/Components/Department-form";
 const App = () => {
   return (
     <Routes>
@@ -12,6 +13,7 @@ const App = () => {
       <Route exact path="/login" element={<Login />} />
       {/* <Route exact path="/menu" element={<MiniDrawer />} /> */}
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
+      <Route exact path="/Department" element={<Department />} />
     </Routes>
   );
 };
