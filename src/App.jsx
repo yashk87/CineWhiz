@@ -9,6 +9,7 @@ import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 import TopNav from "./utils/TopNav/TopNav";
+
 // mulitple screen size xs,sm,md,lg,xl
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
   // console.log(`🚀 ~ variableValue:`, variableValue);
   // document.documentElement.style.setProperty("--primary-color", "#300e0e");
 
-  const [themeIndex, setThemeIndex] = useState(0);
+  const [themeIndex, setThemeIndex] = useState(1);
   const theme = createTheme({
     palette: {
       mode: first[themeIndex].mode,
