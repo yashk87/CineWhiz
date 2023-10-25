@@ -20,7 +20,7 @@ const LoginForm = () => {
       const config = { headers: { "Content-Type": "application/json" } };
 
       console.log(`🚀 ~ process.env.REACT_APP_API:`, process.env.REACT_APP_API);
-      const result = await axios
+      await axios
         .post(`${process.env.REACT_APP_API}route/employee/login`, data, config)
         .catch((errors) => {
           console.log(errors);
