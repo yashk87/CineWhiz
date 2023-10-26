@@ -32,7 +32,7 @@ const AppBarComponent = ({ handleDrawerOpen }) => {
       style={{ background: "white", color: "#1976d2" }}
       position="fixed"
     >
-      <Toolbar>
+      <Toolbar className="justify-between">
         <IconButton
           color="inherit"
           aria-label="open drawer"

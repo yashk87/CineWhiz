@@ -4,8 +4,14 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
-
+import { useContext } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
+import { Link, useNavigate } from "react-router-dom";
 export default function ProfileIcon() {
+  const navigate = useNavigate();
+  const { cookies, removeCookie } = useContext(UseContext);
+  const token = cookies["aeigs"];
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -13,6 +19,15 @@ export default function ProfileIcon() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    // Remove the token from cookies
+    removeCookie("aeigs");
+    // Close the menu
+    setAnchorEl(null);
+    navigate("/sign-in");
+    window.location.reload();
   };
 
   return (
@@ -24,7 +39,7 @@ export default function ProfileIcon() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <Avatar style={{ backgroundColor: "#1d6eb7" }}>
+        <Avatar>
           <AccountCircleIcon />
         </Avatar>
       </IconButton>
@@ -37,9 +52,18 @@ export default function ProfileIcon() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Sign Up</MenuItem>
-        <MenuItem onClick={handleClose}>Sign In</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {token ? (
+          <MenuItem onClick={handleSignOut}>Logout</MenuItem>
+        ) : (
+          <>
+            <Link to="/sign-up">
+              <MenuItem onClick={handleClose}>Sign Up</MenuItem>
+            </Link>
+            <Link to="/sign-in">
+              <MenuItem onClick={handleClose}>Sign In</MenuItem>
+            </Link>
+          </>
+        )}
       </Menu>
     </div>
   );
