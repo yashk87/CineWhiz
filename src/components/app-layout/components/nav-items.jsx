@@ -17,9 +17,11 @@ const NavItems = () => {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton className="!px-2">
             <ListItemIcon>
-              <Home className="text-white" />
+              <IconButton>
+                <Home className="text-white" />
+              </IconButton>
             </ListItemIcon>
             <ListItemText className="text-white" primary={"Home"} />
           </ListItemButton>
@@ -27,9 +29,11 @@ const NavItems = () => {
       </List>
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton className="!px-2">
             <ListItemIcon>
-              <GroupAdd className="text-white" />
+              <IconButton>
+                <GroupAdd className="text-white" />
+              </IconButton>
             </ListItemIcon>
             <ListItemText className="text-white" primary={"Add Organization"} />
           </ListItemButton>
@@ -37,9 +41,9 @@ const NavItems = () => {
       </List>
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton className="!px-2">
             <ListItemIcon>
-              <IconButton aria-label="">
+              <IconButton>
                 <Business className="text-white" />
               </IconButton>
             </ListItemIcon>
@@ -50,9 +54,11 @@ const NavItems = () => {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton className="!px-2">
             <ListItemIcon>
-              <Add className="text-white" />
+              <IconButton>
+                <Add className="text-white" />
+              </IconButton>
             </ListItemIcon>
             <ListItemText className="text-white" primary={"Add Department"} />
           </ListItemButton>

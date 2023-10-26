@@ -4,7 +4,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Badge } from "@mui/material";
 import MuiAppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import MuiDrawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -86,7 +85,11 @@ export default function MiniDrawer({ children }) {
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    if (open) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
   };
 
   const handleDrawerClose = () => {
@@ -94,9 +97,14 @@ export default function MiniDrawer({ children }) {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
+    <Box className="h-full" sx={{ display: "flex" }}>
+      {/* <CssBaseline /> */}
+      <AppBar
+        className="bg-white"
+        style={{ background: "white", color: "#1976d2" }}
+        position="fixed"
+        open={open}
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -105,14 +113,14 @@ export default function MiniDrawer({ children }) {
             edge="start"
             sx={{
               marginRight: 5,
-              ...(open && { display: "none" }),
+              // ...(open && { display: "none" }),
             }}
           >
             <MenuIcon />
           </IconButton>
           <Badge
             badgeContent={
-              <div className=" text-sm rounded-full bg-sky-500 text-white h-4 w-4 box-border flex items-center justify-center">
+              <div className=" text-sm rounded-full text-white box-border flex items-center justify-center">
                 +
               </div>
             }
@@ -125,7 +133,7 @@ export default function MiniDrawer({ children }) {
         </Toolbar>
       </AppBar>
       <Drawer
-        PaperProps={{ style: { background: "#0ea5e9" } }}
+        PaperProps={{ style: { background: "#1976d2" } }}
         variant="permanent"
         open={open}
       >
@@ -141,7 +149,7 @@ export default function MiniDrawer({ children }) {
         <Divider />
         <NavItems />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box className="h-full" component="main" sx={{ flexGrow: 1 }}>
         <DrawerHeader />
         {children}
       </Box>

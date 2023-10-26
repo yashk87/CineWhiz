@@ -1,12 +1,11 @@
-import { createTheme, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import { BrowserRouter } from "react-router-dom";
-import MiniDrawer from "./components/app-layout/components/appdrawer";
-import SwipeableTemporaryDrawer from "./components/app-layout/components/swipable-drawer";
 import Route from "./Route";
 import TestState from "./State/Function/Main";
 import UseEffectState from "./State/UseEffect/UseEffectContext";
 import UseState from "./State/UseState/UseContext";
+import MiniDrawer from "./components/app-layout/components/appdrawer";
+import SwipeableTemporaryDrawer from "./components/app-layout/components/swipable-drawer";
 import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
@@ -26,44 +25,44 @@ function App() {
   // document.documentElement.style.setProperty("--primary-color", "#300e0e");
 
   const [themeIndex, setThemeIndex] = useState(1);
-  const theme = createTheme({
-    palette: {
-      mode: first[themeIndex].mode,
-      primary: {
-        main: first[themeIndex].primary,
-      },
-      secondary: {
-        main: first[themeIndex].secondary,
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     mode: first[themeIndex].mode,
+  //     primary: {
+  //       main: first[themeIndex].primary,
+  //     },
+  //     secondary: {
+  //       main: first[themeIndex].secondary,
+  //     },
+  //   },
+  // });
   return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <UseState first={first} setFirst={setfirst}>
-          <TestState>
-            <UseEffectState>
-              <TopLoadingBar />
-              <AppLoader />
-              <AppAlert />
-              <div className="block sm:hidden lg:hidden xl:hidden">
-                <SwipeableTemporaryDrawer />
+    // <ThemeProvider>
+    <BrowserRouter>
+      <UseState first={first} setFirst={setfirst}>
+        <TestState>
+          <UseEffectState>
+            <TopLoadingBar />
+            <AppLoader />
+            <AppAlert />
+            <div className="block sm:hidden lg:hidden xl:hidden">
+              <SwipeableTemporaryDrawer />
+              <div style={{ height: "100%", width: "100%" }}>
+                <Route />
+              </div>
+            </div>
+            <div className="hidden sm:block lg:block xl:block h-full w-full">
+              <MiniDrawer>
                 <div style={{ height: "100%", width: "100%" }}>
                   <Route />
                 </div>
-              </div>
-              <div className="hidden sm:block lg:block xl:block">
-                <MiniDrawer>
-                  <div style={{ height: "100%", width: "100%" }}>
-                    <Route />
-                  </div>
-                </MiniDrawer>
-              </div>
-            </UseEffectState>
-          </TestState>
-        </UseState>
-      </BrowserRouter>
-    </ThemeProvider>
+              </MiniDrawer>
+            </div>
+          </UseEffectState>
+        </TestState>
+      </UseState>
+    </BrowserRouter>
+    // {/* </ThemeProvider> */}
   );
 }
 

@@ -1,225 +1,116 @@
-import React, { useState } from "react";
+import { Button, TextField } from "@mui/material";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useSignupFormStore from "../../hooks/useSignUpForm";
 import styles from "./styles.module.css";
-import { Typography, Link } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 const Signup = () => {
   const navigate = useNavigate();
-  const [inputvalue, setInputValue] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-  });
-  const [error, setError] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirm_password: "",
-  });
-  const validate = (name, value) => {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const namePattern = /^[a-zA-Z\s' -]+$/;
-    const prefixes = ["Mr", "Mrs", "Miss"];
-    switch (name) {
-      case "first_name":
-        if (!value || value.trim() === "") {
-          return "First Name is required";
-        } else if (!value || !value.match(namePattern)) {
-          return "Invalid name. Please enter a valid name.";
-        } else if (value.length < 3) {
-          return "Name must be at least 3 characters long.";
-        } else if (value.length > 25) {
-          return "Name must not exceed 25 characters.";
-        } else if (prefixes.includes(value.split(" ")[0])) {
-          return "Name should not contain prefixes.";
-        } else {
-          return "";
-        }
-      case "last_name":
-        if (!value || value.trim() === "") {
-          return "Last Name is required";
-        } else if (!value || !value.match(namePattern)) {
-          return "Invalid name. Please enter a valid name.";
-        } else if (value.length < 3) {
-          return "Name must be at least 3 characters long.";
-        } else if (value.length > 25) {
-          return "Name must not exceed 25 characters.";
-        } else if (prefixes.includes(value.split(" ")[0])) {
-          return "Name should not contain prefixes.";
-        } else {
-          return "";
-        }
-      case "email":
-        if (!value || value.trim() === "") {
-          return "email is required";
-        }
-        if (!emailPattern.test(inputvalue.email)) {
-          return "Email Not Valid";
-        } else {
-          return "";
-        }
-      case "password":
-        if (!value || value.trim() === "") {
-          return "password is required";
-        } else if (
-          inputvalue.confirm_password &&
-          value !== inputvalue.confirm_password
-        ) {
-          return "Password and Confirm Password does not match";
-        } else {
-          return "";
-        }
-      case "confirm_password":
-        if (!value || value.trim() === "") {
-          return "confirmpassword is required";
-        } else if (inputvalue.password && value !== inputvalue.password) {
-          return "Password and Confirm Password does not match.";
-        } else {
-          return "";
-        }
-      default: {
-        return "";
-      }
-    }
-  };
+  const {
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    confirmPassword,
+    setConfirmPassword,
+  } = useSignupFormStore();
 
-  const handleOnchange = (event) => {
-    const { name, value } = event.target;
-    setError({ ...error, [name]: validate(name, value) });
-    setInputValue({ ...inputvalue, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSignup = (e) => {
     e.preventDefault();
-    let validationError = {};
-    console.log(inputvalue);
-    Object.keys(inputvalue).forEach((name) => {
-      const error = validate(name, inputvalue[name]);
-      if (error && error.length > 0) {
-        validationError[name] = error;
-      }
-    });
-
-    if (Object.keys(validationError).length > 0) {
-      setError({ ...validationError });
-    }
-    RegisterUser(inputvalue);
-  };
-
-  const RegisterUser = async (data) => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_ENDPOINT}route/employee/create`,
-        data
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
+    // Handle signup logic here
   };
 
   return (
-    <div className={styles.signup_container}>
-      <div className={styles.signup_form_container}>
-        <div className={styles.left}>
+    <div className="flex items-center justify-center p-8 box-border h-[500px] ">
+      <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
+        <div className="w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
+          <form className={styles.form_container} onSubmit={handleSignup}>
+            <h1 className={styles.register_head}>Register</h1>
+            <TextField
+              size="small"
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              size="small"
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              size="small"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              size="small"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              size="small"
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              className={styles.green_btn}
+            >
+              Sign Up
+            </Button>
+          </form>
+        </div>
+        <div className="w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex flex-col justify-center">
           <img
             src="/argan_logo.png"
             alt="My Img"
-            style={{
-              width: "250px",
-              height: "250px",
-              borderRadius: "10px",
-              backgroundColor: "white",
-              alignItems: "center",
-            }}
+            className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
           />
-          <Link to="/singin">
-            <button
-              type="button"
-              className={styles.white_btn}
-              onClick={() => navigate("/singin")}
+          <Link to="/sign-up">
+            <Button
+              variant="contained"
+              fullWidth
+              className=" bg-white"
+              style={{
+                marginTop: "38px",
+                background: "white",
+                color: "#1976d2",
+              }}
             >
-              Sing in
-            </button>
+              Sign Up
+            </Button>
           </Link>
-        </div>
-        <div className={styles.right}>
-          <form className={styles.form_container}>
-            <h1 className={styles.register_head}>Register</h1>
-            <input
-              type="text"
-              placeholder="First Name"
-              name="first_name"
-              id="first_name"
-              value={inputvalue.first_name.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>
-              {error.first_name}
-            </Typography>
-            <input
-              type="text"
-              placeholder="Last Name"
-              name="last_name"
-              id="last_name"
-              value={inputvalue.last_name.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>
-              {error.last_name}
-            </Typography>
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              id="email"
-              value={inputvalue.email.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>{error.email}</Typography>
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              id="password"
-              value={inputvalue.password.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>
-              {error.password}
-            </Typography>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              name="confirm_password"
-              id="confirm_password"
-              value={inputvalue.confirm_password.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>
-              {error.confirm_password}
-            </Typography>
-            <button
-              type="submit"
-              className={styles.green_btn}
-              onClick={handleSubmit}
-            >
-              Sing Up
-            </button>
-          </form>
         </div>
       </div>
     </div>

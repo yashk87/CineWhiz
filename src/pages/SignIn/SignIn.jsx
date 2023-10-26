@@ -1,124 +1,76 @@
-import { useState, React } from "react";
+import { Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./styles.module.css";
-import Typography from "@mui/material/Typography";
-import axios from "axios";
+import useSignup from "../../hooks/useLoginForm";
+
 const SignIn = () => {
-  const [inputvalue, setInputValue] = useState({
-    email: "",
-    password: "",
-  });
+  const { setEmail, setPassword } = useSignup();
 
-  const [error, setError] = useState({
-    email: "",
-    password: "",
-  });
-
-  const validate = (name, value) => {
-    switch (name) {
-      case "email":
-        if (!value || value.trim === "") {
-          return "Email is required";
-        } else {
-          return "";
-        }
-
-      case "password":
-        if (!value || value.trim === "") {
-          return "Password is required";
-        } else {
-          return "";
-        }
-
-      default:
-        return "";
-    }
-  };
-
-  const handleOnchange = (event) => {
-    const { name, value } = event.target;
-    setError({ ...error, [name]: validate(name, value) });
-    setInputValue({ ...inputvalue, [name]: value });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(inputvalue);
-    let validationError = {};
-    Object.keys(inputvalue).forEach((name) => {
-      const error = validate(name, inputvalue[name]);
-      if (error && error.length > 0) {
-        validationError[name] = error;
-      }
-    });
-    if (Object.keys(validationError).length > 0) {
-      setError({ ...validationError });
-    }
-    LoginUser();
-  };
-  const LoginUser = async () => {
-    try {
-      const response = await axios.post("#");
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
-    <div className={styles.login_container}>
-      <div className={styles.login_form_container}>
-        <div className={styles.left}>
-          <form className={styles.form_container}>
-            <h1 className={styles.login_head}>Login As</h1>
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              id="email"
-              value={inputvalue.email.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>{error.email}</Typography>
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              id="password"
-              value={inputvalue.password.value}
-              onChange={handleOnchange}
-              required
-              className={styles.input}
-            />
-            <Typography sx={{ color: "red", mb: 1 }}>
-              {error.password}
-            </Typography>
-            <button
-              type="submit"
-              className={styles.green_btn}
-              onClick={handleSubmit}
-            >
-              Sing In
-            </button>
-          </form>
+    <div className="flex items-center justify-center p-8 box-border h-[500px] ">
+      <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
+        <div className="w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
+          <Typography
+            color={"primary"}
+            fontWeight={800}
+            fontSize={20}
+            className="text-2xl my-2"
+          >
+            Login As
+          </Typography>
+          <TextField
+            type="email"
+            size="small"
+            label="Email"
+            name="email"
+            id="email"
+            onChange={(event) => setEmail(event.target.value)}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            size="small"
+            type="password"
+            label="Password"
+            name="password"
+            id="password"
+            onChange={(event) => setPassword(event.target.value)}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            className="m-auto w-fit"
+            style={{ marginTop: 10 }}
+          >
+            Sign In
+          </Button>
         </div>
-        <div className={styles.right}>
+        <div className="w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex flex-col justify-center">
           <img
             src="/argan_logo.png"
             alt="My Img"
-            style={{
-              width: "220px",
-              height: "200px",
-              borderRadius: "10px",
-              backgroundColor: "white",
-              marginBottom: "5%",
-            }}
+            className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
           />
-          <Link to="/">
-            <button type="button" className={styles.white_btn}>
-              Sing Up
-            </button>
+          <Link to="/sign-up">
+            <Button
+              variant="contained"
+              fullWidth
+              className=" bg-white"
+              style={{
+                marginTop: "38px",
+                background: "white",
+                color: "#1976d2",
+              }}
+            >
+              Sign Up
+            </Button>
           </Link>
         </div>
       </div>
