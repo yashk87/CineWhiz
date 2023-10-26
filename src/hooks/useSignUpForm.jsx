@@ -14,15 +14,6 @@ const useSignupFormStore = create((set) => ({
   setPassword: (password) => set({ password }),
   setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
   setPasswordMatchError: (error) => set({ passwordMatchError: error }),
-
-  validatePasswordMatch: (password, confirmPassword) => {
-    if (password !== confirmPassword) {
-      set({ passwordMatchError: "Passwords do not match" });
-      return false;
-    }
-    set({ passwordMatchError: "" });
-    return true;
-  },
 }));
 
 export default useSignupFormStore;
