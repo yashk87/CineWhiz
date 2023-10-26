@@ -13,6 +13,7 @@ const App = () => {
       <Route exact path="/about" element={<About />} />
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
+
       {/* <Route exact path="/menu" element={<MiniDrawer />} /> */}
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
     </Routes>

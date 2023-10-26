@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
 import NavItems from "./nav-items";
+import ProfileIcon from "../../profieicon/profileIcon";
 
 const drawerWidth = 240;
 
@@ -105,7 +106,7 @@ export default function MiniDrawer({ children }) {
         position="fixed"
         open={open}
       >
-        <Toolbar>
+        <Toolbar className="justify-between">
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -130,6 +131,7 @@ export default function MiniDrawer({ children }) {
               AegisPlus
             </Typography>
           </Badge>
+          <ProfileIcon />
         </Toolbar>
       </AppBar>
       <Drawer
