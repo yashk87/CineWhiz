@@ -1,11 +1,10 @@
 import { Button, TextField } from "@mui/material";
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import useSignupFormStore from "../../hooks/useSignUpForm";
 import axios from "axios";
-import { useContext } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import useSignupFormStore from "../../hooks/useSignUpForm";
 
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
@@ -71,18 +70,18 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center p-8 box-border h-[500px] ">
+    <div className="flex items-center justify-center p-8 box-border h-[600px] ">
       <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
         <div className="w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
           <form onSubmit={handleSignup}>
             <h1 className="text-3xl font-semibold  text-center text-blue-500">
               Register
             </h1>
-            <div className=" w-96">
+            <div className=" w-[300px]">
               <TextField
                 size="small"
                 type="text"
-                placeholder="First Name"
+                label="First Name"
                 name="firstName"
                 id="firstName"
                 value={firstName}
@@ -94,7 +93,7 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="text"
-                placeholder="Middal Name"
+                label="Middal Name"
                 name="middalName"
                 id="middalName"
                 value={middalName}
@@ -106,7 +105,7 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="text"
-                placeholder="Last Name"
+                label="Last Name"
                 name="lastName"
                 id="lastName"
                 value={lastName}
@@ -118,7 +117,7 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="email"
-                placeholder="Email"
+                label="Email"
                 name="email"
                 id="email"
                 value={email}
@@ -130,7 +129,7 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="password"
-                placeholder="Password"
+                label="Password"
                 name="password"
                 id="password"
                 value={password}
@@ -142,7 +141,7 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="password"
-                placeholder="Confirm Password"
+                label="Confirm Password"
                 name="confirmPassword"
                 id="confirmPassword"
                 value={confirmPassword}
@@ -153,13 +152,13 @@ const Signup = () => {
                 error={Boolean(passwordMatchError)}
                 margin="normal"
               />
-              <div className="text-center">
+              <div className="text-center m-6">
                 <Button
-                  className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg m-4"
+                  className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth
+                  fullWidth={false}
                   margin="normal"
                 >
                   Sign Up
@@ -168,16 +167,17 @@ const Signup = () => {
             </div>
           </form>
         </div>
-        <div className="w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex flex-col justify-center">
+        <div className="w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex flex-col justify-between">
           <img
             src="/argan_logo.png"
             alt="My Img"
-            className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
+            className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white m-24"
           />
           <Link to="/sign-in">
             <Button
               variant="contained"
               fullWidth
+              size="small"
               className=" bg-white"
               style={{
                 marginTop: "38px",
