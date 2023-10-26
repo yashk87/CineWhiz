@@ -4,6 +4,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
+import ProfileIcon from "../../profieicon/profileIcon";
 
 const AppBarComponent = ({ handleDrawerOpen }) => {
   const drawerWidth = 240;
@@ -55,6 +56,7 @@ const AppBarComponent = ({ handleDrawerOpen }) => {
             AegisPlus
           </Typography>
         </Badge>
+        <ProfileIcon />
       </Toolbar>
     </AppBar>
   );

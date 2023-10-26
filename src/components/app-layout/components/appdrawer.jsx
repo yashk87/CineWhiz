@@ -8,7 +8,6 @@ import { styled, useTheme } from "@mui/material/styles";
 import * as React from "react";
 import AppBarComponent from "./app-bar";
 import NavItems from "./nav-items";
-import ProfileIcon from "../../profieicon/profileIcon";
 
 const drawerWidth = 240;
 
@@ -77,43 +76,6 @@ export default function MiniDrawer({ children }) {
 
   return (
     <Box className="h-full" sx={{ display: "flex" }}>
-
-      {/* <CssBaseline /> */}
-      <AppBar
-        className="bg-white"
-        style={{ background: "white", color: "#1976d2" }}
-        position="fixed"
-        open={open}
-      >
-        <Toolbar className="justify-between">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              // ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Badge
-            badgeContent={
-              <div className=" text-sm rounded-full text-white box-border flex items-center justify-center">
-                +
-              </div>
-            }
-            color="primary"
-          >
-            <Typography variant="h6" noWrap component="div">
-              AegisPlus
-            </Typography>
-          </Badge>
-          <ProfileIcon />
-        </Toolbar>
-      </AppBar>
-
       <AppBarComponent handleDrawerOpen={handleDrawerOpen} open={open} />
 
       <Drawer
