@@ -45,7 +45,7 @@ function App() {
             <TopLoadingBar />
             <AppLoader />
             <AppAlert />
-            <div className="block sm:hidden lg:hidden xl:hidden">
+            <div className="block sm:hidden lg:hidden xl:hidden h-full mt-[60px]">
               <SwipeableTemporaryDrawer />
               <div style={{ height: "100%", width: "100%" }}>
                 <Route />
