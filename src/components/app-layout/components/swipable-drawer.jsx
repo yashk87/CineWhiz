@@ -6,20 +6,14 @@ import * as React from "react";
 import NavItems from "./nav-items";
 
 export default function SwipeableTemporaryDrawer() {
-  const [state, setState] = React.useState({
-    left: false,
-  });
+  const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
+  const toggleDrawer = () => (event) => {
+    if (open) {
+      setOpen(false);
+    } else {
+      setOpen(true);
     }
-
-    setState({ ...state, left: open });
   };
 
   const list = (
@@ -44,7 +38,6 @@ export default function SwipeableTemporaryDrawer() {
             edge="start"
             sx={{
               marginRight: 5,
-              ...(state.left && { display: "none" }),
             }}
           >
             <Menu />
@@ -67,9 +60,9 @@ export default function SwipeableTemporaryDrawer() {
         PaperProps={{ style: { background: "#0ea5e9" } }}
         color="blue"
         anchor="left"
-        open={state.left}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
+        open={open}
+        onClose={toggleDrawer()}
+        onOpen={toggleDrawer()}
       >
         {list}
       </SwipeableDrawer>

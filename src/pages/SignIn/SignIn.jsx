@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useSignup from "../../hooks/useLoginForm";
@@ -12,19 +12,14 @@ const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
   const { handleAlert } = useContext(TestContext);
   const { setCookie } = useContext(UseContext);
+  const redirect = useNavigate();
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    console.log(
-      `🚀 ~   email,
-    password,:`,
-      email,
-      password
-    );
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API}route/employee/login`,
+        `${process.env.REACT_APP_API}/route/employee/login`,
         {
           email,
           password,
@@ -32,27 +27,29 @@ const SignIn = () => {
       );
       console.log(`🚀 ~ response:`, response);
       console.log("API response:", response.data);
+
       handleAlert(
         true,
         "success",
         `Welcome ${response.data.user.first_name} you are logged in successfully`
       );
       setCookie("aeigs", response.data.token);
+      redirect("/");
     } catch (error) {
       console.error("API error:", error.response);
       handleAlert(
         true,
         "error",
-        error.response.data.message || "Failed to sign in. Please try again."
+        error?.response?.data?.message || "Failed to sign in. Please try again."
       );
     }
   };
   return (
-    <div className="flex items-center justify-center p-8 box-border h-[350px] lg:w-[900px] m-auto">
+    <div className="flex items-center justify-center p-8 box-border h-[500px] lg:w-[900px] m-auto">
       <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
         <form
           onSubmit={onSubmit}
-          className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-around"
+          className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center"
         >
           <Typography
             color={"primary"}
@@ -62,7 +59,7 @@ const SignIn = () => {
           >
             Login As
           </Typography>
-          <div className="w-[280px]">
+          <div className="w-full sm:[250px]">
             <TextField
               required
               type="email"
