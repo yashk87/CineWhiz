@@ -17,11 +17,22 @@ const Signup = () => {
     setPassword,
     confirmPassword,
     setConfirmPassword,
+    passwordMatchError,
+    setPasswordMatchError,
   } = useSignupFormStore();
 
   const handleSignup = (e) => {
     e.preventDefault();
     // Handle signup logic here
+  };
+  const handleConfirmPasswordChange = (e) => {
+    const confirmedPassword = e.target.value;
+    setConfirmPassword(confirmedPassword);
+    if (password !== confirmedPassword) {
+      setPasswordMatchError("Passwords do not match");
+    } else {
+      setPasswordMatchError("");
+    }
   };
 
   return (
@@ -75,9 +86,11 @@ const Signup = () => {
               type="password"
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={handleConfirmPasswordChange}
               required
               fullWidth
+              helperText={passwordMatchError}
+              error={Boolean(passwordMatchError)}
               margin="normal"
             />
             <Button
