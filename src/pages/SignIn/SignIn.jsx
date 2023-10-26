@@ -45,11 +45,11 @@ const SignIn = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center p-8 box-border h-[350px] lg:w-[900px] m-auto">
+    <div className="flex items-center justify-center p-8 box-border h-[500px] lg:w-[900px] m-auto">
       <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
         <form
           onSubmit={onSubmit}
-          className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-around"
+          className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center"
         >
           <Typography
             color={"primary"}

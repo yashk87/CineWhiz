@@ -72,7 +72,7 @@ const Signup = () => {
   return (
     <div className="flex items-center justify-center p-8 box-border h-[600px] ">
       <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
-        <div className="w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
+        <div className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
           <form onSubmit={handleSignup}>
             <h1 className="text-3xl font-semibold  text-center text-blue-500">
               Register
@@ -167,7 +167,7 @@ const Signup = () => {
             </div>
           </form>
         </div>
-        <div className="w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex flex-col justify-between">
+        <div className="w-full md:w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-between hidden md:flex ">
           <img
             src="/argan_logo.png"
             alt="My Img"
