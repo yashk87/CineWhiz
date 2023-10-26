@@ -1,6 +1,5 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-
 import About from "./pages/About/About";
 import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
@@ -14,7 +13,6 @@ const App = () => {
       <Route exact path="/about" element={<About />} />
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
-      <Route exact path="/about" element={<About />} />
       {/* <Route exact path="/menu" element={<MiniDrawer />} /> */}
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
     </Routes>
