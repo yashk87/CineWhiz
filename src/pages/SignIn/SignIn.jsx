@@ -1,17 +1,62 @@
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import React from "react";
+import axios from "axios";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 import useSignup from "../../hooks/useLoginForm";
 
 const SignIn = () => {
-  const { setEmail, setPassword } = useSignup();
+  const { setEmail, setPassword, email, password } = useSignup();
+  const { handleAlert } = useContext(TestContext);
+  const { setCookie } = useContext(UseContext);
 
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    console.log(
+      `🚀 ~   email,
+    password,:`,
+      email,
+      password
+    );
+
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}route/employee/login`,
+        {
+          email,
+          password,
+        }
+      );
+      console.log(`🚀 ~ response:`, response);
+
+      // Handle the response here (e.g., redirect to another page)
+      console.log("API response:", response.data);
+      handleAlert(
+        true,
+        "success",
+        `Welcome ${response.data.user.first_name} you are logged in successfully`
+      );
+      setCookie("aeigs", response.data.token);
+    } catch (error) {
+      // Handle errors (e.g., display an error message to the user)
+      console.error("API error:", error.response);
+      handleAlert(
+        true,
+        "error",
+        error.response.data.message || "Failed to sign in. Please try again."
+      );
+    }
+  };
   return (
-    <div className="flex items-center justify-center p-8 box-border h-[500px] ">
+    <div className="flex items-center justify-center p-8 box-border h-[350px] lg:w-[900px] m-auto">
       <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
-        <div className="w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
+        <form
+          onSubmit={onSubmit}
+          className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-around"
+        >
           <Typography
             color={"primary"}
             fontWeight={800}
@@ -20,39 +65,42 @@ const SignIn = () => {
           >
             Login As
           </Typography>
-          <TextField
-            type="email"
-            size="small"
-            label="Email"
-            name="email"
-            id="email"
-            onChange={(event) => setEmail(event.target.value)}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            size="small"
-            type="password"
-            label="Password"
-            name="password"
-            id="password"
-            onChange={(event) => setPassword(event.target.value)}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-          />
+          <div className="w-[280px]">
+            <TextField
+              required
+              type="email"
+              size="small"
+              label="Email"
+              name="email"
+              id="email"
+              onChange={(event) => setEmail(event.target.value)}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              required
+              size="small"
+              type="password"
+              label="Password"
+              name="password"
+              id="password"
+              onChange={(event) => setPassword(event.target.value)}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+            />
+          </div>
           <Button
             type="submit"
             variant="contained"
             color="primary"
             className="m-auto w-fit"
-            style={{ marginTop: 10 }}
           >
             Sign In
           </Button>
-        </div>
-        <div className="w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex flex-col justify-center">
+        </form>
+        <div className="md:w-1/2 md:flex hidden p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-around">
           <img
             src="/argan_logo.png"
             alt="My Img"
