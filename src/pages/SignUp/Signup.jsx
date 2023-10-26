@@ -1,13 +1,21 @@
 import { Button, TextField } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useSignupFormStore from "../../hooks/useSignUpForm";
 import axios from "axios";
+import { useContext } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
+import { TestContext } from "../../State/Function/Main";
 
 const Signup = () => {
+  const { handleAlert } = useContext(TestContext);
+  const { setCookie } = useContext(UseContext);
+  const navigate = useNavigate();
   const {
     firstName,
     setFirstName,
+    middalName,
+    setMiddalName,
     lastName,
     setLastName,
     email,
@@ -22,28 +30,34 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
-    // Create a user object with the form data
     const user = {
       first_name: firstName,
+      middle_name: middalName,
       last_name: lastName,
       email,
       password,
     };
-
     try {
-      // Send a POST request to your backend API to handle user registration
-      const response = await axios.post("/your-api-endpoint-for-signup", user);
-
-      // Check the response for success or handle it as needed
-      if (response.status === 200) {
-        // User registration was successful
-        // You can redirect the user to the login page or perform other actions
-      } else {
-        // setError(response.data.message); // Display any error message from the server
-      }
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/create`,
+        user
+      );
+      console.log(`🚀 ~ response:`, response);
+      console.log("API response:", response.data);
+      handleAlert(
+        true,
+        "success",
+        `Welcome ${response.data.user.first_name} you are singned up  successfully`
+      );
+      setCookie("aeigs", response.data.token);
+      navigate("/");
     } catch (error) {
-      // setError("An error occurred. Please try again."); // Handle network or other errors
+      console.error("API error:", error.response);
+      handleAlert(
+        true,
+        "error",
+        error.response.data.message || "Failed to sign up. Please try again."
+      );
     }
   };
   const handleConfirmPasswordChange = (e) => {
@@ -69,6 +83,8 @@ const Signup = () => {
                 size="small"
                 type="text"
                 placeholder="First Name"
+                name="firstName"
+                id="firstName"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
@@ -78,7 +94,21 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="text"
+                placeholder="Middal Name"
+                name="middalName"
+                id="middalName"
+                value={middalName}
+                onChange={(e) => setMiddalName(e.target.value)}
+                required
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                size="small"
+                type="text"
                 placeholder="Last Name"
+                name="lastName"
+                id="lastName"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
@@ -89,6 +119,8 @@ const Signup = () => {
                 size="small"
                 type="email"
                 placeholder="Email"
+                name="email"
+                id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -99,6 +131,8 @@ const Signup = () => {
                 size="small"
                 type="password"
                 placeholder="Password"
+                name="password"
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -109,6 +143,8 @@ const Signup = () => {
                 size="small"
                 type="password"
                 placeholder="Confirm Password"
+                name="confirmPassword"
+                id="confirmPassword"
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
                 required
@@ -117,9 +153,9 @@ const Signup = () => {
                 error={Boolean(passwordMatchError)}
                 margin="normal"
               />
-              <div class="text-center">
+              <div className="text-center">
                 <Button
-                  class="px-4 py-2 text-base bg-blue-500 text-white rounded-lg m-4"
+                  className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg m-4"
                   type="submit"
                   variant="contained"
                   color="primary"

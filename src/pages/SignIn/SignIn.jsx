@@ -31,8 +31,6 @@ const SignIn = () => {
         }
       );
       console.log(`🚀 ~ response:`, response);
-
-      // Handle the response here (e.g., redirect to another page)
       console.log("API response:", response.data);
       handleAlert(
         true,
@@ -41,7 +39,6 @@ const SignIn = () => {
       );
       setCookie("aeigs", response.data.token);
     } catch (error) {
-      // Handle errors (e.g., display an error message to the user)
       console.error("API error:", error.response);
       handleAlert(
         true,
