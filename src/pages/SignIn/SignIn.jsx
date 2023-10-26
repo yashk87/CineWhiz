@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useSignup from "../../hooks/useLoginForm";
@@ -12,41 +12,34 @@ const SignIn = () => {
   const { setEmail, setPassword, email, password } = useSignup();
   const { handleAlert } = useContext(TestContext);
   const { setCookie } = useContext(UseContext);
+  const redirect = useNavigate();
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    console.log(
-      `🚀 ~   email,
-    password,:`,
-      email,
-      password
-    );
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API}route/employee/login`,
+        `${process.env.REACT_APP_API}/route/employee/login`,
         {
           email,
           password,
         }
       );
-      console.log(`🚀 ~ response:`, response);
 
       // Handle the response here (e.g., redirect to another page)
-      console.log("API response:", response.data);
       handleAlert(
         true,
         "success",
         `Welcome ${response.data.user.first_name} you are logged in successfully`
       );
       setCookie("aeigs", response.data.token);
+      redirect("/");
     } catch (error) {
       // Handle errors (e.g., display an error message to the user)
-      console.error("API error:", error.response);
       handleAlert(
         true,
         "error",
-        error.response.data.message || "Failed to sign in. Please try again."
+        error?.response?.data?.message || "Failed to sign in. Please try again."
       );
     }
   };
@@ -65,7 +58,7 @@ const SignIn = () => {
           >
             Login As
           </Typography>
-          <div className="w-[280px]">
+          <div className="w-full sm:[250px]">
             <TextField
               required
               type="email"
