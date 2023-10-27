@@ -5,8 +5,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 import { useContext } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
 import { Link, useNavigate } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
 export default function ProfileIcon() {
   const navigate = useNavigate();
   const { cookies, removeCookie } = useContext(UseContext);
@@ -34,13 +34,14 @@ export default function ProfileIcon() {
     <div>
       <IconButton
         id="basic-button"
+        className="bg-white"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <Avatar>
-          <AccountCircleIcon />
+        <Avatar className="!bg-[#1976d2]">
+          <AccountCircleIcon className="!text-white" />
         </Avatar>
       </IconButton>
       <Menu
@@ -55,14 +56,18 @@ export default function ProfileIcon() {
         {token ? (
           <MenuItem onClick={handleSignOut}>Logout</MenuItem>
         ) : (
-          <>
-            <Link to="/sign-up">
-              <MenuItem onClick={handleClose}>Sign Up</MenuItem>
-            </Link>
-            <Link to="/sign-in">
-              <MenuItem onClick={handleClose}>Sign In</MenuItem>
-            </Link>
-          </>
+          [
+            <Link to="/sign-up" key="sign-up-link">
+              <MenuItem onClick={handleClose} key="sign-up">
+                Sign Up
+              </MenuItem>
+            </Link>,
+            <Link to="/sign-in" key="sign-in-link">
+              <MenuItem onClick={handleClose} key="sign-in">
+                Sign In
+              </MenuItem>
+            </Link>,
+          ]
         )}
       </Menu>
     </div>

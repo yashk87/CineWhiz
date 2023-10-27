@@ -4,9 +4,8 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import useSignupFormStore from "../../hooks/useSignUpForm";
 import TermsCondition from "../../components/termscondition/termsCondition";
-
+import useSignupFormStore from "../../hooks/useSignUpForm";
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
   const { setCookie } = useContext(UseContext);
@@ -63,6 +62,7 @@ const Signup = () => {
       );
       setCookie("aeigs", response.data.token);
       navigate("/");
+      window.location.reload();
     } catch (error) {
       console.error("API error:", error.response);
       handleAlert(
