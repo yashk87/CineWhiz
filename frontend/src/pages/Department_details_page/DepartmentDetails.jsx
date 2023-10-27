@@ -1,31 +1,8 @@
 import React, { useState } from 'react'
-import { Button, TextField, List, ListItem, ListItemText } from '@mui/material';
+import { Button, TextField, Autocomplete } from '@mui/material';
 
 
 const DepartmentForm = () => {
-
-  
-const DataList = () => {
-  const [data, setData] = useState([]);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
-
-  const fetchDataFromMongoDB = async () => {
-    try {
-      // Make an API request to your backend to fetch data from MongoDB
-      const response = await fetch('/api/data'); // Replace with your actual API endpoint
-      if (response.ok) {
-        const jsonData = await response.json();
-        setData(jsonData);
-        setIsDataLoaded(true);
-      } else {
-        console.error('Failed to fetch data from MongoDB.');
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-}
-
 
     const [formValues, setFormValues] = useState({
         DepartmentName : "",
@@ -49,7 +26,19 @@ const DataList = () => {
         console.log("Form values: ", formValues);
     }
 
-    // const customInputProps = 
+    // Dummy list for combobox
+    const Employees = [
+      { label: 'The Shawshank Redemption', year: 1994 },
+      { label: 'The Godfather', year: 1972 },
+      { label: 'The Godfather: Part II', year: 1974 },
+      { label: 'The Dark Knight', year: 2008 },
+      { label: '12 Angry Men', year: 1957 },
+      { label: "Schindler's List", year: 1993 },
+      { label: 'Pulp Fiction', year: 1994 },
+      {
+        label: 'The Lord of the Rings: The Return of the King',
+        year: 2003,
+      }]
 
   return(
   <div
@@ -134,41 +123,24 @@ const DataList = () => {
                 placeholder="Enter Cost Center description"
                 onChange={handleChange}
             />
-            <div>
-              <Button variant="contained" onClick={fetchDataFromMongoDB}>
-                Load Data from MongoDB
-              </Button>
-              {isDataLoaded && (
-                <List component="nav">
-                  {data.map((item, index) => (
-                    <ListItem key={index}>
-                      <ListItemText primary={item.name} />
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-            </div>
-            <TextField
-                required
-                size="small"
-                fullWidth
-                name="DepartmentHeadName"
-                label="Department head name"
-                type="text"
-                placeholder="Enter Department head name"
-                onChange={handleChange}
+            <Autocomplete
+              required
+              size='small'
+              fullWidth
+              disablePortal
+              id="DepartmentHeadName"
+              options={Employees}
+              renderInput={(params) => <TextField {...params} label="Department head name" />}
             />
-            <TextField
-                required
-                size="small"
-                fullWidth
-                name="DepartmentDeligateName"
-                label="Department deligate name"
-                type="text"
-                placeholder="Enter Department deligate name"
-                onChange={handleChange}
+            <Autocomplete
+              required
+              size='small'
+              fullWidth
+              disablePortal
+              id="DepartmentDelegateName"
+              options={Employees}
+              renderInput={(params) => <TextField {...params} label="Department delegate name" />}
             />
-
             <Button
                 fullWidth={false}
                 variant="contained"
