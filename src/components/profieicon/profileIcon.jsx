@@ -5,8 +5,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 import { useContext } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
 import { Link, useNavigate } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
 export default function ProfileIcon() {
   const navigate = useNavigate();
   const { cookies, removeCookie } = useContext(UseContext);
@@ -34,13 +34,14 @@ export default function ProfileIcon() {
     <div>
       <IconButton
         id="basic-button"
+        className="bg-white"
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <Avatar>
-          <AccountCircleIcon />
+        <Avatar className="!bg-white">
+          <AccountCircleIcon className="text-[#1976d2]" />
         </Avatar>
       </IconButton>
       <Menu

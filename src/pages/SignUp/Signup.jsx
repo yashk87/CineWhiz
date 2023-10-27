@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import useSignupFormStore from "../../hooks/useSignUpForm";
-
+import TermsCondition from "../../components/termscondition/termsCondition";
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
   const { setCookie } = useContext(UseContext);
@@ -152,6 +152,9 @@ const Signup = () => {
                 error={Boolean(passwordMatchError)}
                 margin="normal"
               />
+              <div>
+                <TermsCondition />
+              </div>
               <div className="text-center m-6">
                 <Button
                   className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
