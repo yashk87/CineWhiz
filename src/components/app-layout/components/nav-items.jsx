@@ -11,14 +11,14 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 
-const NavItems = () => {
+const NavItems = ({ toggleDrawer }) => {
   return (
     <div className="bg-blue">
       {" "}
       <List>
         <ListItem onClick={(e) => e.stopPropagation()}>
-          {/* <ListItemButton className="!px-2"> */}
           <Accordion
             className="w-full"
             style={{ background: "rgb(14, 165, 233)" }}
@@ -46,17 +46,19 @@ const NavItems = () => {
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton className="!p-2 rounded-lg">
-                    <ListItemIcon className="p-2 !min-w-[25px]">
-                      <Add className="text-white" />
-                    </ListItemIcon>
-                    <ListItemText
-                      primaryTypographyProps={{ style: { fontSize: 13 } }}
-                      style={{ fontSize: "10px" }}
-                      className="text-white text-sm"
-                      primary={"Add Organization"}
-                    />
-                  </ListItemButton>
+                  <Link onClick={() => toggleDrawer()} to="/add-organisation">
+                    <ListItemButton className="!p-2 rounded-lg">
+                      <ListItemIcon className="p-2 !min-w-[25px]">
+                        <Add className="text-white" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primaryTypographyProps={{ style: { fontSize: 13 } }}
+                        style={{ fontSize: "10px" }}
+                        className="text-white text-sm"
+                        primary={"Add Organization"}
+                      />
+                    </ListItemButton>
+                  </Link>
                 </ListItem>
               </List>
             </AccordionDetails>

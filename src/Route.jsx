@@ -17,8 +17,6 @@ const App = () => {
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
       <Route exact path="/add-department" element={<Department />} />
-
-      {/* <Route exact path="/menu" element={<MiniDrawer />} /> */}
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
     </Routes>
   );

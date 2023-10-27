@@ -1,9 +1,12 @@
 import React from "react";
+import Organisation from "./components/Organisation";
 
 const Home = () => {
-  return <>
-  hii from home
-  </>
+  return (
+    <>
+      <Organisation />
+    </>
+  );
 };
 
 export default Home;
