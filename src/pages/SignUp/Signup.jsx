@@ -10,6 +10,7 @@ const Signup = () => {
   const { handleAlert } = useContext(TestContext);
   const { setCookie } = useContext(UseContext);
   const navigate = useNavigate();
+
   const {
     firstName,
     setFirstName,
@@ -25,7 +26,18 @@ const Signup = () => {
     setConfirmPassword,
     passwordMatchError,
     setPasswordMatchError,
+    firstNameError,
+    setFirstNameError,
+    lastNameError,
+    setLastNameError,
+    passwordError,
+    setPasswordError,
+    emailError,
+    setEmailError,
   } = useSignupFormStore();
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -69,9 +81,13 @@ const Signup = () => {
       setPasswordMatchError("");
     }
   };
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    return emailRegex.test(email);
+  };
 
   return (
-    <div className="flex items-center justify-center p-8 box-border h-[600px] ">
+    <div className="flex items-center justify-center p-8 box-border ">
       <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
         <div className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
           <form onSubmit={handleSignup}>
@@ -86,11 +102,29 @@ const Signup = () => {
                 name="firstName"
                 id="firstName"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => {
+                  const enteredFirstName = e.target.value;
+                  setFirstName(enteredFirstName);
+
+                  if (
+                    enteredFirstName.length < 2 ||
+                    enteredFirstName.length > 30 ||
+                    /[^a-zA-Z]/.test(enteredFirstName)
+                  ) {
+                    setFirstNameError(
+                      "First Name must be between 2 and 30 characters and should only contain letters."
+                    );
+                  } else {
+                    setFirstNameError("");
+                  }
+                }}
                 required
                 fullWidth
                 margin="normal"
+                error={!!firstNameError}
+                helperText={firstNameError}
               />
+
               <TextField
                 size="small"
                 type="text"
@@ -99,7 +133,6 @@ const Signup = () => {
                 id="middalName"
                 value={middalName}
                 onChange={(e) => setMiddalName(e.target.value)}
-                required
                 fullWidth
                 margin="normal"
               />
@@ -110,7 +143,23 @@ const Signup = () => {
                 name="lastName"
                 id="lastName"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => {
+                  const enteredLastName = e.target.value;
+                  setLastName(enteredLastName);
+                  if (
+                    enteredLastName.length < 2 ||
+                    enteredLastName.length > 30 ||
+                    /[^a-zA-Z]/.test(enteredLastName)
+                  ) {
+                    setLastNameError(
+                      "Last Name must be between 2 and 30 characters and should only contain letters"
+                    );
+                  } else {
+                    setLastNameError("");
+                  }
+                }}
+                error={!!lastNameError}
+                helperText={lastNameError}
                 required
                 fullWidth
                 margin="normal"
@@ -122,11 +171,23 @@ const Signup = () => {
                 name="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  const enteredEmail = e.target.value;
+                  setEmail(enteredEmail);
+
+                  if (!isValidEmail(enteredEmail)) {
+                    setEmailError("Invalid email format");
+                  } else {
+                    setEmailError("");
+                  }
+                }}
                 required
                 fullWidth
                 margin="normal"
+                error={!!emailError}
+                helperText={emailError}
               />
+
               <TextField
                 size="small"
                 type="password"
@@ -134,11 +195,28 @@ const Signup = () => {
                 name="password"
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (!e.target.value.match(passwordRegex)) {
+                    setPasswordError(
+                      "Password must contain at least one number , special character.and and min length is 8"
+                    );
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
                 required
                 fullWidth
                 margin="normal"
+                error={!!passwordError}
+                helperText={passwordError}
+                InputProps={{
+                  inputProps: {
+                    pattern: passwordRegex.source,
+                  },
+                }}
               />
+
               <TextField
                 size="small"
                 type="password"
@@ -171,7 +249,7 @@ const Signup = () => {
             </div>
           </form>
         </div>
-        <div className="w-full md:w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-between hidden md:flex ">
+        <div className="w-full md:w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-center hidden md:flex ">
           <img
             src="/argan_logo.png"
             alt="My Img"
