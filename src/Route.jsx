@@ -7,7 +7,6 @@ import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
-import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 
 const App = () => {
   return (
