@@ -5,7 +5,7 @@ import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
-import Department from "./pages/Department_details_page/DepartmentDetails";
+import Department from "./pages/addDepartment/addDepartment";
 
 const App = () => {
   return (
@@ -14,7 +14,7 @@ const App = () => {
       <Route exact path="/about" element={<About />} />
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
-      <Route exact path="/department-details" element={<Department />} />
+      <Route exact path="/addDepartment" element={<Department />} />
 
       {/* <Route exact path="/menu" element={<MiniDrawer />} /> */}
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />

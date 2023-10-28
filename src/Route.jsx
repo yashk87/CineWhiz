@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
-import Department from "./pages/Department_page/Department";
+import Department from "./pages/addDepartment/addDepartment";
 import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
@@ -17,7 +17,7 @@ const App = () => {
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
 
-      <Route exact path="/add-department" element={<Department />} />
+      <Route exact path="/addDepartment" element={<Department />} />
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
     </Routes>
   );
