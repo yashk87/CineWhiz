@@ -28,17 +28,15 @@ const DepartmentForm = () => {
 
     // Dummy list for combobox
     const Employees = [
-      { label: 'The Shawshank Redemption', year: 1994 },
-      { label: 'The Godfather', year: 1972 },
-      { label: 'The Godfather: Part II', year: 1974 },
-      { label: 'The Dark Knight', year: 2008 },
-      { label: '12 Angry Men', year: 1957 },
-      { label: "Schindler's List", year: 1993 },
-      { label: 'Pulp Fiction', year: 1994 },
-      {
-        label: 'The Lord of the Rings: The Return of the King',
-        year: 2003,
-      }]
+      { label: 'Ramesh patnayak', email: "ramesh1@gmail.com" },
+      { label: 'Raj Sathe', email: "rsathe@gmail.com" },
+      { label: 'Jay Jadhav', email: "jayjadhav1@gmail.com" },
+      { label: 'Vaibhav Pawar', email: "vaibhavp@gmail.com" },
+      { label: 'Ram Desai', email: "ramdesai1@gmail.com" },
+      { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
+      { label: 'Viraj Raman', email: "vraman@gmail.com" },
+      { label: 'Harsh Modi', email: "harshmodi2@gmail.com",}
+      ]
 
   return(
   <div
