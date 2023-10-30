@@ -16,7 +16,7 @@ function App() {
     { primary: "#ffff", secondary: "#01d293", mode: "light" },
   ]);
 
-  const [themeIndex, setThemeIndex] = useState(1);
+  // const [themeIndex, setThemeIndex] = useState(1);
 
   return (
     <>

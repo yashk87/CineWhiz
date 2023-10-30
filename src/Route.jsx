@@ -8,6 +8,7 @@ import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
 import Emailverify from "./components/emailverify/emailverify";
+import PhoneAuthenticate from "./components/phoneauthenticate/phoneauthenticate";
 const App = () => {
   return (
     <Routes>
@@ -19,6 +20,7 @@ const App = () => {
       <Route exact path="/addDepartment" element={<Department />} />
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
       <Route exact path="/:id/verify/:token/" element={<Emailverify />} />
+      <Route exact path="/phone-authenticate" element={<PhoneAuthenticate />} />
     </Routes>
   );
 };
