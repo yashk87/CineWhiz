@@ -12,6 +12,7 @@ const useSignupFormStore = create((set) => ({
   lastNameError: "",
   emailError: "",
   passwordError: "",
+  orgnizationName: "",
 
   setFirstName: (firstName) => set({ firstName }),
   setMiddalName: (middalName) => set({ middalName }),
@@ -19,6 +20,7 @@ const useSignupFormStore = create((set) => ({
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
+  setOrganizationName: (orgnizationName) => set({ orgnizationName }),
   setPasswordMatchError: (error) => set({ passwordMatchError: error }),
   setFirstNameError: (error) => set({ firstNameError: error }),
   setLastNameError: (error) => set({ lastNameError: error }),

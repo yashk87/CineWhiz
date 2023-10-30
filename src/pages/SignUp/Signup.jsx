@@ -33,6 +33,8 @@ const Signup = () => {
     setPasswordError,
     emailError,
     setEmailError,
+    orgnizationName,
+    setOrganizationName,
   } = useSignupFormStore();
 
   const passwordRegex =
@@ -225,6 +227,18 @@ const Signup = () => {
                 fullWidth
                 helperText={passwordMatchError}
                 error={Boolean(passwordMatchError)}
+                margin="normal"
+              />
+              <TextField
+                size="small"
+                type="password"
+                label="Organization Namw"
+                name="orgnizationName"
+                id="orgnizationName"
+                value={orgnizationName}
+                onChange={(e) => setOrganizationName(e.target.value)}
+                required
+                fullWidth
                 margin="normal"
               />
               <div>
