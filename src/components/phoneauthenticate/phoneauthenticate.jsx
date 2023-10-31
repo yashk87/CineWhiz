@@ -1,6 +1,6 @@
 import { BsFillShieldLockFill, BsTelephoneFill } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
-
+import { useNavigate } from "react-router-dom";
 import OtpInput from "otp-input-react";
 import { useState } from "react";
 import PhoneInput from "react-phone-input-2";
@@ -15,7 +15,7 @@ const PhoneAuthenticate = () => {
   const [loading, setLoading] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
   function onCaptchVerify() {
     if (!window.recaptchaVerifier) {
       window.recaptchaVerifier = new RecaptchaVerifier(
@@ -73,15 +73,15 @@ const PhoneAuthenticate = () => {
       <div>
         <Toaster toastOptions={{ duration: 4000 }} />
         <div id="recaptcha-container"></div>
-        {user ? (
-          <h2 className="text-center text-white font-medium text-2xl">
-            👍Login Success
-          </h2>
+        {!user ? (
+          <button
+            onClick={() => navigate("/sign-up")}
+            className="bg-emerald-600 w-32 h-12 flex gap-1 items-center justify-center py-2.5 text-white rounded"
+          >
+            <span>Please Register</span>
+          </button>
         ) : (
           <div className="w-80 flex flex-col gap-4 rounded-lg p-4">
-            <h1 className="text-center leading-normal text-white font-medium text-3xl mb-6">
-              Welcome to <br /> CODE A PROGRAM
-            </h1>
             {showOTP ? (
               <>
                 <div className="bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full">
@@ -114,15 +114,6 @@ const PhoneAuthenticate = () => {
               </>
             ) : (
               <>
-                <div className="bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full">
-                  <BsTelephoneFill size={30} />
-                </div>
-                <label
-                  htmlFor=""
-                  className="font-bold text-xl text-white text-center"
-                >
-                  Verify your phone number
-                </label>
                 <PhoneInput country={"in"} value={ph} onChange={setPh} />
                 <button
                   onClick={onSignup}
