@@ -1,14 +1,14 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import Emailverify from "./components/emailverify/emailverify";
+import PhoneAuthenticate from "./components/phoneauthenticate/phoneauthenticate";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
-import Department from "./pages/addDepartment/addDepartment";
 import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
-import Emailverify from "./components/emailverify/emailverify";
-import PhoneAuthenticate from "./components/phoneauthenticate/phoneauthenticate";
+import Department from "./pages/addDepartment/addDepartment";
 const App = () => {
   return (
     <Routes>

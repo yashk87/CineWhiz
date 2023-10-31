@@ -1,15 +1,16 @@
-import React from "react";
-import styles from "./styles.module.css";
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import styles from "./styles.module.css";
 function Emailverify() {
   const [validUrl, setValidUrl] = useState(true);
   const param = useParams();
   useEffect(() => {
+    console.log("Helo");
+
     const verifyEmailUrl = async () => {
       try {
-        const url = `http://localhost:3000/api/users/${param.id}/verify/${param.token}`;
+        const url = `http://localhost:3000/route/employee/${param.id}/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log(data);
         setValidUrl(true);
