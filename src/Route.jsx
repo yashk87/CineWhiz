@@ -9,6 +9,7 @@ import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
 import Emailverify from "./components/emailverify/emailverify";
 import PhoneAuthenticate from "./components/phoneauthenticate/phoneauthenticate";
+import ForgotPassword from "./components/forgotpassword/forgotpassword";
 const App = () => {
   return (
     <Routes>
@@ -21,6 +22,7 @@ const App = () => {
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
       <Route exact path="/:id/verify/:token/" element={<Emailverify />} />
       <Route exact path="/phone-authenticate" element={<PhoneAuthenticate />} />
+      <Route exact path="/forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 };
