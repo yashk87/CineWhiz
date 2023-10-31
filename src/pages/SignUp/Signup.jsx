@@ -1,7 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import TermsCondition from "../../components/termscondition/termsCondition";
@@ -9,7 +9,6 @@ import useSignupFormStore from "../../hooks/useSignUpForm";
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
   const { setCookie } = useContext(UseContext);
-  const navigate = useNavigate();
 
   const {
     firstName,
@@ -34,6 +33,8 @@ const Signup = () => {
     setPasswordError,
     emailError,
     setEmailError,
+    orgnizationName,
+    setOrganizationName,
   } = useSignupFormStore();
 
   const passwordRegex =
@@ -55,13 +56,10 @@ const Signup = () => {
       );
       console.log(`🚀 ~ response:`, response);
       console.log("API response:", response.data);
-      handleAlert(
-        true,
-        "success",
-        `Welcome ${response.data.user.first_name} you are singned up  successfully`
-      );
+
+      handleAlert(true, "success", `Welcome ${response.data.message}`);
       setCookie("aeigs", response.data.token);
-      navigate("/");
+
       window.location.reload();
     } catch (error) {
       console.error("API error:", error.response);
@@ -112,7 +110,7 @@ const Signup = () => {
                     /[^a-zA-Z]/.test(enteredFirstName)
                   ) {
                     setFirstNameError(
-                      "First Name must be between 2 and 30 characters and should only contain letters."
+                      "First Name must be between 1 and 30 characters and should only contain letters."
                     );
                   } else {
                     setFirstNameError("");
@@ -152,7 +150,7 @@ const Signup = () => {
                     /[^a-zA-Z]/.test(enteredLastName)
                   ) {
                     setLastNameError(
-                      "Last Name must be between 2 and 30 characters and should only contain letters"
+                      "Last Name must be between 1 and 30 characters and should only contain letters"
                     );
                   } else {
                     setLastNameError("");
@@ -229,6 +227,18 @@ const Signup = () => {
                 fullWidth
                 helperText={passwordMatchError}
                 error={Boolean(passwordMatchError)}
+                margin="normal"
+              />
+              <TextField
+                size="small"
+                type="password"
+                label="Organization Namw"
+                name="orgnizationName"
+                id="orgnizationName"
+                value={orgnizationName}
+                onChange={(e) => setOrganizationName(e.target.value)}
+                required
+                fullWidth
                 margin="normal"
               />
               <div>

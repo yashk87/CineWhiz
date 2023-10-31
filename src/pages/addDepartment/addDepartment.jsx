@@ -38,6 +38,16 @@ const Department = () => {
       { label: 'Harsh Modi', email: "harshmodi2@gmail.com",}
       ]
 
+      const Locations = [
+        { City: "Banglore" },
+        { City: "Chennai" },
+        { City: "Tokyo" },
+        { City: "Pune" },
+        { City: "Nagpur" },
+        { City: "Jaipur" },
+        { City: "New York" }
+      ]
+
   return(
   <div
     style={{
@@ -59,9 +69,10 @@ const Department = () => {
                 required
                 inputProps={{
                   pattern: '^[a-zA-Z0-9]*$',
-                  minLength: 5,
-                  maxLength: 10
+                  minLength: 2,
+                  maxLength: 40
                 }}
+              error={true}
                 helperText={"No special characters, Max 5 words allowed"}
                 size="small"
                 fullWidth
@@ -72,12 +83,12 @@ const Department = () => {
                 onChange={handleChange}
             />
             <TextField
-                required
                 size="small"
                 inputProps={{
                   minLength: 8,
-                  maxLength: 50
+                  maxLength: 250
                 }}
+                helperText={"Max 250 characters allowed"}
                 fullWidth
                 multiline
                 name="DepartmentDescription"
@@ -86,15 +97,14 @@ const Department = () => {
                 placeholder="Enter Department Description"
                 onChange={handleChange}
             />
-            <TextField
-                required
-                size="small"
-                fullWidth
-                name="DepartmentLocation"
-                label="Department location"
-                type="text"
-                placeholder="Enter Department location"
-                onChange={handleChange}
+            <Autocomplete
+              size='small'
+              fullWidth
+              disablePortal
+              id="DepartmentLocation"
+              options={Locations}
+              getOptionLabel={(option) => option.City}
+              renderInput={(params) => <TextField {...params} label="Enter Department location" required/>}
             />
             <TextField
                 required
@@ -107,7 +117,6 @@ const Department = () => {
                 onChange={handleChange}
             />
             <TextField
-                required
                 size="small"
                 fullWidth
                 inputProps={{
@@ -122,22 +131,20 @@ const Department = () => {
                 onChange={handleChange}
             />
             <Autocomplete
-              required
               size='small'
               fullWidth
               disablePortal
-              id="DepartmentHeadName"
+              id="addDepartmentHeadName"
               options={Employees}
-              renderInput={(params) => <TextField {...params} label="Department head name" />}
+              renderInput={(params) => <TextField {...params} label="Add Department head name" required/>}
             />
             <Autocomplete
-              required
               size='small'
               fullWidth
               disablePortal
-              id="DepartmentDelegateName"
+              id="addDepartmentHeadDelegateName"
               options={Employees}
-              renderInput={(params) => <TextField {...params} label="Department delegate name" />}
+              renderInput={(params) => <TextField {...params} label="Add Department head delegate name" />}
             />
             <Button
                 fullWidth={false}
