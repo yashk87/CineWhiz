@@ -56,7 +56,6 @@ const Signup = () => {
         user
       );
       console.log(`🚀 ~ response:`, response);
-      console.log("API response:", response.data);
 
       handleAlert(true, "success", response.data.message);
 

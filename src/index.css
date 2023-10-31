@@ -62,12 +62,13 @@ body {
 .envelope-main {
   position: absolute;
   display: inline-block;
-  height: 180px;
+  height: 155px;
   width: 200px;
-  background: #ffb300;
+  background: #0060ff;
   margin: 0 auto;
   left: 0;
   right: 0;
+  border: 5px solid #014fcc;
   z-index: 0;
 }
 
@@ -78,9 +79,9 @@ body {
   height: 0;
   border-top: 75px solid transparent;
   border-bottom: 75px solid transparent;
-  border-left: 100px solid #ffc107;
+  border-left: 100px solid #3e84f7;
   margin: 0 auto;
-  left: -90px;
+  left: -100px;
   right: 0;
   z-index: 2;
 }
@@ -92,7 +93,7 @@ body {
   height: 0;
   border-top: 75px solid transparent;
   border-bottom: 75px solid transparent;
-  border-right: 100px solid #ffc107;
+  border-right: 100px solid #3e84f7;
   margin: 0 auto;
   left: 100px;
   right: 0;
@@ -102,9 +103,9 @@ body {
 .envelope-bottom {
   position: absolute;
   display: inline-block;
-  height: 75px;
+  height: 80px;
   width: 200px;
-  background: #ffb300;
+  background: #3178ef;
   margin: 0 auto;
   left: 0;
   right: 0;
@@ -119,7 +120,7 @@ body {
   height: 0;
   border-left: 100px solid transparent;
   border-right: 100px solid transparent;
-  border-top: 90px solid #f2a600;
+  border-top: 90px solid #0060ff;
   margin: 0 auto;
   left: 0px;
   right: 0px;
@@ -149,8 +150,8 @@ body {
 
 .foldy {
   animation-name: foldUp;
-  animation-duration: 3.5s;
-  animation-iteration-count: 1;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
   animation-timing-function: ease;
   animation-fill-mode: forwards;
 }
@@ -170,8 +171,8 @@ body {
 
 .gone {
   animation-name: goneLeft;
-  animation-duration: 2s;
-  animation-iteration-count: infinite; /* Set animation to repeat indefinitely */
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
   animation-timing-function: ease;
   animation-fill-mode: forwards;
   animation-delay: 1s;
@@ -211,7 +212,7 @@ body {
   cursor: pointer;
   background-color: #eee;
   color: black;
-  border: 2px solid #ffc107;
+  border: 2px solid 0060ff;
   margin: 0 auto;
   left: 0px;
   right: 0px;
@@ -219,8 +220,8 @@ body {
   transform: scale(1);
 }
 
-button:hover {
-  background-color: #ffc107;
+.button-2:hover {
+  background-color: 0060ff;
   color: white;
 }
 

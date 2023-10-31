@@ -14,7 +14,7 @@ const WaitMain = () => {
             alt="My Img"
             className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
           />
-          <Link to="/sign-up">
+          <Link to="/sign-in">
             <Button
               variant="contained"
               fullWidth
@@ -25,7 +25,7 @@ const WaitMain = () => {
                 color: "#1976d2",
               }}
             >
-              Sign Up
+              Sign In
             </Button>
           </Link>
         </div>

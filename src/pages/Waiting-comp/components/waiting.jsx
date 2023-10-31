@@ -36,7 +36,7 @@ const WaitingPage = () => {
           color: "#1976d2",
         }}
       >
-        Sign Up
+        Email is sended to you mail-box
       </Button>
     </div>
   );

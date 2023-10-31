@@ -9,7 +9,7 @@ export const UseState = (props) => {
   const location = useLocation();
 
   const [appAlert, setAppAlert] = useState({
-    alert: true,
+    alert: false,
     type: "success",
     msg: "this is success alert",
   });
