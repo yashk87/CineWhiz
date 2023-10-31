@@ -10,7 +10,7 @@ function Emailverify() {
 
     const verifyEmailUrl = async () => {
       try {
-        const url = `http://localhost:3000/route/employee/${param.id}/verify/${param.token}`;
+        const url = `http://localhost:4000/route/employee/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log(data);
         setValidUrl(true);

@@ -8,6 +8,7 @@ import Home from "./pages/Home/Home";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
+import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 const App = () => {
   return (
@@ -19,8 +20,9 @@ const App = () => {
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
       <Route exact path="/addDepartment" element={<Department />} />
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
-      <Route exact path="/:id/verify/:token/" element={<Emailverify />} />
+      <Route exact path="/verify/:token/" element={<Emailverify />} />
       <Route exact path="/phone-authenticate" element={<PhoneAuthenticate />} />
+      <Route path="/waiting" element={<WaitMain />} />
     </Routes>
   );
 };

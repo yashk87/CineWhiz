@@ -19,7 +19,7 @@ export default function SwipeableTemporaryDrawer() {
 
   const list = (
     <Box
-      sx={{ width: 250, height:100 }}
+      sx={{ width: 250, height: 100 }}
       role="presentation"
       onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
@@ -48,7 +48,7 @@ export default function SwipeableTemporaryDrawer() {
               marginRight: 5,
             }}
           >
-            <Menu />
+            <Menu /> {/* Pass Menu component as a child */}
           </IconButton>
           <Badge
             badgeContent={
