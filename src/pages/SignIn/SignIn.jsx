@@ -67,6 +67,7 @@ const SignIn = () => {
               label="Email"
               name="email"
               id="email"
+              value={email}
               onChange={(event) => setEmail(event.target.value)}
               variant="outlined"
               fullWidth
@@ -93,6 +94,16 @@ const SignIn = () => {
           >
             Sign In
           </Button>
+          <div>
+            <p>
+              <a
+                href="/forgot-password"
+                class="text-blue-500 hover:text-blue-700 underline"
+              >
+                forgot password
+              </a>
+            </p>
+          </div>
         </form>
         <div className="md:w-1/2 md:flex hidden p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-around">
           <img

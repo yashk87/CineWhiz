@@ -1,4 +1,4 @@
-import { BsFillShieldLockFill, BsTelephoneFill } from "react-icons/bs";
+import { BsFillShieldLockFill } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import OtpInput from "otp-input-react";
