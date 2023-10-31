@@ -2,12 +2,6 @@ import React from "react";
 import Typed from "react-typed";
 
 function TextCycler() {
-  const textArray = [
-    "Hi We Are ARGAN Tech!",
-    "Welcome to our AEIG'S Software",
-    "",
-  ];
-
   return (
     <div className="pb-4">
       <Typed

@@ -3,13 +3,11 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
 import TermsCondition from "../../components/termscondition/termsCondition";
 import useSignupFormStore from "../../hooks/useSignUpForm";
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
   const router = useNavigate();
-  const { setCookie } = useContext(UseContext);
 
   const {
     firstName,

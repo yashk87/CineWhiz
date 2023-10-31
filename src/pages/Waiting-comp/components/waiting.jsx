@@ -13,13 +13,6 @@ const WaitingPage = () => {
     }
   };
 
-  const reset = () => {
-    if (envelopeTopRef.current && docRef.current) {
-      envelopeTopRef.current.classList.remove("foldy");
-      docRef.current.classList.remove("gone");
-    }
-  };
-
   return (
     <div className=" md:w-1/2 md:flex hidden p-8 rounded-r-lg items-center flex-col justify-around">
       <div className="container-2 w-[-webkit-fill-available]" onClick={ani}>

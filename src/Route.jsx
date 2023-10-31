@@ -24,7 +24,7 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<Emailverify />} />
       <Route exact path="/phone-authenticate" element={<PhoneAuthenticate />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/waiting" element={<WaitMain />} />
+      <Route exact path="/waiting" element={<WaitMain />} />
     </Routes>
   );
 };
