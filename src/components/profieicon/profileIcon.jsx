@@ -40,8 +40,8 @@ export default function ProfileIcon() {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        <Avatar className="!bg-white">
-          <AccountCircleIcon className="text-[#1976d2]" />
+        <Avatar className="!bg-[#1976d2]">
+          <AccountCircleIcon className="!text-white" />
         </Avatar>
       </IconButton>
       <Menu
@@ -56,14 +56,18 @@ export default function ProfileIcon() {
         {token ? (
           <MenuItem onClick={handleSignOut}>Logout</MenuItem>
         ) : (
-          <>
-            <Link to="/sign-up">
-              <MenuItem onClick={handleClose}>Sign Up</MenuItem>
-            </Link>
-            <Link to="/sign-in">
-              <MenuItem onClick={handleClose}>Sign In</MenuItem>
-            </Link>
-          </>
+          [
+            <Link to="/sign-up" key="sign-up-link">
+              <MenuItem onClick={handleClose} key="sign-up">
+                Sign Up
+              </MenuItem>
+            </Link>,
+            <Link to="/sign-in" key="sign-in-link">
+              <MenuItem onClick={handleClose} key="sign-in">
+                Sign In
+              </MenuItem>
+            </Link>,
+          ]
         )}
       </Menu>
     </div>
