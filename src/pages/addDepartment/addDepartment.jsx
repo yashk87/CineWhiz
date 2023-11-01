@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Button, TextField, Autocomplete } from '@mui/material';
-
+import axios from "axios"
+import { TestContext } from '../../State/Function/Main';
 
 const Department = () => {
-
+  const { handleAlert } = useContext(TestContext);
     const [formValues, setFormValues] = useState({
-        DepartmentName : "",
-        DepartmentDescription: "",
-        DepartmentLocation: "",
-        CostCenter: "",
-        CostCenterDescription: "",
-        DepartmentDeligateName: ""
+        departmentName : "",
+        departmentDescription: "",
+        departmentLocation: "",
+        costCenter: "",
+        costCenterDescription: "",
+        departmentHeadName: "",
+        departmentHeadDelegateName: ""
     })
 
     const handleChange = e => {
@@ -21,11 +23,24 @@ const Department = () => {
         })
     }
 
-    const handleSubmit = e => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
-        console.log("Form values: ", formValues);
-    }
-
+        try {
+         await axios.post("http://localhost:4000/route/department/create", formValues)
+         handleAlert(
+          true,
+          "success",
+          `Department created successfully`
+        );
+    
+        } catch (error) {
+          handleAlert(
+            true,
+            "error",
+            `Department name must be unique`
+          );
+        }
+      }
     // Dummy list for combobox
     const Employees = [
       { label: 'Ramesh patnayak', email: "ramesh1@gmail.com" },
@@ -68,15 +83,14 @@ const Department = () => {
             <TextField
                 required
                 inputProps={{
-                  pattern: '^[a-zA-Z0-9]*$',
+                  pattern: '^[a-zA-Z0-9 ]*$',
                   minLength: 2,
                   maxLength: 40
                 }}
-              error={true}
                 helperText={"No special characters, Max 5 words allowed"}
                 size="small"
                 fullWidth
-                name="DepartmentName"
+                name="departmentName"
                 label="Department Name"
                 type="text"
                 placeholder="Enter Department name"
@@ -91,7 +105,7 @@ const Department = () => {
                 helperText={"Max 250 characters allowed"}
                 fullWidth
                 multiline
-                name="DepartmentDescription"
+                name="departmentDescription"
                 label="Department Description"
                 type="text"
                 placeholder="Enter Department Description"
@@ -101,49 +115,69 @@ const Department = () => {
               size='small'
               fullWidth
               disablePortal
-              id="DepartmentLocation"
-              options={Locations}
+              id="departmentLocation"
+              options={Locations}onChange={(e, value) => {
+                const location = value ? value.City : '';
+                handleChange({
+                  target: { name: 'departmentLocation', value: location },
+                });
+              }}
+              isOptionEqualToValue={(option, value) => option.City === value.City}
               getOptionLabel={(option) => option.City}
               renderInput={(params) => <TextField {...params} label="Enter Department location" required/>}
             />
             <TextField
-                required
-                size="small"
-                fullWidth
-                name="CostCenter"
-                label="Cost Center (Prefix)"
-                type="text"
-                placeholder="Enter Cost Center"
-                onChange={handleChange}
+              required
+              size="small"
+              fullWidth
+              name="costCenter"
+              label="Cost Center (Prefix)"
+              type="text"
+              placeholder="Enter Cost Center"
+              onChange={handleChange}
             />
             <TextField
-                size="small"
-                fullWidth
-                inputProps={{
-                  minLength: 8,
-                  maxLength: 50
-                }}
-                name="CostCenterDescription"
-                label="Cost Center description"
-                multiline
-                type="text"
-                placeholder="Enter Cost Center description"
-                onChange={handleChange}
+              size="small"
+              fullWidth
+              inputProps={{
+                minLength: 8,
+                maxLength: 50
+              }}
+              name="costCenterDescription"
+              label="Cost Center description"
+              multiline
+              type="text"
+              placeholder="Enter Cost Center description"
+              onChange={handleChange}
             />
             <Autocomplete
               size='small'
               fullWidth
               disablePortal
-              id="addDepartmentHeadName"
+              id="departmentHeadName"
               options={Employees}
+              onChange={(e, value) => {
+                const headName = value ? value.label : '';
+                handleChange({
+                  target: { name: 'departmentHeadName', value: headName },
+                });
+              }}
+              isOptionEqualToValue={(option, value) => option.label === value.label}
               renderInput={(params) => <TextField {...params} label="Add Department head name" required/>}
             />
             <Autocomplete
               size='small'
               fullWidth
               disablePortal
-              id="addDepartmentHeadDelegateName"
+              id="departmentHeadDelegateName"
               options={Employees}
+              onChange={(e, value) => {
+                const delegateName = value ? value.label : '';
+                handleChange({
+                  target: { name: 'departmentHeadDelegateName', value: delegateName },
+                });
+              }}
+              isOptionEqualToValue={(option, value) => option.label === value.label}
               renderInput={(params) => <TextField {...params} label="Add Department head delegate name" />}
             />
             <Button

@@ -5,11 +5,11 @@ import { Button, TextField, Autocomplete } from '@mui/material';
 const DepartmentForm = () => {
 
     const [formValues, setFormValues] = useState({
-        DepartmentName : "",
-        DepartmentDescription: "",
-        DepartmentLocation: "",
-        CostCenter: "",
-        CostCenterDescription: "",
+        departmentName : "",
+        departmentDescription: "",
+        departmentLocation: "",
+        costCenter: "",
+        costCenterDescription: "",
         DepartmentDeligateName: ""
     })
 
@@ -23,7 +23,8 @@ const DepartmentForm = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        console.log("Form values: ", formValues);
+        // axios.post("http://localhost:4000/route/department/create", formValues);
+        console.log(formValues);
     }
 
     // Dummy list for combobox
@@ -65,7 +66,7 @@ const DepartmentForm = () => {
                 helperText={"No special characters, Max 5 words allowed"}
                 size="small"
                 fullWidth
-                name="DepartmentName"
+                name="departmentName"
                 label="Department Name"
                 type="text"
                 placeholder="Enter Department name"
@@ -80,27 +81,29 @@ const DepartmentForm = () => {
                 }}
                 fullWidth
                 multiline
-                name="DepartmentDescription"
+                name="departmentDescription"
                 label="Department Description"
                 type="text"
                 placeholder="Enter Department Description"
                 onChange={handleChange}
             />
-            <TextField
-                required
-                size="small"
-                fullWidth
-                name="DepartmentLocation"
-                label="Department location"
-                type="text"
-                placeholder="Enter Department location"
-                onChange={handleChange}
+            <Autocomplete
+              size='small'
+              fullWidth
+              disablePortal
+              id="departmentLocation"
+              options={Locations}
+              getOptionLabel={(option) => option.City}
+              onChange={(e, value) => {
+                handleChange(id, value);
+              }}
+              renderInput={(params) => <TextField {...params} label="Enter Department location" required/>}
             />
             <TextField
                 required
                 size="small"
                 fullWidth
-                name="CostCenter"
+                name="costCenter"
                 label="Cost Center (Prefix)"
                 type="text"
                 placeholder="Enter Cost Center"
@@ -114,7 +117,7 @@ const DepartmentForm = () => {
                   minLength: 8,
                   maxLength: 50
                 }}
-                name="CostCenterDescription"
+                name="costCenterDescription"
                 label="Cost Center description"
                 multiline
                 type="text"
@@ -122,23 +125,31 @@ const DepartmentForm = () => {
                 onChange={handleChange}
             />
             <Autocomplete
-              required
-              size='small'
-              fullWidth
-              disablePortal
-              id="DepartmentHeadName"
-              options={Employees}
-              renderInput={(params) => <TextField {...params} label="Department head name" />}
-            />
-            <Autocomplete
-              required
-              size='small'
-              fullWidth
-              disablePortal
-              id="DepartmentDelegateName"
-              options={Employees}
-              renderInput={(params) => <TextField {...params} label="Department delegate name" />}
-            />
+            required
+            size="small"
+            fullWidth
+            disablePortal
+            id="departmentHeadName"
+            value = { value ? value.label : ""}
+            options={Employees}
+            onChange={(e, value) => {
+              handleChange(id, value);
+            }}
+            renderInput={(params) => <TextField {...params} label="Department head name" />}
+          />
+          <Autocomplete
+            required
+            size="small"
+            fullWidth
+            disablePortal
+            id="departmentHeadDelegateName"
+            value = { value ? value.label : ""}
+            options={Employees}
+            onChange={(e, value) => {
+              handleChange(id, value);
+            }}
+            renderInput={(params) => <TextField {...params} label="Department head delegate name" />}
+          />
             <Button
                 fullWidth={false}
                 variant="contained"
