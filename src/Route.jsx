@@ -9,15 +9,14 @@ import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
 import Department from "./pages/addDepartment/addDepartment";
-import Emailverify from "./components/emailverify/emailverify";
-import PhoneAuthenticate from "./components/phoneauthenticate/phoneauthenticate";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
+import ResetPassword from "./components/resetpassword/resetpassword";
 const App = () => {
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
       <Route exact path="/about" element={<About />} />
-      <Route exact path="/sign-in" element={<SignIn />} />s
+      <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
       <Route exact path="/addDepartment" element={<Department />} />
@@ -25,6 +24,7 @@ const App = () => {
       <Route exact path="/:id/verify/:token/" element={<Emailverify />} />
       <Route exact path="/phone-authenticate" element={<PhoneAuthenticate />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
+      <Route exact path="/reset-password/:token" element={<ResetPassword />} />
     </Routes>
   );
 };
