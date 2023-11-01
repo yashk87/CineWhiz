@@ -5,15 +5,17 @@ import { TestContext } from '../../State/Function/Main';
 
 const Department = () => {
   const { handleAlert } = useContext(TestContext);
-    const [formValues, setFormValues] = useState({
-        departmentName : "",
-        departmentDescription: "",
-        departmentLocation: "",
-        costCenter: "",
-        costCenterDescription: "",
-        departmentHeadName: "",
-        departmentHeadDelegateName: ""
-    })
+
+  const initialFormValues = {
+    departmentName : "",
+    departmentDescription: "",
+    departmentLocation: "",
+    costCenter: "",
+    costCenterDescription: "",
+    departmentHeadName: "",
+    departmentHeadDelegateName: ""
+    }
+    const [formValues, setFormValues] = useState(initialFormValues)
 
     const handleChange = e => {
         const{ name, value } = e.target
@@ -32,13 +34,22 @@ const Department = () => {
           "success",
           `Department created successfully`
         );
-    
+        setFormValues(initialFormValues)
+        window.location.reload()
         } catch (error) {
-          handleAlert(
-            true,
-            "error",
-            `Department name must be unique`
-          );
+          if (error.response && error.response.status === 400) {
+            handleAlert(
+              true,
+              "error",
+              `Department name must be unique`
+            );
+          } else {
+            handleAlert(
+              true,
+              "error",
+              `Server error cannot add department`
+            );
+          }
         }
       }
     // Dummy list for combobox
@@ -85,7 +96,8 @@ const Department = () => {
                 inputProps={{
                   pattern: '^[a-zA-Z0-9 ]*$',
                   minLength: 2,
-                  maxLength: 40
+                  maxLength: 40,
+                  value: formValues.departmentName
                 }}
                 helperText={"No special characters, Max 5 words allowed"}
                 size="small"
@@ -100,7 +112,8 @@ const Department = () => {
                 size="small"
                 inputProps={{
                   minLength: 8,
-                  maxLength: 250
+                  maxLength: 250,
+                  value: formValues.departmentDescription
                 }}
                 helperText={"Max 250 characters allowed"}
                 fullWidth
@@ -131,6 +144,9 @@ const Department = () => {
               size="small"
               fullWidth
               name="costCenter"
+              inputProps={{
+                value: formValues.costCenter
+              }}
               label="Cost Center (Prefix)"
               type="text"
               placeholder="Enter Cost Center"
@@ -141,7 +157,8 @@ const Department = () => {
               fullWidth
               inputProps={{
                 minLength: 8,
-                maxLength: 50
+                maxLength: 50,
+                value: formValues.costCenterDescription
               }}
               name="costCenterDescription"
               label="Cost Center description"
