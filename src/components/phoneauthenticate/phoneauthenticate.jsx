@@ -1,13 +1,13 @@
-import { BsFillShieldLockFill } from "react-icons/bs";
-import { CgSpinner } from "react-icons/cg";
-import { useNavigate } from "react-router-dom";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import OtpInput from "otp-input-react";
 import { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import { BsFillShieldLockFill } from "react-icons/bs";
+import { CgSpinner } from "react-icons/cg";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase.config";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-import { toast, Toaster } from "react-hot-toast";
 
 const PhoneAuthenticate = () => {
   const [otp, setOtp] = useState("");

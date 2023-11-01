@@ -1,26 +1,33 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
 import styles from "./styles.module.css";
 function Emailverify() {
+  const { handleAlert } = useContext(TestContext);
   const [validUrl, setValidUrl] = useState(true);
   const param = useParams();
   useEffect(() => {
-    console.log("Helo");
-
     const verifyEmailUrl = async () => {
+      console.log("Helo");
       try {
-        const url = `http://localhost:3000/route/employee/${param.id}/verify/${param.token}`;
+        const url = `http://localhost:4000/route/employee/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log(data);
         setValidUrl(true);
       } catch (error) {
-        console.log(error);
+        console.log("error", error);
+        handleAlert(
+          true,
+          "error",
+          error?.response?.data?.message ||
+            "Failed to sign in. Please try again."
+        );
         setValidUrl(false);
       }
     };
     verifyEmailUrl();
-  }, [param]);
+  }, [param.token]);
   return (
     <>
       {validUrl ? (
@@ -31,7 +38,6 @@ function Emailverify() {
             className={styles.success_img}
           />
           <h1>Email verified successfully</h1>
-          <img src="/success.png" alt="My Img" className={styles.success_img} />
           <Link to="/sign-in">
             <button className={styles.green_btn}>Login</button>
           </Link>

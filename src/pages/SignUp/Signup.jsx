@@ -1,14 +1,13 @@
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
-import { UseContext } from "../../State/UseState/UseContext";
 import TermsCondition from "../../components/termscondition/termsCondition";
 import useSignupFormStore from "../../hooks/useSignUpForm";
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
-  const { setCookie } = useContext(UseContext);
+  const router = useNavigate();
 
   const {
     firstName,
@@ -50,15 +49,18 @@ const Signup = () => {
       password,
     };
     try {
+      console.log(process.env.REACT_APP_API);
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
         user
       );
       console.log(`🚀 ~ response:`, response);
-      console.log("API response:", response.data);
 
-      handleAlert(true, "success", `Welcome ${response.data.message}`);
-      setCookie("aeigs", response.data.token);
+      handleAlert(true, "success", response.data.message);
+
+      // Redirect to a waiting page after successful signup
+      router("/waiting"); // Redirect to a waiting page
 
       window.location.reload();
     } catch (error) {
