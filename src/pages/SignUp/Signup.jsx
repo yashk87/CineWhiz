@@ -112,7 +112,7 @@ const Signup = () => {
                     /[^a-zA-Z]/.test(enteredFirstName)
                   ) {
                     setFirstNameError(
-                      "First Name must be between 1 and 30 characters and should only contain letters."
+                      "First Name must be between 2 and 30 characters and should only contain letters."
                     );
                   } else {
                     setFirstNameError("");
@@ -152,7 +152,7 @@ const Signup = () => {
                     /[^a-zA-Z]/.test(enteredLastName)
                   ) {
                     setLastNameError(
-                      "Last Name must be between 1 and 30 characters and should only contain letters"
+                      "Last Name must be between 2 and 30 characters and should only contain letters"
                     );
                   } else {
                     setLastNameError("");
