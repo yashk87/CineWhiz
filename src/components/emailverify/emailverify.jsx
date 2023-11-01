@@ -27,7 +27,7 @@ function Emailverify() {
       }
     };
     verifyEmailUrl();
-  }, [param.token]);
+  }, [param.token, handleAlert]);
   return (
     <>
       {validUrl ? (

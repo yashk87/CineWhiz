@@ -11,10 +11,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useContext } from "react";
 import { TestContext } from "../../State/Function/Main";
-<<<<<<< HEAD
-=======
 import useSignup from "../../hooks/useLoginForm";
->>>>>>> e5b6cf88f19d5f1981a69799a5b1bcae75d9d5c5
 
 const ForgotPassword = () => {
   const { setEmail, email } = useSignup();
@@ -29,8 +26,7 @@ const ForgotPassword = () => {
           email,
         }
       );
-      console.log(`🚀 ~ response:`, response);
-      console.log("API response:", response.data);
+      handleAlert(true, "success", response.data.message);
     } catch (error) {
       console.error("API error:", error.response);
       handleAlert(true, "error", error?.response?.data?.message);

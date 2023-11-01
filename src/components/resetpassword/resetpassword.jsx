@@ -1,32 +1,34 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import useSignup from "../../hooks/useLoginForm";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import useSignup from "../../hooks/useLoginForm";
-
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 const ResetPassword = () => {
   const { setPassword, password, confirmPassword, setConfirmPassword } =
     useSignup();
   const { token } = useParams();
-  console.log(token);
+  const { handleAlert } = useContext(TestContext);
+  const redirect = useNavigate(UseContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/reset-password/${token}`,
         {
           password,
-          confirmPassword,
         }
       );
+      handleAlert(true, "success", `Welcome ${response.data.message} `);
+      redirect("/sign-in");
     } catch (error) {
-      console.log(error);
+      handleAlert(true, "error", error?.response?.data?.message);
     }
   };
 
