@@ -74,6 +74,16 @@ const Department = () => {
         { City: "New York" }
       ]
 
+      // const Locations = [
+      //   { City: "Banglore" },
+      //   { City: "Chennai" },
+      //   { City: "Tokyo" },
+      //   { City: "Pune" },
+      //   { City: "Nagpur" },
+      //   { City: "Jaipur" },
+      //   { City: "New York" }
+      // ]
+
   return(
   <div
     style={{
