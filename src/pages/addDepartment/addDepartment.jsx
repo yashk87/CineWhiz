@@ -139,7 +139,8 @@ const Department = () => {
               fullWidth
               disablePortal
               id="departmentLocation"
-              options={Locations}onChange={(e, value) => {
+              options={Locations}
+              onChange={(e, value) => {
                 const location = value ? value.City : '';
                 handleChange({
                   target: { name: 'departmentLocation', value: location },
