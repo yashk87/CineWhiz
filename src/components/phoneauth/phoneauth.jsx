@@ -1,112 +1,117 @@
-import { React, useState } from "react";
-import { Button } from "@mui/material";
+import { React, useContext, useState } from "react";
+import { Button, TextField } from "@mui/material";
+import { TestContext } from "../../State/Function/Main";
+import axios from "axios";
+
 function PhoneAuth() {
   const [phone_number, setPhoneNumber] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState("");
+  const { handleAlert } = useContext(TestContext);
 
-  async function sendCode() {
-    await fetch(`${process.env.REACT_APP_API}/route/employee/send-code`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phone_number: phone_number }),
-    }).then((response) => {
-      console.log(response);
-      if (response.ok === true) {
-        alert("Verification code sent successfully");
-        setCodeSent(true);
-      } else alert("Oh no we have an error");
-    });
-  }
-  async function verifyCode() {
-    await fetch(`${process.env.REACT_APP_API}/route/employee/verify-code`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ phone_number: phone_number, code: code }),
-    }).then((response) => {
-      console.log(response);
-      if (response.ok === true) {
-        alert("Number verified successfully");
-      } else alert("Oh no we have an error");
-    });
-  }
+  const sendCode = async () => {
+    const user = {
+      phone_number,
+    };
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/send-code`,
+        user
+      );
+      console.log(`🚀 ~ response:`, response);
+      handleAlert(true, "success", response.data);
+      setCodeSent(true);
+    } catch (error) {
+      console.error("API error:", error.response);
+      handleAlert(
+        true,
+        "error",
+        error.response.data || "Could not send phone number"
+      );
+    }
+  };
 
-  return !codeSent ? (
+  const verifyCode = async () => {
+    const user = {
+      phone_number,
+      code,
+    };
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/verify-code`,
+        user
+      );
+      console.log(`🚀 ~ response:`, response);
+      handleAlert(true, "success", response.data);
+    } catch (error) {
+      console.error("API error:", error.response);
+      handleAlert(true, "error", error.response.data);
+    }
+  };
+
+  return (
     <div>
-      <input
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        style={styles.input}
-        placeholder="Enter your phone number "
-      />
-      <br></br>
-      <Button
-        className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth={false}
-        margin="normal"
-        onClick={async () => await sendCode()}
-      >
-        Code send via sms
-      </Button>
-    </div>
-  ) : (
-    <div>
-      <input
-        onChange={(e) => setCode(e.target.value)}
-        placeholder="Enter your code"
-        style={styles.input}
-      ></input>
-      <br></br>
-      <Button
-        className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
-        type="submit"
-        variant="contained"
-        color="primary"
-        fullWidth={false}
-        margin="normal"
-        onClick={async () => await verifyCode()}
-      >
-        Verify code
-      </Button>
+      {!codeSent && (
+        <TextField
+          size="small"
+          type="Number"
+          label="Enter your Phone Number"
+          name="phone_number"
+          id="phone_number"
+          value={phone_number}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          required
+          fullWidth
+          margin="normal"
+        />
+      )}
+      <br />
+      {phone_number && !codeSent && (
+        <Button
+          className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth={false}
+          margin="normal"
+          onClick={async () => await sendCode()}
+        >
+          Send Code Via SMS
+        </Button>
+      )}
+      {codeSent && (
+        <div>
+          <TextField
+            size="small"
+            type="Number"
+            label="Enter your code"
+            name="code"
+            id="code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            required
+            fullWidth
+            margin="normal"
+          />
+        </div>
+      )}
+      {code && (
+        <>
+          <Button
+            className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth={false}
+            margin="normal"
+            onClick={async () => await verifyCode()}
+          >
+            Verify code
+          </Button>
+        </>
+      )}
     </div>
   );
 }
 
-const styles = {
-  mainDiv: {
-    display: "flex",
-    flexDirection: "column",
-    padding: 30,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  input: {
-    width: 500,
-    height: 50,
-    margin: 10,
-    fontSize: 15,
-    borderRadius: 5,
-    fontFamily: "Arial",
-    border: "1px solid black",
-  },
-  registerButton: {
-    width: 500,
-    height: 50,
-    backgroundColor: "purple",
-    color: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "white",
-    fontWeight: "bold",
-    fontFamily: "Sans-Serif",
-  },
-};
 export default PhoneAuth;
