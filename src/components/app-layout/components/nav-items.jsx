@@ -20,7 +20,8 @@ const NavItems = ({ toggleDrawer }) => {
       <List>
         <ListItem onClick={(e) => e.stopPropagation()}>
           <Accordion
-            className="w-full"
+            expanded={true}
+            className="w-full !shadow-none border-[#0093d6] border"
             style={{ background: "rgb(14, 165, 233)" }}
           >
             <AccordionSummary
@@ -33,7 +34,7 @@ const NavItems = ({ toggleDrawer }) => {
             <AccordionDetails>
               <List>
                 <ListItem disablePadding>
-                  <ListItemButton className="!p-2 rounded-lg">
+                  <ListItemButton className="!p-2 !rounded-md">
                     <ListItemIcon className="p-2 !min-w-[25px]">
                       <Group className="text-white" />
                     </ListItemIcon>
@@ -46,8 +47,12 @@ const NavItems = ({ toggleDrawer }) => {
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <Link onClick={() => toggleDrawer()} to="/add-organisation">
-                    <ListItemButton className="!p-2 rounded-lg">
+                  <Link
+                    onClick={() => toggleDrawer()}
+                    to="/add-organisation"
+                    className="w-full"
+                  >
+                    <ListItemButton className="!p-2 !rounded-lg w-full">
                       <ListItemIcon className="p-2 !min-w-[25px]">
                         <Add className="text-white" />
                       </ListItemIcon>
