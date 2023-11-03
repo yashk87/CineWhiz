@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import TextCycler from "./components/cyclic-text";
-import Org from "./components/org";
+import Organisation from "./components/Organisation";
 const Home = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
@@ -27,8 +27,7 @@ const Home = () => {
     <div className="p-8">
       <TextCycler />
       <Divider />
-      <Org />
-      <Org />
+      <Organisation />
     </div>
   );
 };
