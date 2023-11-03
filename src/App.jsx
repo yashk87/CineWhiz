@@ -10,6 +10,8 @@ import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 // mulitple screen size xs,sm,md,lg,xl
 
 function App() {
+  console.log("Naresh");
+
   return (
     <>
       <UseState>
