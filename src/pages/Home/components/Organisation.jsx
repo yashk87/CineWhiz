@@ -12,9 +12,9 @@ const Organisation = () => {
   return (
     <Link
       to={"/add-organisation"}
-      className=" cursor-pointer hover:scale-95 scroll-smooth  transition-all"
+      className=" cursor-pointer hover:scale-95 scroll-smooth transition-all"
     >
-      <Card sx={{ width: "-webkit-fill-available", overflow: "visible" }}>
+      <Card sx={{ width: "w-[40%]", overflow: "visible" }}>
         <CardActionArea disabled className="!w-[300px]">
           <CardMedia
             component="img"
