@@ -1,11 +1,10 @@
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import TermsCondition from "../../../components/termscondition/termsCondition";
 import useProfileForm from "../../../hooks/useProfileForm";
-import RoleSelect from "./roleselect";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -15,6 +14,32 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import Select from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+const names = [
+  "Department Admin",
+  "Department Head",
+  "Hr",
+  "Manager",
+  "Super Admin Deligate",
+];
+
 const CreateProfile = () => {
   const { handleAlert } = useContext(TestContext);
 
@@ -26,7 +51,6 @@ const CreateProfile = () => {
     password,
     phone_number,
     emergency_contact,
-    gender,
     address,
     location,
     firstNameError,
@@ -42,7 +66,28 @@ const CreateProfile = () => {
     setFirstNameError,
     setLastNameError,
     setPasswordError,
+    setPhoneNumber,
+    setEmergencyContact,
+    setAddress,
+    setLocation,
+    joining_date,
+    setJoiningDate,
   } = useProfileForm();
+
+  const [selectedValue, setSelectedValue] = useState("");
+
+  const handleRadioChange = (event) => {
+    setSelectedValue(event.target.value);
+  };
+  const [profile, setProfile] = React.useState([]);
+
+  const handleRoleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setProfile(typeof value === "string" ? value.split(",") : value);
+  };
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -51,12 +96,48 @@ const CreateProfile = () => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return emailRegex.test(email);
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const user = {
+      first_name,
+      last_name,
+      middle_name,
+      email,
+      password,
+      phone_number,
+      emergency_contact,
+      address,
+      location,
+      selectedValue,
+      joining_date,
+      profile: profile.length <= 0 ? "Employee" : profile,
+    };
+    console.log(user);
+    try {
+      console.log(process.env.REACT_APP_API);
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/profile/create`,
+        user
+      );
+      console.log(`🚀 ~ response:`, response);
+
+      handleAlert(true, "success", response.data.message);
+    } catch (error) {
+      console.error("API error:", error.response);
+      handleAlert(
+        true,
+        "error",
+        error.response.data.message || "Failed to sign up. Please try again."
+      );
+    }
+  };
   return (
     <>
       <div className="flex items-center justify-center p-8 box-border ">
         <div className="flex w-full h-full rounded-lg shadow-xl border bg-white">
           <div className="w-full md:w-1/2 p-8 flex flex-col items-center gap-4 justify-center">
-            <form>
+            <form onSubmit={handleSubmit}>
               <h1 className="text-3xl font-semibold  text-center text-blue-500">
                 Add Employee
               </h1>
@@ -65,8 +146,8 @@ const CreateProfile = () => {
                   size="small"
                   type="text"
                   label="First Name"
-                  name="firstName"
-                  id="firstName"
+                  name="first_name"
+                  id="first_name"
                   value={first_name}
                   onChange={(e) => {
                     const enteredFirstName = e.target.value;
@@ -95,8 +176,8 @@ const CreateProfile = () => {
                   size="small"
                   type="text"
                   label="Middal Name"
-                  name="middalName"
-                  id="middalName"
+                  name="middle_name"
+                  id="middle_name"
                   value={middle_name}
                   onChange={(e) => setMiddalName(e.target.value)}
                   fullWidth
@@ -106,8 +187,8 @@ const CreateProfile = () => {
                   size="small"
                   type="text"
                   label="Last Name"
-                  name="lastName"
-                  id="lastName"
+                  name="last_name"
+                  id="last_name"
                   value={last_name}
                   onChange={(e) => {
                     const enteredLastName = e.target.value;
@@ -187,9 +268,11 @@ const CreateProfile = () => {
                 <TextField
                   size="small"
                   type="text"
-                  label="phone_number"
+                  label="Phone Number"
                   name="phone_number"
                   id="phone_number"
+                  value={phone_number}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
                   required
                   fullWidth
                   margin="normal"
@@ -200,6 +283,8 @@ const CreateProfile = () => {
                   label="Emergency Contact"
                   name="emergency_contact"
                   id="emergency_contact"
+                  value={emergency_contact}
+                  onChange={(e) => setEmergencyContact(e.target.value)}
                   required
                   fullWidth
                   margin="normal"
@@ -210,6 +295,8 @@ const CreateProfile = () => {
                   label="Address"
                   name="address"
                   id="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   required
                   fullWidth
                   margin="normal"
@@ -220,26 +307,56 @@ const CreateProfile = () => {
                   label="Location"
                   name="location"
                   id="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   required
                   fullWidth
                   margin="normal"
                 />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    className="w-full"
-                    components={["DatePicker"]}
-                    required
-                  >
-                    <DatePicker
-                      label="Joining Date"
-                      slotProps={{
-                        textField: { size: "small", fullWidth: true },
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
                 <div>
-                  <RoleSelect />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      className="w-full"
+                      components={["DatePicker"]}
+                      required
+                    >
+                      <DatePicker
+                        label="Joining Date"
+                        value={joining_date}
+                        onChange={(newDate) => {
+                          setJoiningDate(newDate);
+                        }}
+                        slotProps={{
+                          textField: { size: "small", fullWidth: true },
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </div>
+
+                <div>
+                  <FormControl sx={{ width: 300, mt: 1, mb: 2 }}>
+                    <InputLabel id="demo-multiple-checkbox-label">
+                      Profile
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-checkbox-label"
+                      id="demo-multiple-checkbox"
+                      multiple
+                      value={profile}
+                      onChange={handleRoleChange}
+                      input={<OutlinedInput label="profile" />}
+                      renderValue={(selected) => selected.join(", ")}
+                      MenuProps={MenuProps}
+                    >
+                      {names.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={profile.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </div>
                 <div>
                   <FormControl>
@@ -250,6 +367,8 @@ const CreateProfile = () => {
                       row
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
+                      value={selectedValue}
+                      onChange={handleRadioChange}
                     >
                       <FormControlLabel
                         value="female"
