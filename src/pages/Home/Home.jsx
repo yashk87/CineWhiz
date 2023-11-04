@@ -31,16 +31,18 @@ const Home = () => {
       slidesToSlide: 1,
     },
     tablet: {
-      breakpoint: { max: 1400, min: 464 },
+      breakpoint: { max: 1400, min: 1050 },
       items: 3,
       slidesToSlide: 1,
     },
     mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 3,
+      breakpoint: { max: 1050, min: 500 },
+      items: 2,
       slidesToSlide: 1,
     },
   };
+
+  console.log("Hii");
 
   const CustomRightArrow = ({ onClick, ...rest }) => {
     const {
@@ -89,7 +91,7 @@ const Home = () => {
           responsive={dotsresponsive}
         >
           {Array.from({ length: 10 }, (_, index) => (
-            <div key={index} className="w-max">
+            <div key={index}>
               <Organisation />
             </div>
           ))}

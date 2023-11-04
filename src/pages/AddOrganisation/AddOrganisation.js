@@ -1,9 +1,17 @@
 import React, { useState, useContext } from "react";
+<<<<<<< HEAD
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+=======
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+>>>>>>> 6b231d174531cf7e68d8386b8c9d4496c2b3d12c
 import { Button, Container, TextField, Typography } from "@mui/material";
 import {
   Avatar,
@@ -92,6 +100,7 @@ const AddOrganisation = () => {
     }
   };
 
+<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -100,6 +109,21 @@ const AddOrganisation = () => {
         inputdata
       );
       console.log(result);
+=======
+    console.log("pipe check one  1");
+
+    const data = {
+        name: "",
+        logo: "",
+        web_url: "",
+        industry_type: "",
+        email: "",
+        location: "",
+        contact_number: "",
+        description: "",
+        foundation_date: ""
+    };
+>>>>>>> 6b231d174531cf7e68d8386b8c9d4496c2b3d12c
 
       // Show a success alert
       handleAlert(true, "success", "Organization created successfully");
