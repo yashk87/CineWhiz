@@ -71,7 +71,8 @@ const Department = () => {
         { City: "Pune" },
         { City: "Nagpur" },
         { City: "Jaipur" },
-        { City: "New York" }
+        { City: "New York" },
+        { City: "Mumbai" }
       ]
 
       // const Locations = [
