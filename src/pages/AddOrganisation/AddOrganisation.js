@@ -1,72 +1,68 @@
-import React, { useContext, useState } from "react";
-<<<<<<< HEAD
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-=======
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
->>>>>>> 6b231d174531cf7e68d8386b8c9d4496c2b3d12c
+import React, { useContext, useState } from "react";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 import {
-  Avatar, Button, Container, FormControl, Input, InputLabel,
+  Avatar,
+  Button,
+  Container,
+  FormControl,
+  Input,
+  InputLabel,
   MenuItem,
-  Select, TextField, Typography
+  Select,
+  TextField,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
 
 const AddOrganisation = () => {
-
-    const data = {
-        name: "",
-        logo: "",
-        web_url: "",
-        industry_type: "",
-        email: "",
-        location: "",
-        contact_number: "",
-        description: "",
-        foundation_date: ""
-    };
-
+  const data = {
+    name: "",
+    logo: "",
+    web_url: "",
+    industry_type: "",
+    email: "",
+    location: "",
+    contact_number: "",
+    description: "",
+    foundation_date: "",
+  };
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [emailLabel, setEmailLabel] = useState("Organisation Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
   const [emailError, setEmailError] = useState(false);
-    const [inputdata, setInputData] = useState(data);
-
-
+  const [inputdata, setInputData] = useState(data);
 
   const [contactNumberError, setContactNumberError] = useState(false);
   const { handleAlert } = useContext(TestContext);
 
-    const handleImageChange = async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setSelectedImage(imageUrl);
-        }
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "lhyvmmdu");
-        await axios.post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData).then((resp) => {
-            console.log(resp.data.secure_url);
-            setInputData(prev => ({
-                ...prev,
-                logo: resp.data.secure_url
-            }))
-            // setLogo(resp.data.secure_url)
-        });
-    };
-
-
-
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "lhyvmmdu");
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData)
+      .then((resp) => {
+        console.log(resp.data.secure_url);
+        setInputData((prev) => ({
+          ...prev,
+          logo: resp.data.secure_url,
+        }));
+        // setLogo(resp.data.secure_url)
+      });
+  };
 
   const isEmailValid = (email) => {
     return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email);
@@ -75,8 +71,6 @@ const AddOrganisation = () => {
   const isContactNumberValid = (contactNumber) => {
     return /^\d{10}$/.test(contactNumber);
   };
-
-  const [inputdata, setInputData] = useState(data);
 
   const handleData = (e) => {
     const { name, value } = e.target;
@@ -108,7 +102,6 @@ const AddOrganisation = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -117,10 +110,10 @@ const AddOrganisation = () => {
         inputdata
       );
       console.log(result);
-=======
-    console.log("pipe check one  1");
 
-    const data = {
+      console.log("pipe check one  1");
+
+      const data = {
         name: "",
         logo: "",
         web_url: "",
@@ -129,9 +122,8 @@ const AddOrganisation = () => {
         location: "",
         contact_number: "",
         description: "",
-        foundation_date: ""
-    };
->>>>>>> 6b231d174531cf7e68d8386b8c9d4496c2b3d12c
+        foundation_date: "",
+      };
 
       // Show a success alert
       handleAlert(true, "success", "Organization created successfully");
