@@ -9,46 +9,59 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Organisation = () => {
+const Organisation = ({ item }) => {
   return (
-    <Link
-      to={"/add-organisation"}
-      className=" cursor-pointerhover:scale-95 scroll-smooth transition-all"
+    <Card
+      className=" hover:shadow-lg !transition-all  h-max    !w-[320px]"
+      sx={{ overflow: "visible" }}
     >
-      <Card sx={{ overflow: "visible" }}>
-        <CardActionArea disabled className="!w-[320px]">
-          <CardMedia
-            component="img"
-            className="h-[140px] rounded-t-md"
-            image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-            alt="green iguana"
-          />
-          <CardContent>
-            <Typography
-              color={"#1D6EB7"}
-              gutterBottom
-              variant="h5"
-              component="div"
-              className="hover:underline"
-            >
-              Organisation-1
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Lizards are a widespread group of squamate reptiles, with over
-              6,000 species, ranging across all continents except Antarctica
-            </Typography>
-          </CardContent>
-          <div className="flex items-center px-2 py-4 justify-end gap-4">
-            <Button size="small" variant="contained">
-              Go to setuppage
-            </Button>
-            <Button size="small" variant="contained">
-              Create Profile
-            </Button>
-          </div>
-        </CardActionArea>
-      </Card>
-    </Link>
+      {/* <CardMedia
+        component="img"
+        className="h-[140px] rounded-t-md"
+        image={"https://mui.com/static/images/cards/contemplative-reptile.jpg"}
+        alt="green iguana"
+      /> */}
+      <Link
+        to={`/organisation/${item._id}`}
+        className=" cursor-pointerhover:scale-95 scroll-smooth transition-all"
+      >
+        <CardContent>
+          <Typography
+            color={"#1D6EB7"}
+            gutterBottom
+            variant="h5"
+            component="div"
+            className="hover:underline"
+          >
+            {item.name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Description : {item.description}
+          </Typography>
+          {/* <Typography variant="body2" color="text.secondary">
+          Email : {item.email}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Contact Number : {item.contact_number}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Website : {item.web_url}
+        </Typography> */}
+          {/* <Typography variant="body2" color="text.secondary">
+              Foundation date : {item.foundation_date}
+            </Typography> */}
+        </CardContent>
+      </Link>
+
+      <div className="space-x-4 p-2 pb-6">
+        <Button size="small" className=" cursor-pointer" variant="contained">
+          Go to setuppage
+        </Button>
+        <Button size="small" className=" cursor-pointer" variant="contained">
+          Create Profile
+        </Button>
+      </div>
+    </Card>
   );
 };
 
