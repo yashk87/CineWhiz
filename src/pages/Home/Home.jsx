@@ -40,11 +40,6 @@ const Home = () => {
       handleAlert(true, "warning", "Please login first.");
     }
   }, [redirect, cookies, handleAlert]);
-  const handleScroll = (e) => {
-    console.log(e);
-    // window.scrollLeft = 10;
-    console.log("e", (e.target.parentElement.scrollLeft = -10));
-  };
 
   const dotsresponsive = {
     desktop: {
