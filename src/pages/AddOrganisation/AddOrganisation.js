@@ -15,6 +15,8 @@ const AddOrganisation = () => {
     const [numberLabel, setNumberLabel] = useState("Phone Number");
     const [emailError, setEmailError] = useState(false);
     const [contactNumberError, setContactNumberError] = useState(false);
+    const [organizationLinkedinUrlLabel, setOrganizationLinkedinUrlLabel] = useState("Organization Linkedin Url")
+    const [organizationLinkedinUrlError, setOrganizationLinkedinUrlError] = useState(false);
     const { handleAlert } = useContext(TestContext);
 
     const handleImageChange = async (event) => {
@@ -35,6 +37,8 @@ const AddOrganisation = () => {
         name: "",
         logo: "",
         web_url: "",
+        organization_linkedin_url: "",
+        organization_tagline: "",
         industry_type: "",
         email: "",
         location: "",
@@ -45,6 +49,10 @@ const AddOrganisation = () => {
 
     const isEmailValid = (email) => {
         return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email);
+    };
+
+    const isOrganizationLinkedinUrlValid = (organizationLinkedinUrl) => {
+        return /^(http(s)?:\/\/)?([a-zA-Z]+\.)*linkedin\.com\/[-\w/]+/gm.test(organizationLinkedinUrl)
     };
 
     const isContactNumberValid = (contactNumber) => {
@@ -77,6 +85,18 @@ const AddOrganisation = () => {
                 setEmailLabel("Organisation Email");
                 setEmailError(false);
             }
+        } else if (name === 'organization_linkedin_url') {
+            if (!isOrganizationLinkedinUrlValid(value)) {
+                setOrganizationLinkedinUrlLabel("enter valid linkedin url");
+                setOrganizationLinkedinUrlError(true);
+                if (e.target.value === "") {
+                    setOrganizationLinkedinUrlError(false)
+                    setOrganizationLinkedinUrlLabel("Organisation Linkedin Url")
+                }
+            } else {
+                setOrganizationLinkedinUrlLabel("Organisation Linkedin Url");
+                setOrganizationLinkedinUrlError(false);
+            }
         }
     };
 
@@ -97,6 +117,8 @@ const AddOrganisation = () => {
         setInputData({
             name: "",
             web_url: "",
+            organization_linkedin_url: "",
+            organization_tagline: "",
             industry_type: "",
             email: "",
             location: "",
@@ -146,6 +168,32 @@ const AddOrganisation = () => {
                         size="small"
                         className='w-[80%]'
                         label='Url Of Website'
+                        type='text'
+                    />
+                    <TextField
+                        style={{ marginTop: "20px", height: "10px" }}
+                        name='organization_linkedin_url'
+                        onChange={handleData}
+                        error= {organizationLinkedinUrlError}
+                        value={inputdata.organization_linkedin_url}
+                        size="small"
+                        className='w-[80%]'
+                        InputProps={{
+                            style: {
+                                borderColor: organizationLinkedinUrlError ? 'red' : 'blue',
+                            },
+                        }}
+                        label={organizationLinkedinUrlLabel}
+                        type='text'
+                    />
+                    <TextField
+                        style={{ marginTop: "20px", height: "10px" }}
+                        name='organization_tagline'
+                        onChange={handleData}
+                        value={inputdata.organization_tagline}
+                        size="small"
+                        className='w-[80%]'
+                        label='Organization Tagline'
                         type='text'
                     />
                     <FormControl
