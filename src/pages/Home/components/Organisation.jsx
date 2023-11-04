@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -12,10 +13,10 @@ const Organisation = () => {
   return (
     <Link
       to={"/add-organisation"}
-      className=" cursor-pointer hover:scale-95 scroll-smooth transition-all"
+      className=" cursor-pointerhover:scale-95 scroll-smooth transition-all"
     >
-      <Card sx={{ width: "w-[40%]", overflow: "visible" }}>
-        <CardActionArea disabled className="!w-[300px]">
+      <Card sx={{ overflow: "visible" }}>
+        <CardActionArea disabled className="!w-[320px]">
           <CardMedia
             component="img"
             className="h-[140px] rounded-t-md"
@@ -37,6 +38,14 @@ const Organisation = () => {
               6,000 species, ranging across all continents except Antarctica
             </Typography>
           </CardContent>
+          <div className="flex items-center px-2 py-4 justify-end gap-4">
+            <Button size="small" variant="contained">
+              Go to setuppage
+            </Button>
+            <Button size="small" variant="contained">
+              Create Profile
+            </Button>
+          </div>
         </CardActionArea>
       </Card>
     </Link>
