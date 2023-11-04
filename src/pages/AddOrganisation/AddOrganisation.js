@@ -31,7 +31,7 @@ const AddOrganisation = () => {
         });
     };
 
-    console.log("pipe check one");
+    console.log("pipe check one  1");
 
     const data = {
         name: "",
