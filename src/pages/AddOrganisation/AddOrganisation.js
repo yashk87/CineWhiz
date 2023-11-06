@@ -125,10 +125,17 @@ const AddOrganisation = () => {
         foundation_date: "",
       };
 
+
+            if (result.data.success) {
+                console.log("hii i am called as error");
+                handleAlert(true, "error", "Invalid authorization");
+
+            }
+
       // Show a success alert
       handleAlert(true, "success", "Organization created successfully");
     } catch (e) {
-      console.error(e);
+      console.error(e.response.data.msg);
 
       // Show an error alert
       handleAlert(true, "error", "Failed to create organization");
