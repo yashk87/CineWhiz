@@ -19,9 +19,23 @@ const Home = () => {
   const redirect = useNavigate();
   const [organizationData, setOrganizationData] = useState([]);
 
+  const authToken = cookies["aeigs"];
+  useEffect(() => {
+    if (!authToken) {
+      // Redirect to the login page
+      redirect("/sign-in");
+      handleAlert(true, "warning", "Please login first.");
+    }
+  }, [redirect, cookies, handleAlert]);
+
   const getData = async () => {
     const data = await axios.get(
-      "http://localhost:4000/route/organization/get"
+      "http://localhost:4000/route/organization/get",
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
     );
 
     setOrganizationData(data.data.organizations);
@@ -30,15 +44,6 @@ const Home = () => {
   useEffect(() => {
     getData();
   }, []);
-
-  useEffect(() => {
-    const authToken = cookies["aeigs"];
-    if (!authToken) {
-      // Redirect to the login page
-      redirect("/sign-in");
-      handleAlert(true, "warning", "Please login first.");
-    }
-  }, [redirect, cookies, handleAlert]);
 
   const dotsresponsive = {
     desktop: {
@@ -96,8 +101,8 @@ const Home = () => {
       {/* <Org /> */}
 
       <div className="w-full  mt-6">
-        <Typography variant="h4" className="!font-medium">
-          Organization
+        <Typography variant="body1" className=" !font-medium !text-2xl">
+          List of Organization
         </Typography>
 
         {/* {organizationData.length <= 0 ? (
