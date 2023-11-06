@@ -20,8 +20,15 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+
+
+
 
 const AddOrganisation = () => {
+    const { cookies } = useContext(UseContext)
+    const authToken = cookies["aeigs"]
+
     const data = {
         name: "",
         logo: "",
@@ -40,6 +47,7 @@ const AddOrganisation = () => {
     const [emailError, setEmailError] = useState(false);
     const [inputdata, setInputData] = useState(data);
 
+
     const [contactNumberError, setContactNumberError] = useState(false);
     const { handleAlert } = useContext(TestContext);
 
@@ -53,7 +61,7 @@ const AddOrganisation = () => {
         formData.append("file", file);
         formData.append("upload_preset", "lhyvmmdu");
         await axios
-            .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData)
+            .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData,)
             .then((resp) => {
                 console.log(resp.data.secure_url);
                 setInputData((prev) => ({
@@ -107,9 +115,16 @@ const AddOrganisation = () => {
         try {
             const result = await axios.post(
                 "http://localhost:4000/route/organization/create",
-                inputdata
+                inputdata,
+                {
+                    headers: {
+                        Authorization: authToken,
+                    }
+                }
             );
-            console.log(result);
+
+            // console.log(authToken);
+            // console.log(result);
 
             console.log("pipe check one  1");
 
@@ -135,6 +150,7 @@ const AddOrganisation = () => {
             // Show a success alert
             handleAlert(true, "success", "Organization created successfully");
         } catch (e) {
+            console.log(authToken);
             console.error(e.response.data.msg);
             handleAlert(true, "error", e.response.data.msg);
 

@@ -24,7 +24,6 @@ const SingleOrganization = () => {
     const data = await axios.get(
       `http://localhost:4000/route/organization/get/${id}`
     );
-    console.log(data.data);
     setOrganization(data.data.organizations);
   };
 
@@ -37,23 +36,27 @@ const SingleOrganization = () => {
       <Stack className="px-10 py-10">
         <Stack direction={"row"} className="pl-2 gap-4 items-center mb-4">
           <Box className="p-4 rounded-full bg-sky-50 shadow-lg h-max w-max">
-            <CorporateFareIcon />
+            <CorporateFareIcon className="!h-5" />
           </Box>
           <Typography
             variant="h1"
-            className="!text-4xl !mb-2  text-blue-500  font-semibold"
+            className="!text-2xl !mb-2  text-blue-500  font-semibold"
           >
             {organization.name}
           </Typography>
+
+          <Box>
+            <Typography
+              variant="body2"
+              className="text-gray-600 !text-sm !mt-4 pl-4 flex gap-2 items-center"
+            >
+              <CalendarTodayIcon />
+              <span className="text-sm">
+                Joined on {organization.foundation_date}
+              </span>
+            </Typography>
+          </Box>
         </Stack>
-        <Box>
-          <Typography
-            variant="body2"
-            className="text-gray-600 !mt-4 pl-4 flex gap-2 items-center"
-          >
-            <CalendarTodayIcon /> Joined on {organization.foundation_date}
-          </Typography>
-        </Box>
 
         <Stack direction={"row"} className="!mt-4 gap-40 px-4">
           <Box>
