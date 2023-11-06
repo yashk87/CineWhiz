@@ -8,23 +8,15 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import {
   Avatar,
-<<<<<<< HEAD
   Input,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-=======
   Button,
   Container,
-  FormControl,
-  Input,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
->>>>>>> 655ddb56d38b40f111203c5bd4b4a80f85abeb47
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
