@@ -1,23 +1,23 @@
 import { Button, Container, TextField, Typography } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Select from "@mui/material/Select";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useProfileForm from "../../../hooks/useProfileForm";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -38,7 +38,7 @@ const names = [
   "Super Admin Deligate",
 ];
 
-const AddProfile = () => {
+const AddEmployee = () => {
   const { handleAlert } = useContext(TestContext);
 
   const {
@@ -435,4 +435,4 @@ const AddProfile = () => {
   );
 };
 
-export default AddProfile;
+export default AddEmployee;
