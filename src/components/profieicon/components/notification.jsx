@@ -1,11 +1,11 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import CheckIcon from "@mui/icons-material/Check"; // Import the accept icon
 import CloseIcon from "@mui/icons-material/Close"; // Import the reject icon
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import React from "react";
 
 const Notification = () => {
   return (
@@ -20,12 +20,12 @@ const Notification = () => {
           container
           spacing={2}
           sx={{
-            border: "1px solid  #C3C3C3",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a box shadow on hover
+            borderRadius: "5px",
           }}
         >
-          <Grid item xs={8}>
-            <Box>
+          <Grid item xs={8} className="gap-4">
+            <Box className="flex flex-col gap-2">
               <Typography
                 variant="subtitle1"
                 gutterBottom
@@ -44,7 +44,11 @@ const Notification = () => {
               >
                 Details :
               </Typography>
-              <Typography variant="body2" gutterBottom>
+              <Typography
+                variant="body2"
+                gutterBottom
+                className=" text-gray-400"
+              >
                 He added organization name as "Organization1"
               </Typography>
             </Box>
@@ -92,6 +96,7 @@ const Notification = () => {
                 <img
                   src="argan_founder.png"
                   alt="my-img"
+                  className="border-2 border-gray-400"
                   style={{
                     borderRadius: "50%",
                     width: "50px",
