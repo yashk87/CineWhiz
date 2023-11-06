@@ -26,54 +26,52 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 
 const AddOrganisation = () => {
-    const { cookies } = useContext(UseContext)
-    const authToken = cookies["aeigs"]
+  const { cookies } = useContext(UseContext)
+  const authToken = cookies["aeigs"]
 
-    const data = {
-        name: "",
-        logo: "",
-        web_url: "",
-        industry_type: "",
-        email: "",
-        location: "",
-        contact_number: "",
-        description: "",
-        foundation_date: "",
-    };
+  const data = {
+    name: "",
+    logo: "",
+    web_url: "",
+    industry_type: "",
+    email: "",
+    location: "",
+    contact_number: "",
+    description: "",
+    foundation_date: "",
+  };
 
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [emailLabel, setEmailLabel] = useState("Organisation Email");
-    const [numberLabel, setNumberLabel] = useState("Phone Number");
-    const [emailError, setEmailError] = useState(false);
-    const [inputdata, setInputData] = useState(data);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [emailLabel, setEmailLabel] = useState("Organisation Email");
+  const [numberLabel, setNumberLabel] = useState("Phone Number");
+  const [emailError, setEmailError] = useState(false);
+  const [inputdata, setInputData] = useState(data);
 
 
   const [contactNumberError, setContactNumberError] = useState(false);
   const { handleAlert } = useContext(TestContext);
 
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
 
-    const handleImageChange = async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setSelectedImage(imageUrl);
-        }
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "lhyvmmdu");
-        await axios
-            .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData,)
-            .then((resp) => {
-                console.log(resp.data.secure_url);
-                setInputData((prev) => ({
-                    ...prev,
-                    logo: resp.data.secure_url,
-                }));
-                // setLogo(resp.data.secure_url)
-            });
-    };
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "lhyvmmdu");
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData,)
+      .then((resp) => {
+        console.log(resp.data.secure_url);
+        setInputData((prev) => ({
+          ...prev,
+          logo: resp.data.secure_url,
+        }));
+        // setLogo(resp.data.secure_url)
+      });
+  };
 
   const isEmailValid = (email) => {
     return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email);
