@@ -7,6 +7,9 @@ import * as React from "react";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+
 export default function ProfileIcon() {
   const navigate = useNavigate();
   const { cookies, removeCookie } = useContext(UseContext);
@@ -28,6 +31,11 @@ export default function ProfileIcon() {
     setAnchorEl(null);
     navigate("/sign-in");
     window.location.reload();
+  };
+
+  const handleNotificationClick = () => {
+    navigate("/notification");
+    setAnchorEl(null);
   };
 
   return (
@@ -54,7 +62,19 @@ export default function ProfileIcon() {
         }}
       >
         {token ? (
-          <MenuItem onClick={handleSignOut}>Logout</MenuItem>
+          <>
+            <>
+              <MenuItem onClick={handleSignOut} className="flex gap-2">
+                <ExitToAppIcon /> Logout
+              </MenuItem>
+              <MenuItem
+                className="flex gap-2"
+                onClick={handleNotificationClick}
+              >
+                <NotificationsIcon /> Notification
+              </MenuItem>
+            </>
+          </>
         ) : (
           [
             <Link to="/sign-up" key="sign-up-link">
