@@ -1,17 +1,30 @@
-import React, { useState, useContext } from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Button, Container, TextField, Typography } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import React, { useContext, useState } from "react";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 import {
   Avatar,
+<<<<<<< HEAD
   Input,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+=======
+  Button,
+  Container,
+  FormControl,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+>>>>>>> 655ddb56d38b40f111203c5bd4b4a80f85abeb47
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
