@@ -30,13 +30,11 @@ const AddOrganisation = () => {
         foundation_date: ""
     };
 
-
     const [selectedImage, setSelectedImage] = useState(null);
     const [emailLabel, setEmailLabel] = useState("Organisation Email");
     const [numberLabel, setNumberLabel] = useState("Phone Number");
     const [emailError, setEmailError] = useState(false);
     const [inputdata, setInputData] = useState(data);
-
 
 
     const [contactNumberError, setContactNumberError] = useState(false);
@@ -48,6 +46,7 @@ const AddOrganisation = () => {
             const imageUrl = URL.createObjectURL(file);
             setSelectedImage(imageUrl);
         }
+
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", "lhyvmmdu");
@@ -126,13 +125,20 @@ const AddOrganisation = () => {
                 foundation_date: ""
             };
 
+
+            if (result.data.success) {
+                console.log("hii i am called as error");
+                handleAlert(true, "error", "Invalid authorization");
+
+            }
+
             // Show a success alert
             handleAlert(true, "success", "Organization created successfully");
         } catch (e) {
-            console.error(e);
+            console.error(e.response.data.msg);
 
             // Show an error alert
-            handleAlert(true, "error", "Failed to create organization");
+            handleAlert(true, "error", e.response.data.msg);
         }
         setInputData({
             name: "",
@@ -296,7 +302,7 @@ const AddOrganisation = () => {
                                     value={inputdata.foundation_date}
                                     onChange={(newDate) => {
                                         setInputData({ ...inputdata, foundation_date: newDate });
-                                        console.log(newDate);
+                                        // console.log(newDate);
                                     }}
                                     slotProps={{ textField: { size: "small", fullWidth: true } }}
                                 />
