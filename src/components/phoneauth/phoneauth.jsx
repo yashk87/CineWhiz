@@ -2,12 +2,15 @@ import { React, useContext, useState } from "react";
 import { Button, TextField } from "@mui/material";
 import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
+import { UseContext } from "../../State/UseState/UseContext";
 
 function PhoneAuth() {
   const [phone_number, setPhoneNumber] = useState("");
   const [codeSent, setCodeSent] = useState(false);
   const [code, setCode] = useState("");
   const { handleAlert } = useContext(TestContext);
+
+  const { cookies } = useContext(UseContext);
 
   const sendCode = async () => {
     const user = {

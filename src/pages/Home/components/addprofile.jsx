@@ -18,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -123,11 +124,7 @@ const AddProfile = () => {
       handleAlert(true, "success", response.data.message);
     } catch (error) {
       console.error("API error:", error.response);
-      handleAlert(
-        true,
-        "error",
-        error.response.data.message || "Failed to sign up. Please try again."
-      );
+      handleAlert(true, "error", error.response.data.message);
     }
   };
   return (

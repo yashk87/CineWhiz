@@ -1,8 +1,9 @@
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const Organisation = ({ item }) => {
+  const navigate = useNavigate();
   return (
     <Card
       className=" hover:shadow-lg !transition-all  h-max    !w-[320px]"
@@ -50,7 +51,12 @@ const Organisation = ({ item }) => {
         <Button size="small" className=" cursor-pointer" variant="contained">
           Go to setuppage
         </Button>
-        <Button size="small" className=" cursor-pointer" variant="contained">
+        <Button
+          size="small"
+          className=" cursor-pointer"
+          variant="contained"
+          onClick={() => navigate("/add-profile")}
+        >
           Create Profile
         </Button>
       </div>

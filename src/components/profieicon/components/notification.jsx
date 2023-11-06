@@ -21,7 +21,7 @@ const Notification = () => {
           spacing={2}
           sx={{
             border: "1px solid  #C3C3C3",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a box shadow on hover
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
           }}
         >
           <Grid item xs={8}>
