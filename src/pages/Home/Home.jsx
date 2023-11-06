@@ -1,10 +1,9 @@
-import { Button, Card, CardContent, Divider, Typography } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import React, { useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import TextCycler from "./components/cyclic-text";
-import Org from "./components/org";
 import Organisation from "./components/Organisation";
 import "react-multi-carousel/lib/styles.css";
 import Carousel from "react-multi-carousel";
@@ -13,7 +12,7 @@ import WestIcon from "@mui/icons-material/West";
 import EastIcon from "@mui/icons-material/East";
 import axios from "axios";
 import { useState } from "react";
-import CorporateFareIcon from "@mui/icons-material/CorporateFare";
+
 const Home = () => {
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);

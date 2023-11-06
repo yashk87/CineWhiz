@@ -1,7 +1,6 @@
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import BusinessIcon from "@mui/icons-material/Business";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
