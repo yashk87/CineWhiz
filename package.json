@@ -20,6 +20,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "firebase": "^10.5.2",
+    "lottie-web": "^5.12.2",
     "otp-input-react": "^0.3.0",
     "postcss": "^8.4.31",
     "postcss-cli": "^10.1.0",

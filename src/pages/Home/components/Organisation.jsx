@@ -23,7 +23,7 @@ const Organisation = ({ item }) => {
           <Typography
             color={"#1D6EB7"}
             gutterBottom
-            variant="h5"
+            variant="h6"
             component="div"
             className="hover:underline"
           >

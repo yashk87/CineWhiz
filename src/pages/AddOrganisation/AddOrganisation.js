@@ -22,7 +22,13 @@ import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
+
+
+
 const AddOrganisation = () => {
+  const { cookies } = useContext(UseContext)
+  const authToken = cookies["aeigs"]
+
   const data = {
     name: "",
     logo: "",
@@ -41,11 +47,10 @@ const AddOrganisation = () => {
   const [emailError, setEmailError] = useState(false);
   const [inputdata, setInputData] = useState(data);
 
+
   const [contactNumberError, setContactNumberError] = useState(false);
   const { handleAlert } = useContext(TestContext);
 
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -57,7 +62,7 @@ const AddOrganisation = () => {
     formData.append("file", file);
     formData.append("upload_preset", "lhyvmmdu");
     await axios
-      .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData)
+      .post("https://api.cloudinary.com/v1_1/dnpj0dyxu/image/upload", formData,)
       .then((resp) => {
         console.log(resp.data.secure_url);
         setInputData((prev) => ({
