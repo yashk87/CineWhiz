@@ -13,6 +13,7 @@ import Department from "./pages/addDepartment/addDepartment";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddProfile from "./pages/Home/components/addprofile";
+import Notification from "./components/profieicon/components/notification";
 const App = () => {
   return (
     <Routes>
@@ -29,6 +30,7 @@ const App = () => {
       <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/add-profile" element={<AddProfile />} />
+      <Route exact path="/notification" element={<Notification />} />
     </Routes>
   );
 };

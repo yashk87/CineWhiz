@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const AddOrganisation = () => {
   const data = {
@@ -42,6 +43,9 @@ const AddOrganisation = () => {
 
   const [contactNumberError, setContactNumberError] = useState(false);
   const { handleAlert } = useContext(TestContext);
+
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -107,7 +111,12 @@ const AddOrganisation = () => {
     try {
       const result = await axios.post(
         "http://localhost:4000/route/organization/create",
-        inputdata
+        inputdata,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
       console.log(result);
 
