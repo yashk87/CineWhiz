@@ -38,22 +38,19 @@ const SingleOrganization = () => {
           <Box className="p-4 rounded-full bg-sky-50 shadow-lg h-max w-max">
             <CorporateFareIcon className="!h-5" />
           </Box>
-          <Typography
-            variant="h1"
-            className="!text-2xl !mb-2  text-blue-500  font-semibold"
-          >
-            {organization.name}
-          </Typography>
-
           <Box>
             <Typography
-              variant="body2"
-              className="text-gray-600 !text-sm !mt-4 pl-4 flex gap-2 items-center"
+              variant="h1"
+              className="!text-2xl !mb-2  text-blue-500  font-semibold"
             >
-              <CalendarTodayIcon />
-              <span className="text-sm">
-                Joined on {organization.foundation_date}
-              </span>
+              {organization.name}
+            </Typography>
+
+            <Typography
+              variant="body2"
+              className="text-gray-600 !text-sm !mt-2"
+            >
+              Joined on {organization.foundation_date}
             </Typography>
           </Box>
         </Stack>
