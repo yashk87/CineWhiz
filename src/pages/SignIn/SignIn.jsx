@@ -26,6 +26,7 @@ const SignIn = () => {
         }
       );
       console.log(`🚀 ~ response:`, response);
+      setCookie("aeigs", response.data.token);
       handleAlert(
         true,
         "success",
@@ -35,7 +36,6 @@ const SignIn = () => {
       console.log(`🚀 ~ response:`, response);
       console.log("API response:", response.data);
 
-      setCookie("aeigs", response.data.token);
       window.location.reload();
     } catch (error) {
       console.error("API error:", error.response);
