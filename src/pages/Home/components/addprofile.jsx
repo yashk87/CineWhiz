@@ -154,7 +154,9 @@ const AddProfile = () => {
             justifyContent: "space-around",
             alignItems: "center",
             height: "170vh",
-            border: "1.5PX solid rgb(177, 177, 177)",
+            // border: "1.5PX solid rgb(177, 177, 177)",
+            boxShadow: "0 0 3px #333",
+            padding: "0 20px",
             margin: "auto",
             position: "relative",
             top: "20px",
@@ -168,7 +170,7 @@ const AddProfile = () => {
               position: "relative",
               top: "15px",
             }}
-            variant="h4"
+            variant="h5"
           >
             Add Employee
           </Typography>
