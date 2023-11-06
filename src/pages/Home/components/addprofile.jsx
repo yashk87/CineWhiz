@@ -18,6 +18,7 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useProfileForm from "../../../hooks/useProfileForm";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -39,6 +40,9 @@ const names = [
 ];
 
 const AddEmployee = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+
   const { handleAlert } = useContext(TestContext);
 
   const {
@@ -116,13 +120,21 @@ const AddEmployee = () => {
 
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/profile/create`,
-        user
+        user,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
       console.log(`🚀 ~ response:`, response);
-
+      if (response.data.success) {
+        console.log("hii i am called as error");
+        handleAlert(true, "error", "Invalid authorization");
+      }
       handleAlert(true, "success", response.data.message);
     } catch (error) {
-      console.error("API error:", error.response);
+      console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
     }
   };

@@ -8,26 +8,28 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import {
   Avatar,
-  Button,
-  Container,
-  FormControl,
   Input,
+  FormControl,
   InputLabel,
   MenuItem,
   Select,
-  TextField,
+  Container,
   Typography,
+  TextField,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
-function AddOrganisation() {
+const AddOrganisation = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+
   const data = {
     name: "",
     logo: "",
     web_url: "",
-    organization_linkedin_url: "",
-    organization_tagline: "",
     industry_type: "",
     email: "",
     location: "",
@@ -35,6 +37,7 @@ function AddOrganisation() {
     description: "",
     foundation_date: "",
   };
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [emailLabel, setEmailLabel] = useState("Organisation Email");
   const [numberLabel, setNumberLabel] = useState("Phone Number");
@@ -42,10 +45,6 @@ function AddOrganisation() {
   const [inputdata, setInputData] = useState(data);
 
   const [contactNumberError, setContactNumberError] = useState(false);
-  const [organizationLinkedinUrlLabel, setOrganizationLinkedinUrlLabel] =
-    useState("Organization Linkedin Url");
-  const [organizationLinkedinUrlError, setOrganizationLinkedinUrlError] =
-    useState(false);
   const { handleAlert } = useContext(TestContext);
 
   const handleImageChange = async (event) => {
@@ -71,12 +70,6 @@ function AddOrganisation() {
 
   const isEmailValid = (email) => {
     return /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email);
-  };
-
-  const isOrganizationLinkedinUrlValid = (organizationLinkedinUrl) => {
-    return /^(http(s)?:\/\/)?([a-zA-Z]+\.)*linkedin\.com\/[-\w/]+/gm.test(
-      organizationLinkedinUrl
-    );
   };
 
   const isContactNumberValid = (contactNumber) => {
@@ -110,18 +103,6 @@ function AddOrganisation() {
         setEmailLabel("Organisation Email");
         setEmailError(false);
       }
-    } else if (name === "organization_linkedin_url") {
-      if (!isOrganizationLinkedinUrlValid(value)) {
-        setOrganizationLinkedinUrlLabel("enter valid linkedin url");
-        setOrganizationLinkedinUrlError(true);
-        if (e.target.value === "") {
-          setOrganizationLinkedinUrlError(false);
-          setOrganizationLinkedinUrlLabel("Organisation Linkedin Url");
-        }
-      } else {
-        setOrganizationLinkedinUrlLabel("Organisation Linkedin Url");
-        setOrganizationLinkedinUrlError(false);
-      }
     }
   };
 
@@ -130,11 +111,14 @@ function AddOrganisation() {
     try {
       const result = await axios.post(
         "http://localhost:4000/route/organization/create",
-        inputdata
+        inputdata,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
       console.log(result);
-
-      console.log("pipe check one  1");
 
       if (result.data.success) {
         console.log("hii i am called as error");
@@ -152,8 +136,6 @@ function AddOrganisation() {
     setInputData({
       name: "",
       web_url: "",
-      organization_linkedin_url: "",
-      organization_tagline: "",
       industry_type: "",
       email: "",
       location: "",
@@ -225,32 +207,6 @@ function AddOrganisation() {
             size="small"
             className="w-[80%]"
             label="Url Of Website"
-            type="text"
-          />
-          <TextField
-            style={{ marginTop: "20px", height: "10px" }}
-            name="organization_linkedin_url"
-            onChange={handleData}
-            error={organizationLinkedinUrlError}
-            value={inputdata.organization_linkedin_url}
-            size="small"
-            className="w-[80%]"
-            InputProps={{
-              style: {
-                borderColor: organizationLinkedinUrlError ? "red" : "blue",
-              },
-            }}
-            label={organizationLinkedinUrlLabel}
-            type="text"
-          />
-          <TextField
-            style={{ marginTop: "20px", height: "10px" }}
-            name="organization_tagline"
-            onChange={handleData}
-            value={inputdata.organization_tagline}
-            size="small"
-            className="w-[80%]"
-            label="Organization Tagline"
             type="text"
           />
           <FormControl
@@ -391,6 +347,6 @@ function AddOrganisation() {
       </form>
     </>
   );
-}
+};
 
 export default AddOrganisation;
