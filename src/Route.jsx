@@ -7,7 +7,7 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Home from "./pages/Home/Home";
-import AddProfile from "./pages/Home/components/addprofile";
+import AddEmployee from "./pages/Home/components/addprofile";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
@@ -29,7 +29,7 @@ const App = () => {
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
-      <Route exact path="/add-profile" element={<AddProfile />} />
+      <Route exact path="/add-employee" element={<AddEmployee />} />
       <Route exact path="/notification" element={<Notification />} />
     </Routes>
   );
