@@ -11,7 +11,8 @@ import DateRangeCalendarValue from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 import ResetPassword from "./components/resetpassword/resetpassword";
-
+import SingleOrganization from "./pages/Organization/SingleOrganization";
+import AddProfile from "./pages/Home/components/addprofile";
 const App = () => {
   return (
     <Routes>
@@ -25,8 +26,9 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<Emailverify />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/waiting" element={<WaitMain />} />
-
+      <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
+      <Route exact path="/add-profile" element={<AddProfile />} />
     </Routes>
   );
 };

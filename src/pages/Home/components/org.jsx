@@ -16,7 +16,7 @@ const Org = () => {
           spacing={2}
           sx={{ p: 1, border: "1px solid black", m: 1 }}
         >
-          <Grid item xs={8} sx={{ borderRight: "1px solid black" }}>
+          <Grid item xs={8} sx={{ borderRight: ".5px solid #888" }}>
             <Box>
               <Grid container spacing={3}>
                 <Grid item xs={3}>
