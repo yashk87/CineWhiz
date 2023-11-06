@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import TermsCondition from "../../components/termscondition/termsCondition";
 import useSignupFormStore from "../../hooks/useSignUpForm";
-import PhoneAuth from "../../components/phoneauth/phoneauth";
+
 const Signup = () => {
   const { handleAlert } = useContext(TestContext);
   const router = useNavigate();
@@ -165,9 +165,7 @@ const Signup = () => {
                 fullWidth
                 margin="normal"
               />
-              <div>
-                <PhoneAuth />
-              </div>
+
               <TextField
                 size="small"
                 type="email"

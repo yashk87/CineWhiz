@@ -7,16 +7,16 @@ import React, { useContext, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import {
-    Avatar,
-    Input,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Container,
-    Typography,
-    TextField,
-    Button,
+  Avatar,
+  Input,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Container,
+  Typography,
+  TextField,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
@@ -77,16 +77,16 @@ function AddOrganisation(){
         return /^(http(s)?:\/\/)?([a-zA-Z]+\.)*linkedin\.com\/[-\w/]+/gm.test(organizationLinkedinUrl)
     };
 
-    const isContactNumberValid = (contactNumber) => {
-        return /^\d{10}$/.test(contactNumber);
-    };
+  const isContactNumberValid = (contactNumber) => {
+    return /^\d{10}$/.test(contactNumber);
+  };
 
-    const handleData = (e) => {
-        const { name, value } = e.target;
-        setInputData({
-            ...inputdata,
-            [name]: name === "email" ? value.toLowerCase() : value,
-        });
+  const handleData = (e) => {
+    const { name, value } = e.target;
+    setInputData({
+      ...inputdata,
+      [name]: name === "email" ? value.toLowerCase() : value,
+    });
 
         if (name === "contact_number") {
             if (!isContactNumberValid(value)) {
@@ -123,41 +123,27 @@ function AddOrganisation(){
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const result = await axios.post(
-                "http://localhost:4000/route/organization/create",
-                inputdata
-            );
-            console.log(result);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await axios.post(
+        "http://localhost:4000/route/organization/create",
+        inputdata
+      );
+      console.log(result);
 
-            console.log("pipe check one  1");
+      console.log("pipe check one  1");
 
-            const data = {
-                name: "",
-                logo: "",
-                web_url: "",
-                industry_type: "",
-                email: "",
-                location: "",
-                contact_number: "",
-                description: "",
-                foundation_date: "",
-            };
+      if (result.data.success) {
+        console.log("hii i am called as error");
+        handleAlert(true, "error", "Invalid authorization");
+      }
 
-
-            if (result.data.success) {
-                console.log("hii i am called as error");
-                handleAlert(true, "error", "Invalid authorization");
-
-            }
-
-            // Show a success alert
-            handleAlert(true, "success", "Organization created successfully");
-        } catch (e) {
-            console.error(e.response.data.msg);
-            handleAlert(true, "error", e.response.data.msg);
+      // Show a success alert
+      handleAlert(true, "success", "Organization created successfully");
+    } catch (e) {
+      console.error(e.response.data.msg);
+      handleAlert(true, "error", e.response.data.msg);
 
             // Show an error alert
         }
