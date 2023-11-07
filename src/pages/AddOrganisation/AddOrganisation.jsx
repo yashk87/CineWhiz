@@ -143,9 +143,9 @@ function AddOrganisation() {
 
       // Show a success alert
       handleAlert(true, "success", "Organization created successfully");
-    } catch (e) {
-      console.error(e.response.data.msg);
-      handleAlert(true, "error", e.response.data.msg);
+    } catch (error) {
+      console.error(error.response.data.message);
+      handleAlert(true, "error", error.response.data.message);
 
       // Show an error alert
     }
