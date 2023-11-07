@@ -20,25 +20,6 @@ import { TestContext } from "../../../State/Function/Main";
 import useProfileForm from "../../../hooks/useProfileForm";
 import { UseContext } from "../../../State/UseState/UseContext";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const names = [
-  "Department Admin",
-  "Department Head",
-  "Hr",
-  "Manager",
-  "Super Admin Deligate",
-];
-
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -98,6 +79,26 @@ const AddEmployee = () => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return emailRegex.test(email);
   };
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  const names = [
+    "Department Admin",
+    "Department Head",
+    "Hr",
+    "Manager",
+    "Super Admin Deligate",
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = {
@@ -144,7 +145,6 @@ const AddEmployee = () => {
         style={{
           display: "flex",
           width: "100%",
-          // height: "100%",         //
           justifyContent: "center",
           padding: "20px 0 0",
           boxSizing: "border-box",

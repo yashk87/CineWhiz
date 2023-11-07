@@ -7,7 +7,7 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Home from "./pages/Home/Home";
-import AddEmployee from "./pages/Home/components/addprofile";
+import AddEmployee from "./pages/Home/components/addemployee";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
