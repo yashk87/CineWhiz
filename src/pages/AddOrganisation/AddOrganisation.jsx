@@ -172,10 +172,11 @@ function AddOrganisation() {
           padding: "40px 0 0",
           boxSizing: "border-box",
         }}
+        className="bg-gray-50"
       >
-        <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
-          <div className="w-[400px] shadow-lg rounded-lg border py-8 px-8 grid items-center">
-            <h4 className="text-center mb-6 text-lg font-bold text-blue-500">
+        <div className="content-center bg-white flex justify-center my-0 p-0 ">
+          <div className="w-[600px] shadow-lg rounded-lg border py-8 px-8 grid items-center">
+            <h4 className="mb-6 text-2xl font-semibold text-blue-500">
               Add Organization
             </h4>
             <form
@@ -188,7 +189,7 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.name}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label="My Organisation Name"
                 type="text"
               />
@@ -198,7 +199,7 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.web_url}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label="Url Of Website"
                 type="text"
               />
@@ -208,7 +209,7 @@ function AddOrganisation() {
                 error={organizationLinkedinUrlError}
                 value={inputdata.organization_linkedin_url}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 InputProps={{
                   style: {
                     borderColor: organizationLinkedinUrlError ? "red" : "blue",
@@ -222,13 +223,13 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.organization_tagline}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label="Organization Tagline"
                 type="text"
               />
               <FormControl
                 required
-                style={{ width: "80%", height: "10px", marginBottom: 30 }}
+                style={{ width: "100%", height: "10px", marginBottom: 30 }}
                 size="small"
               >
                 <InputLabel id="industry-type-label">Industry Type</InputLabel>
@@ -250,7 +251,7 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.email}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label={emailLabel}
                 type="email"
                 error={emailError}
@@ -266,7 +267,7 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.location}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label="Location"
                 type="text"
               />
@@ -276,7 +277,7 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.contact_number}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label={numberLabel}
                 type="number"
                 error={contactNumberError}
@@ -292,12 +293,12 @@ function AddOrganisation() {
                 onChange={handleData}
                 value={inputdata.description}
                 size="small"
-                className="w-[80%]"
+                className="w-full"
                 label="Organisation Description"
                 type="text"
               />
               <div
-                style={{ marginTop: "15px", display: "block", width: "80%" }}
+                style={{ marginTop: "15px", display: "block", width: "100%" }}
               >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer
@@ -354,18 +355,20 @@ function AddOrganisation() {
                   )}
                 </div>
               </div>
-              <Button
-                onClick={handleSubmit}
-                variant="contained"
-                style={{
-                  background: "#1D6EB7",
-                  color: "white",
-                  position: "relative",
-                  bottom: "-15px",
-                }}
-              >
-                Submit
-              </Button>
+
+              <div className="w-full">
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  style={{
+                    background: "#1D6EB7",
+                    color: "white",
+                    bottom: "-15px",
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
             </form>
           </div>
         </div>

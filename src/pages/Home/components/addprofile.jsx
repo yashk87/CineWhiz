@@ -144,20 +144,20 @@ const AddEmployee = () => {
         style={{
           display: "flex",
           width: "100%",
-          // height: "100%",         //
           justifyContent: "center",
-          padding: "20px 0 0",
+          padding: "40px 0 0",
           boxSizing: "border-box",
         }}
+        className="bg-gray-50"
       >
-        <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
-          <div className="w-[400px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
-            <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
+        <div className="content-center flex justify-center my-0 p-0 bg-white">
+          <div className="w-[600px]  shadow-lg rounded-lg border py-8 px-8 grid items-center">
+            <h4 className=" text-2xl  mb-4 font-semibold text-blue-500">
               Add Employee
             </h4>
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col items-center space-y-5"
+              className="flex flex-col items-center  space-y-5"
             >
               <TextField
                 size="small"
@@ -406,13 +406,12 @@ const AddEmployee = () => {
                 </FormControl>
               </div>
 
-              <div className="text-center m-6">
+              <div className="w-full m-6">
                 <Button
                   className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth={false}
                   margin="normal"
                 >
                   Submit
