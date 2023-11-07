@@ -15,7 +15,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useProfileForm from "../../../hooks/useProfileForm";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -23,9 +23,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-
   const { handleAlert } = useContext(TestContext);
-
   const {
     first_name,
     middle_name,
@@ -56,30 +54,10 @@ const AddEmployee = () => {
     joining_date,
     setJoiningDate,
   } = useProfileForm();
-
   const [selectedValue, setSelectedValue] = useState("");
-
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
   };
-  const [profile, setProfile] = React.useState([]);
-
-  const handleRoleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setProfile(typeof value === "string" ? value.split(",") : value);
-  };
-
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  const isValidEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    return emailRegex.test(email);
-  };
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -90,14 +68,72 @@ const AddEmployee = () => {
       },
     },
   };
+  const [profile, setProfile] = React.useState([]);
 
-  const names = [
-    "Department Admin",
-    "Department Head",
-    "Hr",
-    "Manager",
-    "Super Admin Deligate",
-  ];
+  const handleRoleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setProfile(typeof value === "string" ? value.split(",") : value);
+  };
+  // display the role dynamically depend existing role
+
+  const [availableProfiles, setAvailableProfiles] = useState([]);
+
+  // useEffect(() => {
+  //   // Fetch available profiles from the backend
+  //   const fetchAvailableProfiles = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.REACT_APP_API}/route/profile/available-profiles`,
+  //         {
+  //           headers: {
+  //             Authorization: authToken,
+  //           },
+  //         }
+  //       );
+  //       if (response.data.profiles.length > 0) {
+  //         // Filter profiles based on isActive property
+  //         const activeProfiles = response.data.profiles.filter(
+  //           (profile) => profile.isActive
+  //         );
+
+  //         if (activeProfiles.length > 0) {
+  //           setAvailableProfiles(activeProfiles);
+  //         } else {
+  //           // Handle error if no active profiles are available
+  //           handleAlert(
+  //             true,
+  //             "error",
+  //             "No active profiles available. Please add active profiles for your organization."
+  //           );
+  //         }
+  //       } else {
+  //         // Handle error if the request is not successful or no profiles are available
+  //         handleAlert(
+  //           true,
+  //           "error",
+  //           response.data.message || "No profiles available."
+  //         );
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       // Handle error if the request fails
+  //       handleAlert(true, "error", "Failed to fetch available profiles");
+  //     }
+  //   };
+
+  //   // Call the fetchAvailableProfiles function when the component mounts
+  //   fetchAvailableProfiles();
+  // }, [authToken, handleAlert]);
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -133,6 +169,7 @@ const AddEmployee = () => {
         console.log("hii i am called as error");
         handleAlert(true, "error", "Invalid authorization");
       }
+
       handleAlert(true, "success", response.data.message);
     } catch (error) {
       console.error(error.response.data.message);
@@ -188,7 +225,6 @@ const AddEmployee = () => {
                 error={!!firstNameError}
                 helperText={firstNameError}
               />
-
               <TextField
                 size="small"
                 type="text"
@@ -228,7 +264,6 @@ const AddEmployee = () => {
                 fullWidth
                 margin="normal"
               />
-
               <TextField
                 size="small"
                 type="email"
@@ -252,7 +287,6 @@ const AddEmployee = () => {
                 error={!!emailError}
                 helperText={emailError}
               />
-
               <TextField
                 size="small"
                 type="password"
@@ -281,7 +315,6 @@ const AddEmployee = () => {
                   },
                 }}
               />
-
               <TextField
                 size="small"
                 type="text"
@@ -350,7 +383,6 @@ const AddEmployee = () => {
                   </DemoContainer>
                 </LocalizationProvider>
               </div>
-
               <div className="w-full">
                 <FormControl sx={{ width: "100%", mt: 1, mb: 2 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
@@ -366,15 +398,24 @@ const AddEmployee = () => {
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
                   >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={profile.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
+                    {availableProfiles.length === 0 ? (
+                      // Display an error message if no roles are available
+                      <MenuItem disabled>
+                        No roles available. Please add roles for your
+                        organization.
                       </MenuItem>
-                    ))}
+                    ) : (
+                      availableProfiles.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={profile.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))
+                    )}
                   </Select>
                 </FormControl>
               </div>
+
               <div className="w-full">
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label">
@@ -405,7 +446,6 @@ const AddEmployee = () => {
                   </RadioGroup>
                 </FormControl>
               </div>
-
               <div className="text-center m-6">
                 <Button
                   className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
