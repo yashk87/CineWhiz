@@ -2,8 +2,11 @@ import React, { useContext, useState } from "react";
 import { Button, TextField, Autocomplete } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const Department = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
 
   const initialFormValues = {
@@ -30,17 +33,19 @@ const Department = () => {
     try {
       await axios.post(
         "http://localhost:4000/route/department/create",
-        formValues
+        formValues,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
       handleAlert(true, "success", `Department created successfully`);
       setFormValues(initialFormValues);
       window.location.reload();
     } catch (error) {
-      if (error.response && error.response.status === 400) {
-        handleAlert(true, "error", `Department name must be unique`);
-      } else {
-        handleAlert(true, "error", `Server error cannot add department`);
-      }
+      console.error(error.response.data.message);
+      handleAlert(true, "error", error.response.data.message);
     }
   };
   // Dummy list for combobox

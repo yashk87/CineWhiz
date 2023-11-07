@@ -55,7 +55,7 @@ const Organisation = ({ item }) => {
           size="small"
           className=" cursor-pointer"
           variant="contained"
-          onClick={() => navigate("/add-profile")}
+          onClick={() => navigate("/add-employee")}
         >
           Create Profile
         </Button>
