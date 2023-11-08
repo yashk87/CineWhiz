@@ -27,9 +27,13 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/waiting" element={<WaitMain />} />
-      <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
-      <Route exact path="/add-employee" element={<AddEmployee />} />
+      <Route exact path="/organisation/:id" element={<SingleOrganization />} />
+      <Route
+        exact
+        path="/organisation/:id/add-employee"
+        element={<AddEmployee />}
+      />
       <Route exact path="/notification" element={<Notification />} />
     </Routes>
   );

@@ -19,7 +19,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useProfileForm from "../../../hooks/useProfileForm";
 import { UseContext } from "../../../State/UseState/UseContext";
-
+import { useParams } from "react-router-dom";
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -69,64 +69,59 @@ const AddEmployee = () => {
     },
   };
   const [profile, setProfile] = React.useState([]);
+  const [profileSelected, setProfileSelected] = React.useState([]);
 
   const handleRoleChange = (event) => {
     const {
       target: { value },
     } = event;
 
-    setProfile(typeof value === "string" ? value.split(",") : value);
+    setProfileSelected(typeof value === "string" ? value.split(",") : value);
   };
   // display the role dynamically depend existing role
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
 
-  // useEffect(() => {
-  //   // Fetch available profiles from the backend
-  //   const fetchAvailableProfiles = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.REACT_APP_API}/route/profile/available-profiles`,
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-  //       if (response.data.profiles.length > 0) {
-  //         // Filter profiles based on isActive property
-  //         const activeProfiles = response.data.profiles.filter(
-  //           (profile) => profile.isActive
-  //         );
+  const { id } = useParams();
+  const fetchAvailableProfiles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/profile/role/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(response);
+      console.log(response.data.roles);
+      if (response.data.roles.length > 0) {
+        // Filter profiles based on isActive property
+        let activeProfiles = response.data.roles.filter(
+          (role) => role.isActive
+        );
+        console.log(activeProfiles);
+        if (activeProfiles.length > 0) {
+          setAvailableProfiles(activeProfiles);
+        } else {
+          console.log(availableProfiles);
+          // Handle error if no active profiles are available
+          handleAlert(
+            true,
+            "error",
+            "No active profiles available. Please add active profiles for your organization."
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch available profiles");
+    }
+  };
 
-  //         if (activeProfiles.length > 0) {
-  //           setAvailableProfiles(activeProfiles);
-  //         } else {
-  //           // Handle error if no active profiles are available
-  //           handleAlert(
-  //             true,
-  //             "error",
-  //             "No active profiles available. Please add active profiles for your organization."
-  //           );
-  //         }
-  //       } else {
-  //         // Handle error if the request is not successful or no profiles are available
-  //         handleAlert(
-  //           true,
-  //           "error",
-  //           response.data.message || "No profiles available."
-  //         );
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       // Handle error if the request fails
-  //       handleAlert(true, "error", "Failed to fetch available profiles");
-  //     }
-  //   };
-
-  //   // Call the fetchAvailableProfiles function when the component mounts
-  //   fetchAvailableProfiles();
-  // }, [authToken, handleAlert]);
+  useEffect(() => {
+    fetchAvailableProfiles();
+  }, [id]);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -392,7 +387,7 @@ const AddEmployee = () => {
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
-                    value={profile}
+                    value={profileSelected}
                     onChange={handleRoleChange}
                     input={<OutlinedInput label="profile" />}
                     renderValue={(selected) => selected.join(", ")}
@@ -406,9 +401,12 @@ const AddEmployee = () => {
                       </MenuItem>
                     ) : (
                       availableProfiles.map((name) => (
-                        <MenuItem key={name} value={name}>
-                          <Checkbox checked={profile.indexOf(name) > -1} />
-                          <ListItemText primary={name} />
+                        <MenuItem key={name._id} value={name.roleName}>
+                          {name.roleName}
+                          {/* <Checkbox
+                            checked={availableProfiles.indexOf(name) > -1}
+                          /> */}
+                          {/* <ListItemText primary={name} /> */}
                         </MenuItem>
                       ))
                     )}
