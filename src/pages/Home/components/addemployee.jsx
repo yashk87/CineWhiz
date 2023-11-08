@@ -69,20 +69,21 @@ const AddEmployee = () => {
     },
   };
   const [profile, setProfile] = React.useState([]);
-  // const [profileSelected, setProfileSelected] = React.useState([]);
+  const [profileSelected, setProfileSelected] = React.useState([]);
 
   const handleRoleChange = (event) => {
     const {
       target: { value },
     } = event;
 
-    setProfile(typeof value === "string" ? value.split(",") : value);
+    setProfileSelected(typeof value === "string" ? value.split(",") : value);
   };
   // display the role dynamically depend existing role
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
 
   const { id } = useParams();
+  console.log(id);
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -95,22 +96,23 @@ const AddEmployee = () => {
       );
       console.log(response);
       console.log(response.data.roles);
-      if (response.data.roles.length > 0) {
-        // Filter profiles based on isActive property
-        let activeProfiles = response.data.roles.filter(
-          (role) => role.isActive
-        );
-        console.log(activeProfiles);
-        if (activeProfiles.length > 0) {
-          setAvailableProfiles(activeProfiles);
-        } else {
-          console.log(availableProfiles);
-          // Handle error if no active profiles are available
-          handleAlert(
-            true,
-            "error",
-            "No active profiles available. Please add active profiles for your organization."
-          );
+      if (response.data && response.data.roles) {
+        if (response.data.roles.length > 0) {
+          const filteredProfiles = response.data.roles.filter((role) => {
+            return role.isActive;
+          });
+
+          console.log(filteredProfiles.length);
+          if (filteredProfiles.length > 0) {
+            setAvailableProfiles(filteredProfiles);
+          } else {
+            console.log(availableProfiles);
+            handleAlert(
+              true,
+              "error",
+              "No active profiles available. Please add active profiles for your organization."
+            );
+          }
         }
       }
     } catch (error) {
@@ -387,7 +389,7 @@ const AddEmployee = () => {
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
-                    value={profile}
+                    value={profileSelected}
                     onChange={handleRoleChange}
                     input={<OutlinedInput label="profile" />}
                     renderValue={(selected) => selected.join(", ")}
