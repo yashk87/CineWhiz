@@ -15,36 +15,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { TestContext } from "../../../State/Function/Main";
 import useProfileForm from "../../../hooks/useProfileForm";
 import { UseContext } from "../../../State/UseState/UseContext";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const names = [
-  "Department Admin",
-  "Department Head",
-  "Hr",
-  "Manager",
-  "Super Admin Deligate",
-];
-
+import { useParams } from "react-router-dom";
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-
   const { handleAlert } = useContext(TestContext);
-
   const {
     first_name,
     middle_name,
@@ -75,13 +54,22 @@ const AddEmployee = () => {
     joining_date,
     setJoiningDate,
   } = useProfileForm();
-
   const [selectedValue, setSelectedValue] = useState("");
-
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
   };
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
   const [profile, setProfile] = React.useState([]);
+  // const [profileSelected, setProfileSelected] = React.useState([]);
 
   const handleRoleChange = (event) => {
     const {
@@ -90,14 +78,58 @@ const AddEmployee = () => {
 
     setProfile(typeof value === "string" ? value.split(",") : value);
   };
+  // display the role dynamically depend existing role
+
+  const [availableProfiles, setAvailableProfiles] = useState([]);
+
+  const { id } = useParams();
+  const fetchAvailableProfiles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/profile/role/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(response);
+      console.log(response.data.roles);
+      if (response.data.roles.length > 0) {
+        // Filter profiles based on isActive property
+        let activeProfiles = response.data.roles.filter(
+          (role) => role.isActive
+        );
+        console.log(activeProfiles);
+        if (activeProfiles.length > 0) {
+          setAvailableProfiles(activeProfiles);
+        } else {
+          console.log(availableProfiles);
+          // Handle error if no active profiles are available
+          handleAlert(
+            true,
+            "error",
+            "No active profiles available. Please add active profiles for your organization."
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch available profiles");
+    }
+  };
+
+  useEffect(() => {
+    fetchAvailableProfiles();
+  }, [id]);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
   const isValidEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return emailRegex.test(email);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const user = {
@@ -132,6 +164,7 @@ const AddEmployee = () => {
         console.log("hii i am called as error");
         handleAlert(true, "error", "Invalid authorization");
       }
+
       handleAlert(true, "success", response.data.message);
     } catch (error) {
       console.error(error.response.data.message);
@@ -145,19 +178,18 @@ const AddEmployee = () => {
           display: "flex",
           width: "100%",
           justifyContent: "center",
-          padding: "40px 0 0",
+          padding: "20px 0 0",
           boxSizing: "border-box",
         }}
-        className="bg-gray-50"
       >
-        <div className="content-center flex justify-center my-0 p-0 bg-white">
-          <div className="w-[600px]  shadow-lg rounded-lg border py-8 px-8 grid items-center">
-            <h4 className=" text-2xl  mb-4 font-semibold text-blue-500">
+        <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
+          <div className="w-[400px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
+            <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
               Add Employee
             </h4>
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col items-center  space-y-5"
+              className="flex flex-col items-center space-y-5"
             >
               <TextField
                 size="small"
@@ -188,7 +220,6 @@ const AddEmployee = () => {
                 error={!!firstNameError}
                 helperText={firstNameError}
               />
-
               <TextField
                 size="small"
                 type="text"
@@ -228,7 +259,6 @@ const AddEmployee = () => {
                 fullWidth
                 margin="normal"
               />
-
               <TextField
                 size="small"
                 type="email"
@@ -252,7 +282,6 @@ const AddEmployee = () => {
                 error={!!emailError}
                 helperText={emailError}
               />
-
               <TextField
                 size="small"
                 type="password"
@@ -281,7 +310,6 @@ const AddEmployee = () => {
                   },
                 }}
               />
-
               <TextField
                 size="small"
                 type="text"
@@ -350,7 +378,6 @@ const AddEmployee = () => {
                   </DemoContainer>
                 </LocalizationProvider>
               </div>
-
               <div className="w-full">
                 <FormControl sx={{ width: "100%", mt: 1, mb: 2 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
@@ -366,15 +393,27 @@ const AddEmployee = () => {
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
                   >
-                    {names.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={profile.indexOf(name) > -1} />
-                        <ListItemText primary={name} />
+                    {availableProfiles.length === 0 ? (
+                      // Display an error message if no roles are available
+                      <MenuItem disabled>
+                        No roles available. Please add roles for your
+                        organization.
                       </MenuItem>
-                    ))}
+                    ) : (
+                      availableProfiles.map((name) => (
+                        <MenuItem key={name._id} value={name.roleName}>
+                          {name.roleName}
+                          {/* <Checkbox
+                            checked={availableProfiles.indexOf(name) > -1}
+                          /> */}
+                          {/* <ListItemText primary={name} /> */}
+                        </MenuItem>
+                      ))
+                    )}
                   </Select>
                 </FormControl>
               </div>
+
               <div className="w-full">
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label">
@@ -405,13 +444,13 @@ const AddEmployee = () => {
                   </RadioGroup>
                 </FormControl>
               </div>
-
-              <div className="w-full m-6">
+              <div className="text-center m-6">
                 <Button
                   className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
                   type="submit"
                   variant="contained"
                   color="primary"
+                  fullWidth={false}
                   margin="normal"
                 >
                   Submit

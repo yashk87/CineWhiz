@@ -7,7 +7,7 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import Home from "./pages/Home/Home";
-import AddEmployee from "./pages/Home/components/addprofile";
+import AddEmployee from "./pages/Home/components/addemployee";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
@@ -29,9 +29,13 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/waiting" element={<WaitMain />} />
-      <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
-      <Route exact path="/add-employee" element={<AddEmployee />} />
+      <Route exact path="/organisation/:id" element={<SingleOrganization />} />
+      <Route
+        exact
+        path="/organisation/:id/add-employee"
+        element={<AddEmployee />}
+      />
       <Route exact path="/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/setup/:id" element={<Setup />} />
