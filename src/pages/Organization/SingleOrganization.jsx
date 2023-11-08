@@ -124,7 +124,7 @@ const SingleOrganization = () => {
           </Typography>
         </Box>
 
-        <Box className="w-full my-4 px-4">
+        <Box className="w-full space-x-4 my-4 px-4">
           <Button
             size="small"
             className="!font-bold flex gap-4"
@@ -132,6 +132,16 @@ const SingleOrganization = () => {
           >
             Go to setup page <EastIcon />
           </Button>
+
+          <Link to={`/add-roles/${id}`}>
+            <Button
+              size="small"
+              className="!font-bold flex gap-4"
+              variant="contained"
+            >
+              Create roles <EastIcon />
+            </Button>
+          </Link>
         </Box>
       </Stack>
     </>

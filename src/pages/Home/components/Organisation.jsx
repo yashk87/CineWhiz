@@ -48,9 +48,11 @@ const Organisation = ({ item }) => {
       </Link>
 
       <div className="space-x-4 p-2 pb-6">
-        <Button size="small" className=" cursor-pointer" variant="contained">
-          Go to setuppage
-        </Button>
+        <Link to={`/setup/${item._id}`}>
+          <Button size="small" className=" cursor-pointer" variant="contained">
+            Go to setuppage
+          </Button>
+        </Link>
         <Button
           size="small"
           className=" cursor-pointer"

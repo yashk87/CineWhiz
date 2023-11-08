@@ -14,6 +14,8 @@ import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import AddRoles from "./pages/Roles/AddRoles";
+import Setup from "./pages/SetUpOrganization/Setup";
 const App = () => {
   return (
     <Routes>
@@ -30,7 +32,9 @@ const App = () => {
       <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/add-employee" element={<AddEmployee />} />
+      <Route exact path="/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/notification" element={<Notification />} />
+      <Route exact path="/setup/:id" element={<Setup />} />
     </Routes>
   );
 };
