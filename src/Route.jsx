@@ -14,6 +14,7 @@ import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import AddProfiles from "./pages/Setup/addProfiles";
 const App = () => {
   return (
     <Routes>
@@ -31,6 +32,7 @@ const App = () => {
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/add-employee" element={<AddEmployee />} />
       <Route exact path="/notification" element={<Notification />} />
+      <Route exact path="/addProfiles" element={<AddProfiles />} />
     </Routes>
   );
 };
