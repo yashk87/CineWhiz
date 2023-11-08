@@ -5,8 +5,14 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import RuleIcon from "@mui/icons-material/Rule";
 import { Link, useParams } from "react-router-dom";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
+import LeaveModal from "./LeaveComponents/LeaveModal";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 const Setup = () => {
   const { id } = useParams("");
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <>
       <section className="flex  bg-gray-50 min-h-screen w-full">
@@ -41,7 +47,10 @@ const Setup = () => {
             </h1>
 
             <div className="flex gap-10">
-              <div className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
+              <div
+                onClick={handleOpen}
+                className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md"
+              >
                 <div className="px-4 py-1">
                   <RuleIcon className="h-20 w-20 text-gray-700 !text-[2.5rem]" />
                 </div>
@@ -49,6 +58,8 @@ const Setup = () => {
                   Leave Types
                 </h1>
               </div>
+
+              <LeaveModal open={open} handleClose={handleClose} />
 
               <div className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
                 <div className="px-4 py-1">
@@ -59,6 +70,23 @@ const Setup = () => {
                 </h1>
               </div>
             </div>
+          </div>
+
+          <div className="mt-10">
+            <h1 className="text-xl font-semibold leading-relaxed">
+              Shift Allowence
+            </h1>
+
+            <Link to={`/add-roles/${id}`}>
+              <div className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
+                <div className="px-4  py-2">
+                  <WorkHistoryIcon className="h-20 w-20 text-gray-700 !text-[2.5rem]" />
+                </div>
+                <h1 className="text-md pb-2 text-gray-400 font-medium">
+                  Create Shift
+                </h1>
+              </div>
+            </Link>
           </div>
 
           <div className="mt-10">
