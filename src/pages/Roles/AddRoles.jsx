@@ -46,7 +46,7 @@ const AddRoles = () => {
     },
     {
       placeholder: "Manager",
-      label: "manage",
+      label: "manager",
       isApprover: false,
       isActive: false,
     },
@@ -95,7 +95,7 @@ const AddRoles = () => {
         };
         return acc;
       }, {});
-      console.log(rolesObject);
+      // console.log(rolesObject);
 
       const sendData = await axios.post(
         `${process.env.REACT_APP_API}/route/profile/role/create`,
