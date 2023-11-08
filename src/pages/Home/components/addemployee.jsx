@@ -69,14 +69,14 @@ const AddEmployee = () => {
     },
   };
   const [profile, setProfile] = React.useState([]);
-  const [profileSelected, setProfileSelected] = React.useState([]);
+  // const [profileSelected, setProfileSelected] = React.useState([]);
 
   const handleRoleChange = (event) => {
     const {
       target: { value },
     } = event;
 
-    setProfileSelected(typeof value === "string" ? value.split(",") : value);
+    setProfile(typeof value === "string" ? value.split(",") : value);
   };
   // display the role dynamically depend existing role
 
@@ -387,7 +387,7 @@ const AddEmployee = () => {
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
-                    value={profileSelected}
+                    value={profile}
                     onChange={handleRoleChange}
                     input={<OutlinedInput label="profile" />}
                     renderValue={(selected) => selected.join(", ")}
