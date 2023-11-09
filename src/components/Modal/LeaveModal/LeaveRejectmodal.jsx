@@ -18,7 +18,7 @@ import { TestContext } from "../../../State/Function/Main";
 
 import axios from "axios";
 
-const LeaveRejectmodal = ({ open, handleClose }) => {
+const LeaveRejectmodal = ({ open, handleClose, id }) => {
   const style = {
     position: "absolute",
     top: "50%",
@@ -27,6 +27,9 @@ const LeaveRejectmodal = ({ open, handleClose }) => {
     bgcolor: "background.paper",
     p: 4,
   };
+
+  console.log(id, "id");
+
   return (
     <>
       <Modal
@@ -53,11 +56,11 @@ const LeaveRejectmodal = ({ open, handleClose }) => {
             <label className="mb-2 text-md font-semibold" htmlFor="desc">
               Enter desc for rejecting the leave request
             </label>
-            <textArea
+            <textarea
               id="desc"
               rows={5}
               className="border-[.5px] border-gray-200 rounded-md w-full"
-            ></textArea>
+            ></textarea>
           </div>
           <div className="flex gap-4 mt-4 justify-end">
             <Button

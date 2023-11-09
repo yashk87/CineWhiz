@@ -17,6 +17,7 @@ import Department from "./pages/addDepartment/addDepartment";
 import AddRoles from "./pages/Roles/AddRoles";
 import Setup from "./pages/SetUpOrganization/Setup";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
+import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 const App = () => {
   return (
     <Routes>
@@ -40,6 +41,7 @@ const App = () => {
       <Route exact path="/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/setup/:id" element={<Setup />} />
+      <Route exact path="/leave/:id" element={<LeaveRequisitiion />} />
       <Route
         exact
         path="/setup/:id/public-holidays"

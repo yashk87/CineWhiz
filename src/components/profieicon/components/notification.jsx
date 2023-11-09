@@ -13,6 +13,9 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { useState } from "react";
 import { format } from "date-fns";
 import LeaveRejectmodal from "../../Modal/LeaveModal/LeaveRejectmodal";
+import { jwtDecode } from "jwt-decode";
+import { async } from "q";
+import { Chip } from "@mui/material";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
@@ -21,6 +24,23 @@ const Notification = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      console.log(decodedToken);
+      console.log(decodedToken.user.profile);
+      if (decodedToken && decodedToken.user.profile) {
+        console.log(decodedToken.user.profile);
+
+        setUserRole(decodedToken.user.profile);
+      } else {
+        setUserRole("guest");
+      }
+    } catch (error) {
+      console.error("Failed to decode the authToken:", error);
+    }
+  }, []);
 
   const [workFlow, setWorkFlow] = useState([]);
 
@@ -37,13 +57,55 @@ const Notification = () => {
     setWorkFlow(getNotification.data.leaveRequests);
     console.log(getNotification.data.leaveRequests);
   };
+
+  const AcceptLeave = async (id) => {
+    console.log(id, "id");
+
+    try {
+      const acceptLeave = await axios.post(
+        `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
+        { message: "Your Request is successfully approved" },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      window.location.reload();
+      console.log(acceptLeave, "acc");
+    } catch (error) {
+      console.log(error, "err");
+    }
+  };
+
+  const RejectRequest = async (id) => {
+    console.log(id, "id");
+
+    try {
+      const rejectLeave = await axios.post(
+        `${process.env.REACT_APP_API}/route/leave/reject/${id}`,
+        { message: "Your Request has been rejected" },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      window.location.reload();
+      console.log(rejectLeave, "acc");
+    } catch (error) {
+      console.log(error, "err");
+    }
+  };
+
   useEffect(() => {
     GetApproval();
   }, []);
   return (
     <>
       <Box
-        className="py-2 h-max"
+        className="py-2 space-y-5 h-max"
         sx={{
           flexGrow: 1,
           p: 5,
@@ -59,25 +121,23 @@ const Notification = () => {
               borderRadius: "5px",
             }}
           >
+            {/* <LeaveRejectmodal
+              open={open}
+              handleClose={handleClose}
+              id={items._id}
+            /> */}
+
             <Grid item xs={8} className="gap-4 py-4 h-max space-y-4">
               <Box className="flex flex-col gap-2">
-                <h1 className="text-2xl font-semibold text-sky-600">
+                {/* <h1 className="text-2xl font-semibold text-sky-600">
                   Leave Request From Employee
-                </h1>
-                <Typography variant="body1" gutterBottom>
-                  Details :
-                </Typography>
-                <Typography
-                  variant="body2"
-                  gutterBottom
-                  className=" text-gray-400"
-                >
-                  Employee has raised a leave request for {items.description}
-                </Typography>
+                </h1> */}
 
-                <Typography variant="body1" color="initial">
-                  Leave Dates :
-                </Typography>
+                <h1 className="text-xl font-semibold ">
+                  {items.employeeId.first_name} has raised a leave request for{" "}
+                  {items.description}
+                </h1>
+
                 {items.daysOfLeave.map((day, id) => (
                   <>
                     <Box key={id}>
@@ -89,39 +149,47 @@ const Notification = () => {
                   </>
                 ))}
               </Box>
-              <Box sx={{ mt: 3, mb: 3 }}>
-                <Stack direction="row" spacing={9}>
-                  <Button
-                    variant="contained"
-                    startIcon={<CheckIcon />}
-                    sx={{
-                      fontSize: "12px",
-                      textTransform: "capitalize",
-                      backgroundColor: "#42992D",
-                      "&:hover": {
-                        backgroundColor: "#42992D", // Set the same color on hover to maintain the color
-                      },
-                    }}
-                  >
-                    Approved
-                  </Button>
-                  <Button
-                    onClick={handleOpen}
-                    variant="contained"
-                    startIcon={<CloseIcon />}
-                    sx={{
-                      fontSize: "12px",
-                      textTransform: "capitalize",
-                      backgroundColor: "#BB1F11",
-                      "&:hover": {
-                        backgroundColor: "#BB1F11", // Set the same color on hover to maintain the color
-                      },
-                    }}
-                  >
-                    Denied
-                  </Button>
-                </Stack>
-              </Box>
+              {items.status === "Pending" ? (
+                <Box sx={{ mt: 3, mb: 3 }}>
+                  <Stack direction="row" spacing={9}>
+                    <Button
+                      variant="contained"
+                      onClick={() => AcceptLeave(items._id)}
+                      startIcon={<CheckIcon />}
+                      sx={{
+                        fontSize: "12px",
+                        textTransform: "capitalize",
+                        backgroundColor: "#42992D",
+                        "&:hover": {
+                          backgroundColor: "#42992D", // Set the same color on hover to maintain the color
+                        },
+                      }}
+                    >
+                      Approved
+                    </Button>
+                    <Button
+                      // onClick={handleOpen}
+                      onClick={() => RejectRequest(items._id)}
+                      variant="contained"
+                      startIcon={<CloseIcon />}
+                      sx={{
+                        fontSize: "12px",
+                        textTransform: "capitalize",
+                        backgroundColor: "#BB1F11",
+                        "&:hover": {
+                          backgroundColor: "#BB1F11", // Set the same color on hover to maintain the color
+                        },
+                      }}
+                    >
+                      Denied
+                    </Button>
+                  </Stack>
+                </Box>
+              ) : items.status === "Rejected" ? (
+                <Chip label="Request rejected" color="error" />
+              ) : (
+                <Chip label="Request Approved" color="success" />
+              )}
             </Grid>
             <Grid item xs={4}>
               <Box>
@@ -131,7 +199,7 @@ const Notification = () => {
                   alignItems="center"
                   marginTop={5}
                 >
-                  <img
+                  {/* <img
                     src="argan_founder.png"
                     alt="my-img"
                     className="border-2 border-gray-400"
@@ -140,15 +208,13 @@ const Notification = () => {
                       width: "50px",
                       height: "50px",
                     }}
-                  />
+                  /> */}
                 </Box>
               </Box>
             </Grid>
           </Grid>
         ))}
       </Box>
-
-      <LeaveRejectmodal open={open} handleClose={handleClose} />
     </>
   );
 };
