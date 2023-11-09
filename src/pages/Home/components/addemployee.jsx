@@ -1,10 +1,8 @@
 import { Button, TextField } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
-import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Radio from "@mui/material/Radio";
@@ -69,21 +67,20 @@ const AddEmployee = () => {
     },
   };
   const [profile, setProfile] = React.useState([]);
-  const [profileSelected, setProfileSelected] = React.useState([]);
 
   const handleRoleChange = (event) => {
     const {
       target: { value },
     } = event;
 
-    setProfileSelected(typeof value === "string" ? value.split(",") : value);
+    setProfile(typeof value === "string" ? value.split(",") : value);
   };
   // display the role dynamically depend existing role
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
 
   const { id } = useParams();
-  console.log(id);
+
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -151,9 +148,8 @@ const AddEmployee = () => {
     console.log(user);
     try {
       console.log(process.env.REACT_APP_API);
-
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/profile/create`,
+        `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
         {
           headers: {
@@ -389,7 +385,7 @@ const AddEmployee = () => {
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
-                    value={profileSelected}
+                    value={profile}
                     onChange={handleRoleChange}
                     input={<OutlinedInput label="profile" />}
                     renderValue={(selected) => selected.join(", ")}
