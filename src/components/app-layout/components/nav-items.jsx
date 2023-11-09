@@ -1,4 +1,4 @@
-import { Add, DevicesRounded, ExpandMore, Group } from "@mui/icons-material";
+import { Add, ExpandMore } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -10,10 +10,10 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { jwtDecode } from "jwt-decode";
 
 const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
