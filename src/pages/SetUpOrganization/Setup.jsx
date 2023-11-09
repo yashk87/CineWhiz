@@ -7,12 +7,17 @@ import { Link, useParams } from "react-router-dom";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import LeaveModal from "./LeaveComponents/LeaveModal";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+import LeavePublicholidayModal from "./LeaveComponents/LeavePublicholidayModal";
 const Setup = () => {
   const { id } = useParams("");
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [openHoliday, setOpenHoliday] = React.useState(false);
+  const handleHolidayOpen = () => setOpenHoliday(true);
+  const handleHolidayClose = () => setOpenHoliday(false);
+
   return (
     <>
       <section className="flex  bg-gray-50 min-h-screen w-full">
@@ -59,18 +64,29 @@ const Setup = () => {
                 </h1>
               </div>
 
-              <LeaveModal open={open} handleClose={handleClose} />
+              <LeaveModal open={open} id={id} handleClose={handleClose} />
 
-              <div className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
-                <div className="px-4 py-1">
-                  <EventAvailableIcon className="h-20 w-20 text-gray-700 !text-[2.5rem]" />
+              <Link to={`/setup/${id}/public-holidays`}>
+                <div
+                  // onClick={handleHolidayOpen}
+                  className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md"
+                >
+                  <div className="px-4 py-1">
+                    <EventAvailableIcon className="h-20 w-20 text-gray-700 !text-[2.5rem]" />
+                  </div>
+                  <h1 className="text-md pb-2 text-gray-400 font-medium">
+                    Public holiday
+                  </h1>
                 </div>
-                <h1 className="text-md pb-2 text-gray-400 font-medium">
-                  Leaves for holiday
-                </h1>
-              </div>
+              </Link>
             </div>
           </div>
+
+          {/* <LeavePublicholidayModal
+            open={openHoliday}
+            id={id}
+            handleClose={handleHolidayClose}
+          /> */}
 
           <div className="mt-10">
             <h1 className="text-xl font-semibold leading-relaxed">

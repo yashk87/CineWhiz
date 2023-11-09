@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   Checkbox,
@@ -22,17 +22,23 @@ import SendIcon from "@mui/icons-material/Send";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
 import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { TestContext } from "../../../State/Function/Main";
 
-const LeaveModal = ({ open, handleClose }) => {
+const LeaveModal = ({ open, handleClose, id }) => {
   const [leaveTypes, setLeaveTypes] = useState([
-    { name: "Vacation", enabled: false },
-    { name: "Sick Leave", enabled: false },
-    { name: "Maternity Leave", enabled: false },
+    { leaveName: "Vacation", isActive: false, count: 0 },
+    { leaveName: "Sick Leave", isActive: false, count: 0 },
+    { leaveName: "Maternity Leave", isActive: false, count: 0 },
   ]);
 
   const [newLeaveType, setNewLeaveType] = useState("");
   const [newLeaveTypeEnabled, setNewLeaveTypeEnabled] = useState(false);
   const [isinputOpen, setIsinputOpen] = useState(false);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const { handleAlert } = useContext(TestContext);
 
   const handleInput = () => {
     setIsinputOpen(true);
@@ -40,7 +46,10 @@ const LeaveModal = ({ open, handleClose }) => {
 
   const addLeaveType = () => {
     if (newLeaveType.trim() !== "") {
-      setLeaveTypes([...leaveTypes, { name: newLeaveType, enabled: true }]);
+      setLeaveTypes([
+        ...leaveTypes,
+        { leaveName: newLeaveType, isActive: true },
+      ]);
       setNewLeaveType("");
       setNewLeaveTypeEnabled(false);
     }
@@ -50,12 +59,42 @@ const LeaveModal = ({ open, handleClose }) => {
 
   const handleLeaveTypeChange = (index) => {
     const updatedLeaveTypes = [...leaveTypes];
-    updatedLeaveTypes[index].enabled = !updatedLeaveTypes[index].enabled;
+    updatedLeaveTypes[index].isActive = !updatedLeaveTypes[index].isActive;
+    if (!updatedLeaveTypes[index].isActive) {
+      updatedLeaveTypes[index].count = 0; // Reset leave count when not active
+    }
     setLeaveTypes(updatedLeaveTypes);
   };
 
-  const createLeave = () => {
+  const handleLeaveCountChange = (index, count) => {
+    const updatedLeaveTypes = [...leaveTypes];
+    updatedLeaveTypes[index].count = parseInt(count);
+    setLeaveTypes(updatedLeaveTypes);
+  };
+
+  const createLeave = async () => {
     console.log(leaveTypes);
+    try {
+      const createLeave = await axios.post(
+        `${process.env.REACT_APP_API}/route/leave-types/create/${id}`,
+        { leaveTypes: leaveTypes },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      handleClose();
+      handleAlert(true, "success", createLeave.data.message);
+    } catch (error) {
+      console.log(error, "err");
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Failed to sign in. Please try again."
+      );
+    }
   };
 
   const style = {
@@ -87,18 +126,29 @@ const LeaveModal = ({ open, handleClose }) => {
             Add Leave Types
           </h1>
         </header>
-        <ul className="mb-2">
+        <ul className="mb-2 space-y-4">
           {leaveTypes.map((leaveType, index) => (
             <li key={index}>
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={leaveType.enabled}
+                    checked={leaveType.isActive}
                     onChange={() => handleLeaveTypeChange(index)}
                   />
                 }
-                label={leaveType.name}
+                label={leaveType.leaveName}
               />
+              {leaveType.isActive && (
+                <TextField
+                  type="number"
+                  label="Number of Leaves"
+                  value={leaveType.count}
+                  size="small"
+                  onChange={(e) =>
+                    handleLeaveCountChange(index, e.target.value)
+                  }
+                />
+              )}
             </li>
           ))}
         </ul>
@@ -164,7 +214,7 @@ const LeaveModal = ({ open, handleClose }) => {
         </div>
         <div className="flex gap-4 mt-4 justify-end">
           <Button
-            size="medium"
+            size="small"
             onClick={handleClose}
             color="error"
             variant="contained"
@@ -173,7 +223,7 @@ const LeaveModal = ({ open, handleClose }) => {
           </Button>
           <Button
             onClick={createLeave}
-            size="medium"
+            size="small"
             variant="contained"
             color="primary"
           >
