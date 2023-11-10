@@ -1,21 +1,15 @@
 import CheckIcon from "@mui/icons-material/Check"; // Import the accept icon
 import CloseIcon from "@mui/icons-material/Close"; // Import the reject icon
+import { Chip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import React from "react";
-import { useContext } from "react";
-import { useEffect } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { useState } from "react";
 import { format } from "date-fns";
-import LeaveRejectmodal from "../../Modal/LeaveModal/LeaveRejectmodal";
-import { jwtDecode } from "jwt-decode";
-import { async } from "q";
-import { Chip } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
