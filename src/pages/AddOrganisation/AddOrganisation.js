@@ -33,7 +33,6 @@ const AddOrganisation = () => {
 
     const data = {
         name: "",
-        logo: "",
         web_url: "",
         industry_type: "",
         email: "",
@@ -61,6 +60,10 @@ const AddOrganisation = () => {
             if (!isContactNumberValid(value)) {
                 setNumberLabel("number should be 10 digits only");
                 setContactNumberError(true);
+                if(e.target.value === ""){
+                    setNumberLabel("Phone Number")
+                    setContactNumberError(false)
+                }
             } else {
                 setNumberLabel("Phone Number");
                 setContactNumberError(false);
@@ -86,12 +89,10 @@ const AddOrganisation = () => {
             const result = await axios.post("http://localhost:4000/route/organization/create", inputdata);
             console.log(result);
 
-            // Show a success alert
             handleAlert(true, "success", "Organization created successfully");
         } catch (e) {
             console.error(e);
 
-            // Show an error alert
             handleAlert(true, "error", "Failed to create organization");
         }
         setInputData({

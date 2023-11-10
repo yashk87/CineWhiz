@@ -10,6 +10,9 @@ import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
 import Department from "./pages/addDepartment/addDepartment";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
+import AddRole from "./pages/AddRole/AddRole";
+import Shifts from "./pages/SetupPage/Shifts";
+import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 const App = () => {
   return (
     <Routes>
@@ -18,11 +21,14 @@ const App = () => {
       <Route exact path="/sign-in" element={<SignIn />} />s
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
-      <Route exact path="/addDepartment" element={<Department />} />
+      <Route exact path="/add-department" element={<Department />} />
       <Route exact path="/menu" element={<DateRangeCalendarValue />} />
       <Route exact path="/:id/verify/:token/" element={<Emailverify />} />
       <Route exact path="/phone-authenticate" element={<PhoneAuthenticate />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
+      <Route exact path="/add-role" element={<AddRole />} />
+      <Route exact path="/set-shifts" element={<Shifts />} />
+      <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} />
     </Routes>
   );
 };
