@@ -1,19 +1,10 @@
-import {
-  Box,
-  Button,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 // import AddIcon from "@mui/icons-material/Add";
 // import axios from "axios";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { TestContext } from "../../../State/Function/Main";
 
 import axios from "axios";
 import Holidays from "date-holidays";
@@ -23,8 +14,6 @@ const LeavePublicholidayModal = ({ open, handleClose, id }) => {
   // const getHolidays = holiday.getHolidays();
 
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
-  const { handleAlert } = useContext(TestContext);
 
   // const createLeave = async () => {
   //   console.log(leaveTypes);

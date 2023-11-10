@@ -1,5 +1,4 @@
 import React from "react";
-
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import RuleIcon from "@mui/icons-material/Rule";
@@ -7,16 +6,12 @@ import { Link, useParams } from "react-router-dom";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import LeaveModal from "./LeaveComponents/LeaveModal";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
-import LeavePublicholidayModal from "./LeaveComponents/LeavePublicholidayModal";
 const Setup = () => {
   const { id } = useParams("");
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [openHoliday, setOpenHoliday] = React.useState(false);
-  const handleHolidayOpen = () => setOpenHoliday(true);
-  const handleHolidayClose = () => setOpenHoliday(false);
 
   return (
     <>
