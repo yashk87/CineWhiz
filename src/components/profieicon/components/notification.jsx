@@ -25,22 +25,22 @@ const Notification = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  useEffect(() => {
-    try {
-      const decodedToken = jwtDecode(authToken);
-      console.log(decodedToken);
-      console.log(decodedToken.user.profile);
-      if (decodedToken && decodedToken.user.profile) {
-        console.log(decodedToken.user.profile);
+  // useEffect(() => {
+  //   try {
+  //     const decodedToken = jwtDecode(authToken);
+  //     console.log(decodedToken);
+  //     console.log(decodedToken.user.profile);
+  //     if (decodedToken && decodedToken.user.profile) {
+  //       console.log(decodedToken.user.profile);
 
-        setUserRole(decodedToken.user.profile);
-      } else {
-        setUserRole("guest");
-      }
-    } catch (error) {
-      console.error("Failed to decode the authToken:", error);
-    }
-  }, []);
+  //       setUserRole(decodedToken.user.profile);
+  //     } else {
+  //       setUserRole("guest");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to decode the authToken:", error);
+  //   }
+  // }, []);
 
   const [workFlow, setWorkFlow] = useState([]);
 
