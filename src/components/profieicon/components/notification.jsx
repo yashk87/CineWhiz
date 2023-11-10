@@ -1,18 +1,15 @@
 import CheckIcon from "@mui/icons-material/Check"; // Import the accept icon
 import CloseIcon from "@mui/icons-material/Close"; // Import the reject icon
+import { Chip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import React from "react";
-import { useContext } from "react";
-import { useEffect } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { useState } from "react";
 import { format } from "date-fns";
-import { Chip } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
@@ -21,6 +18,23 @@ const Notification = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  // useEffect(() => {
+  //   try {
+  //     const decodedToken = jwtDecode(authToken);
+  //     console.log(decodedToken);
+  //     console.log(decodedToken.user.profile);
+  //     if (decodedToken && decodedToken.user.profile) {
+  //       console.log(decodedToken.user.profile);
+
+  //       setUserRole(decodedToken.user.profile);
+  //     } else {
+  //       setUserRole("guest");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to decode the authToken:", error);
+  //   }
+  // }, []);
 
   const [workFlow, setWorkFlow] = useState([]);
 
