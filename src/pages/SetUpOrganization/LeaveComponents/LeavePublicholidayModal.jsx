@@ -1,18 +1,9 @@
-<<<<<<< HEAD
-import { Box, Button, Modal } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-=======
->>>>>>> a0409ab91221da29df7285e866a6e0eaca1b7f5f
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import { Box, Button, Modal } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 // import AddIcon from "@mui/icons-material/Add";
 // import axios from "axios";
-<<<<<<< HEAD
-=======
-import { TestContext } from "../../../State/Function/Main";
->>>>>>> a0409ab91221da29df7285e866a6e0eaca1b7f5f
 import { UseContext } from "../../../State/UseState/UseContext";
 
 import axios from "axios";
