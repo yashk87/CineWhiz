@@ -1,19 +1,11 @@
-import {
-  Box,
-  Button,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import { Box, Button, Modal } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 
 // import AddIcon from "@mui/icons-material/Add";
 // import axios from "axios";
-import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 import axios from "axios";
 import Holidays from "date-holidays";
