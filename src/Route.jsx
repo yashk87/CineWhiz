@@ -2,23 +2,25 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
+import Notification from "./components/profieicon/components/notification";
+import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import AddRole from "./pages/AddRole/AddRole";
 import Home from "./pages/Home/Home";
+import AddEmployee from "./pages/Home/components/addemployee";
+import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
+import SingleOrganization from "./pages/Organization/SingleOrganization";
+import AddRoles from "./pages/Roles/AddRoles";
+import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
+import Setup from "./pages/SetUpOrganization/Setup";
 import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import DateRangeCalendarValue from "./pages/Test/test2";
+import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import AddRole from "./pages/AddRole/AddRole";
-import Shifts from "./pages/SetupPage/Shifts";
-import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
-import AddRoles from "./pages/Roles/AddRoles";
-import Setup from "./pages/SetUpOrganization/Setup";
-import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
-import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 const App = () => {
   return (
     <Routes>
