@@ -15,27 +15,6 @@ const Notification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  // useEffect(() => {
-  //   try {
-  //     const decodedToken = jwtDecode(authToken);
-  //     console.log(decodedToken);
-  //     console.log(decodedToken.user.profile);
-  //     if (decodedToken && decodedToken.user.profile) {
-  //       console.log(decodedToken.user.profile);
-
-  //       setUserRole(decodedToken.user.profile);
-  //     } else {
-  //       setUserRole("guest");
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to decode the authToken:", error);
-  //   }
-  // }, []);
-
   const [workFlow, setWorkFlow] = useState([]);
 
   const GetApproval = async () => {
@@ -95,6 +74,7 @@ const Notification = () => {
 
   useEffect(() => {
     GetApproval();
+    // eslint-disable-next-line
   }, []);
   return (
     <>

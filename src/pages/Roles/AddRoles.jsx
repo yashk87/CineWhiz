@@ -2,8 +2,8 @@ import { Button, Checkbox, FormControlLabel, Switch } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { UseContext } from "../../State/UseState/UseContext";
 import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const AddRoles = () => {
   const { id } = useParams("");
@@ -77,7 +77,6 @@ const AddRoles = () => {
   const sendRequestToBackend = async () => {
     try {
       // Filter the roles that are selected
-      const selectedRoles = roles.filter((role) => role.isSelected);
 
       const newRoles = roles.map((role) => ({
         ...role,
