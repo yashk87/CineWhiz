@@ -24,7 +24,7 @@ const Shifts = () => {
     const handleStartTimeChange = (time) => {
         setSelectedStartTime(time);
     };
-    
+
 
     const handleEndTimeChange = (time) => {
         setSelectedEndTime(time);
@@ -44,6 +44,7 @@ const Shifts = () => {
         e.preventDefault();
         const startTime = selectedStartTime;
         const endTime = selectedEndTime;
+        console.log(startTime);
 
         if (!startTime || !endTime || selectedDays.length === 0) {
             setError('Please fill in all the mandatory fields');
