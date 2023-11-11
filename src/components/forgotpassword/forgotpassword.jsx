@@ -11,7 +11,10 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useContext } from "react";
 import { TestContext } from "../../State/Function/Main";
+<<<<<<< HEAD
+=======
 import useSignup from "../../hooks/useLoginForm";
+>>>>>>> 4152908710c052a198a2bc07ddca841ed0283cdd
 
 const ForgotPassword = () => {
   const { setEmail, email } = useSignup();
