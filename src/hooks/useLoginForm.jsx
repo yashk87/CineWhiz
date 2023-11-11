@@ -7,6 +7,7 @@ const useSignup = create((set) => ({
   confirmPassword: "",
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
+  setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
 }));
 
 export default useSignup;

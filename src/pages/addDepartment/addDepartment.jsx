@@ -1,165 +1,252 @@
-import React, { useState } from 'react'
-import { Button, TextField, Autocomplete } from '@mui/material';
-
+import React, { useContext, useState } from "react";
+import { Button, TextField, Autocomplete } from "@mui/material";
+import axios from "axios";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const Department = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const { handleAlert } = useContext(TestContext);
 
-    const [formValues, setFormValues] = useState({
-        DepartmentName : "",
-        DepartmentDescription: "",
-        DepartmentLocation: "",
-        CostCenter: "",
-        CostCenterDescription: "",
-        DepartmentDeligateName: ""
-    })
+  const initialFormValues = {
+    departmentName: "",
+    departmentDescription: "",
+    departmentLocation: "",
+    costCenter: "",
+    costCenterDescription: "",
+    departmentHeadName: "",
+    departmentHeadDelegateName: "",
+  };
+  const [formValues, setFormValues] = useState(initialFormValues);
 
-    const handleChange = e => {
-        const{ name, value } = e.target
-        setFormValues({
-            ...formValues,
-            [name] : value,
-        })
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(
+        "http://localhost:4000/route/department/create",
+        formValues,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      handleAlert(true, "success", `Department created successfully`);
+      setFormValues(initialFormValues);
+      window.location.reload();
+    } catch (error) {
+      console.error(error.response.data.message);
+      handleAlert(true, "error", error.response.data.message);
     }
+  };
+  // Dummy list for combobox
+  const Employees = [
+    { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
+    { label: "Raj Sathe", email: "rsathe@gmail.com" },
+    { label: "Jay Jadhav", email: "jayjadhav1@gmail.com" },
+    { label: "Vaibhav Pawar", email: "vaibhavp@gmail.com" },
+    { label: "Ram Desai", email: "ramdesai1@gmail.com" },
+    { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
+    { label: "Viraj Raman", email: "vraman@gmail.com" },
+    { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
+  ];
 
-    const handleSubmit = e => {
-        e.preventDefault()
-        console.log("Form values: ", formValues);
-    }
+  const Locations = [
+    { City: "Banglore" },
+    { City: "Chennai" },
+    { City: "Tokyo" },
+    { City: "Pune" },
+    { City: "Nagpur" },
+    { City: "Jaipur" },
+    { City: "New York" },
+  ];
 
-    // Dummy list for combobox
-    const Employees = [
-      { label: 'Ramesh patnayak', email: "ramesh1@gmail.com" },
-      { label: 'Raj Sathe', email: "rsathe@gmail.com" },
-      { label: 'Jay Jadhav', email: "jayjadhav1@gmail.com" },
-      { label: 'Vaibhav Pawar', email: "vaibhavp@gmail.com" },
-      { label: 'Ram Desai', email: "ramdesai1@gmail.com" },
-      { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
-      { label: 'Viraj Raman', email: "vraman@gmail.com" },
-      { label: 'Harsh Modi', email: "harshmodi2@gmail.com",}
-      ]
+  // const Locations = [
+  //   { City: "Banglore" },
+  //   { City: "Chennai" },
+  //   { City: "Tokyo" },
+  //   { City: "Pune" },
+  //   { City: "Nagpur" },
+  //   { City: "Jaipur" },
+  //   { City: "New York" }
+  // ]
 
-      const Locations = [
-        { City: "Banglore" },
-        { City: "Chennai" },
-        { City: "Tokyo" },
-        { City: "Pune" },
-        { City: "Nagpur" },
-        { City: "Jaipur" },
-        { City: "New York" }
-      ]
-
-  return(
-  <div
-    style={{
-      display: "flex",
-      width: "100%",
-      // height: "100%",         //
-      justifyContent: "center",
-      padding: "20px 0 0",
-      boxSizing: "border-box",
-    }}
-  >
-    <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
-      <div className="w-[400px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
-        <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
-          Add Department details
-        </h4>
-        <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-5">
+  return (
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        // height: "100%",         //
+        justifyContent: "center",
+        padding: "20px 0 0",
+        boxSizing: "border-box",
+      }}
+    >
+      <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
+        <div className="w-[400px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
+          <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
+            Add Department details
+          </h4>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center space-y-5"
+          >
             <TextField
-                required
-                inputProps={{
-                  pattern: '^[a-zA-Z0-9]*$',
-                  minLength: 2,
-                  maxLength: 40
-                }}
-              error={true}
-                helperText={"No special characters, Max 5 words allowed"}
-                size="small"
-                fullWidth
-                name="DepartmentName"
-                label="Department Name"
-                type="text"
-                placeholder="Enter Department name"
-                onChange={handleChange}
+              required
+              inputProps={{
+                pattern: "^[a-zA-Z0-9 ]*$",
+                minLength: 2,
+                maxLength: 40,
+                value: formValues.departmentName,
+              }}
+              helperText={"No special characters, Max 5 words allowed"}
+              size="small"
+              fullWidth
+              name="departmentName"
+              label="Department Name"
+              type="text"
+              placeholder="Enter Department name"
+              onChange={handleChange}
             />
             <TextField
-                size="small"
-                inputProps={{
-                  minLength: 8,
-                  maxLength: 250
-                }}
-                helperText={"Max 250 characters allowed"}
-                fullWidth
-                multiline
-                name="DepartmentDescription"
-                label="Department Description"
-                type="text"
-                placeholder="Enter Department Description"
-                onChange={handleChange}
+              size="small"
+              inputProps={{
+                minLength: 8,
+                maxLength: 250,
+                value: formValues.departmentDescription,
+              }}
+              helperText={"Max 250 characters allowed"}
+              fullWidth
+              multiline
+              name="departmentDescription"
+              label="Department Description"
+              type="text"
+              placeholder="Enter Department Description"
+              onChange={handleChange}
             />
             <Autocomplete
-              size='small'
+              size="small"
               fullWidth
               disablePortal
-              id="DepartmentLocation"
+              id="departmentLocation"
               options={Locations}
+              onChange={(e, value) => {
+                const location = value ? value.City : "";
+                handleChange({
+                  target: { name: "departmentLocation", value: location },
+                });
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option.City === value.City
+              }
               getOptionLabel={(option) => option.City}
-              renderInput={(params) => <TextField {...params} label="Enter Department location" required/>}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Enter Department location"
+                  required
+                />
+              )}
             />
             <TextField
-                required
-                size="small"
-                fullWidth
-                name="CostCenter"
-                label="Cost Center (Prefix)"
-                type="text"
-                placeholder="Enter Cost Center"
-                onChange={handleChange}
+              required
+              size="small"
+              fullWidth
+              name="costCenter"
+              inputProps={{
+                value: formValues.costCenter,
+              }}
+              label="Cost Center (Prefix)"
+              type="text"
+              placeholder="Enter Cost Center"
+              onChange={handleChange}
             />
             <TextField
-                size="small"
-                fullWidth
-                inputProps={{
-                  minLength: 8,
-                  maxLength: 50
-                }}
-                name="CostCenterDescription"
-                label="Cost Center description"
-                multiline
-                type="text"
-                placeholder="Enter Cost Center description"
-                onChange={handleChange}
+              size="small"
+              fullWidth
+              inputProps={{
+                minLength: 8,
+                maxLength: 50,
+                value: formValues.costCenterDescription,
+              }}
+              name="costCenterDescription"
+              label="Cost Center description"
+              multiline
+              type="text"
+              placeholder="Enter Cost Center description"
+              onChange={handleChange}
             />
             <Autocomplete
-              size='small'
+              size="small"
               fullWidth
               disablePortal
-              id="addDepartmentHeadName"
+              id="departmentHeadName"
               options={Employees}
-              renderInput={(params) => <TextField {...params} label="Add Department head name" required/>}
+              onChange={(e, value) => {
+                const headName = value ? value.label : "";
+                handleChange({
+                  target: { name: "departmentHeadName", value: headName },
+                });
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option.label === value.label
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Add Department head name"
+                  required
+                />
+              )}
             />
             <Autocomplete
-              size='small'
+              size="small"
               fullWidth
               disablePortal
-              id="addDepartmentHeadDelegateName"
+              id="departmentHeadDelegateName"
               options={Employees}
-              renderInput={(params) => <TextField {...params} label="Add Department head delegate name" />}
+              onChange={(e, value) => {
+                const delegateName = value ? value.label : "";
+                handleChange({
+                  target: {
+                    name: "departmentHeadDelegateName",
+                    value: delegateName,
+                  },
+                });
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option.label === value.label
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Add Department head delegate name"
+                />
+              )}
             />
             <Button
-                fullWidth={false}
-                variant="contained"
-                className="w-[100px] content-center text-white m-auto"
-                type="submit"
-                style={{backgroundColor:"#1d6eb7", color:"white"}}
+              fullWidth={false}
+              variant="contained"
+              className="w-[100px] content-center text-white m-auto"
+              type="submit"
+              style={{ backgroundColor: "#1d6eb7", color: "white" }}
             >
-                Submit
+              Submit
             </Button>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  
-)};
+  );
+};
 
 export default Department;

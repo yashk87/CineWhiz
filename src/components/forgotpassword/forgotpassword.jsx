@@ -1,17 +1,20 @@
-import React, { useContext } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
-import useSignup from "../../hooks/useLoginForm";
+import React, { useContext } from "react";
 import { TestContext } from "../../State/Function/Main";
+<<<<<<< HEAD
+=======
+import useSignup from "../../hooks/useLoginForm";
+>>>>>>> 4152908710c052a198a2bc07ddca841ed0283cdd
 
 const ForgotPassword = () => {
   const { setEmail, email } = useSignup();
@@ -26,8 +29,7 @@ const ForgotPassword = () => {
           email,
         }
       );
-      console.log(`🚀 ~ response:`, response);
-      console.log("API response:", response.data);
+      handleAlert(true, "success", response.data.message);
     } catch (error) {
       console.error("API error:", error.response);
       handleAlert(true, "error", error?.response?.data?.message);

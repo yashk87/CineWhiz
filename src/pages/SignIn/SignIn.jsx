@@ -26,15 +26,17 @@ const SignIn = () => {
         }
       );
       console.log(`🚀 ~ response:`, response);
-      console.log("API response:", response.data);
-
+      setCookie("aeigs", response.data.token);
       handleAlert(
         true,
         "success",
         `Welcome ${response.data.user.first_name} you are logged in successfully`
       );
-      setCookie("aeigs", response.data.token);
       redirect("/");
+      console.log(`🚀 ~ response:`, response);
+      console.log("API response:", response.data);
+
+      window.location.reload();
     } catch (error) {
       console.error("API error:", error.response);
       handleAlert(
@@ -96,12 +98,12 @@ const SignIn = () => {
           </Button>
           <div>
             <p>
-              <a
-                href="/forgot-password"
-                class="text-blue-500 hover:text-blue-700 underline"
+              <Link
+                to="/forgot-password"
+                className="text-blue-500 hover:text-blue-700 underline"
               >
                 forgot password
-              </a>
+              </Link>
             </p>
           </div>
         </form>

@@ -1,37 +1,67 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Button, Card, CardContent, Typography } from "@mui/material";
 import React from "react";
-
-const Organisation = () => {
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+const Organisation = ({ item }) => {
+  const navigate = useNavigate();
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          className="h-[140px]"
-          image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
-          alt="green iguana"
-        />
+    <Card
+      className=" hover:shadow-lg !transition-all  h-max    !w-[320px]"
+      sx={{ overflow: "visible" }}
+    >
+      {/* <CardMedia
+        component="img"
+        className="h-[140px] rounded-t-md"
+        image={"https://mui.com/static/images/cards/contemplative-reptile.jpg"}
+        alt="green iguana"
+      /> */}
+      <Link
+        to={`/organisation/${item._id}`}
+        className=" cursor-pointerhover:scale-95 scroll-smooth transition-all"
+      >
         <CardContent>
           <Typography
             color={"#1D6EB7"}
             gutterBottom
-            variant="h5"
+            variant="h6"
             component="div"
+            className="hover:underline"
           >
-            Organisation-1
+            {item.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+            Description : {item.description}
           </Typography>
+          {/* <Typography variant="body2" color="text.secondary">
+          Email : {item.email}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Contact Number : {item.contact_number}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Website : {item.web_url}
+        </Typography> */}
+          {/* <Typography variant="body2" color="text.secondary">
+              Foundation date : {item.foundation_date}
+            </Typography> */}
         </CardContent>
-      </CardActionArea>
+      </Link>
+
+      <div className="space-x-4 p-2 pb-6">
+        <Link to={`/setup/${item._id}`}>
+          <Button size="small" className=" cursor-pointer" variant="contained">
+            Go to setuppage
+          </Button>
+        </Link>
+        <Button
+          size="small"
+          className=" cursor-pointer"
+          variant="contained"
+          onClick={() => navigate(`/organisation/${item._id}/add-employee`)}
+        >
+          Create Profile
+        </Button>
+      </div>
     </Card>
   );
 };

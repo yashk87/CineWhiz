@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Route from "./Route";
 import TestState from "./State/Function/Main";
 import UseEffectState from "./State/UseEffect/UseEffectContext";
@@ -11,13 +10,6 @@ import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 // mulitple screen size xs,sm,md,lg,xl
 
 function App() {
-  const [first, setfirst] = useState([
-    { primary: "rgb(29, 110, 183)", secondary: "#01d293", mode: "light" },
-    { primary: "#ffff", secondary: "#01d293", mode: "light" },
-  ]);
-
-  // const [themeIndex, setThemeIndex] = useState(1);
-
   return (
     <>
       <UseState>
