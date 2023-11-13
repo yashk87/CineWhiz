@@ -7,7 +7,6 @@ import { Link, useParams } from "react-router-dom";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import LeaveModal from "./LeaveComponents/LeaveModal";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
-import LeavePublicholidayModal from "./LeaveComponents/LeavePublicholidayModal";
 const Setup = () => {
   const { id } = useParams("");
 

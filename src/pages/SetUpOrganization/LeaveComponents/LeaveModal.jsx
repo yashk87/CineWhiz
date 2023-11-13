@@ -130,6 +130,7 @@ const LeaveModal = ({ open, handleClose, id }) => {
           {leaveTypes.map((leaveType, index) => (
             <li key={index}>
               <FormControlLabel
+                size="small"
                 control={
                   <Checkbox
                     checked={leaveType.isActive}
@@ -143,7 +144,6 @@ const LeaveModal = ({ open, handleClose, id }) => {
                   type="number"
                   label="Number of Leaves"
                   value={leaveType.count}
-                  size="small"
                   onChange={(e) =>
                     handleLeaveCountChange(index, e.target.value)
                   }

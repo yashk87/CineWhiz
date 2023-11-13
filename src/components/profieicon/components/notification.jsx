@@ -10,31 +10,15 @@ import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
+import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  // useEffect(() => {
-  //   try {
-  //     const decodedToken = jwtDecode(authToken);
-  //     console.log(decodedToken);
-  //     console.log(decodedToken.user.profile);
-  //     if (decodedToken && decodedToken.user.profile) {
-  //       console.log(decodedToken.user.profile);
-
-  //       setUserRole(decodedToken.user.profile);
-  //     } else {
-  //       setUserRole("guest");
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to decode the authToken:", error);
-  //   }
-  // }, []);
+  // const [open, setOpen] = React.useState(false);
+  // // const handleOpen = () => setOpen(true);
+  // // const handleClose = () => setOpen(false);
 
   const [workFlow, setWorkFlow] = useState([]);
 
@@ -105,95 +89,103 @@ const Notification = () => {
           p: 5,
         }}
       >
-        {workFlow.map((items, id) => (
-          <Grid
-            key={id}
-            container
-            spacing={2}
-            sx={{
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a box shadow on hover
-              borderRadius: "5px",
-            }}
-          >
-            {/* <LeaveRejectmodal
+        {workFlow.length <= 0 ? (
+          <>
+            <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
+              <NotificationImportantIcon className="!text-4xl" />
+              <h1 className="text-2xl font-semibold">No notification</h1>
+            </div>
+          </>
+        ) : (
+          workFlow.map((items, id) => (
+            <Grid
+              key={id}
+              container
+              spacing={2}
+              sx={{
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add a box shadow on hover
+                borderRadius: "5px",
+              }}
+            >
+              {/* <LeaveRejectmodal
               open={open}
               handleClose={handleClose}
               id={items._id}
             /> */}
 
-            <Grid item xs={8} className="gap-4 py-4 h-max space-y-4">
-              <Box className="flex flex-col gap-2">
-                {/* <h1 className="text-2xl font-semibold text-sky-600">
+              <Grid item xs={8} className="gap-4 py-4 h-max space-y-4">
+                <Box className="flex flex-col gap-2">
+                  {/* <h1 className="text-2xl font-semibold text-sky-600">
                   Leave Request From Employee
                 </h1> */}
 
-                <h1 className="text-xl font-semibold ">
-                  {items.employeeId.first_name} has raised a leave request for{" "}
-                  {items.description}
-                </h1>
+                  <h1 className="text-xl font-semibold ">
+                    {items.employeeId.first_name} has raised a leave request for{" "}
+                    {items.description}
+                  </h1>
 
-                {items.daysOfLeave.map((day, id) => (
-                  <>
-                    <Box key={id}>
-                      <Typography className=" text-gray-400" variant="body2">
-                        Leave from {format(new Date(day.startDate), "PP")} to{" "}
-                        {format(new Date(day.endDate), "PP")}
-                      </Typography>
-                    </Box>
-                  </>
-                ))}
-              </Box>
-              {items.status === "Pending" ? (
-                <Box sx={{ mt: 3, mb: 3 }}>
-                  <Stack direction="row" spacing={9}>
-                    <Button
-                      variant="contained"
-                      onClick={() => AcceptLeave(items._id)}
-                      startIcon={<CheckIcon />}
-                      sx={{
-                        fontSize: "12px",
-                        textTransform: "capitalize",
-                        backgroundColor: "#42992D",
-                        "&:hover": {
-                          backgroundColor: "#42992D", // Set the same color on hover to maintain the color
-                        },
-                      }}
-                    >
-                      Approved
-                    </Button>
-                    <Button
-                      // onClick={handleOpen}
-                      onClick={() => RejectRequest(items._id)}
-                      variant="contained"
-                      startIcon={<CloseIcon />}
-                      sx={{
-                        fontSize: "12px",
-                        textTransform: "capitalize",
-                        backgroundColor: "#BB1F11",
-                        "&:hover": {
-                          backgroundColor: "#BB1F11", // Set the same color on hover to maintain the color
-                        },
-                      }}
-                    >
-                      Denied
-                    </Button>
-                  </Stack>
+                  {items.daysOfLeave.map((day, id) => (
+                    <>
+                      <Box key={id}>
+                        <Typography className=" text-gray-400" variant="body2">
+                          Leave from {format(new Date(day.startDate), "PP")} to{" "}
+                          {format(new Date(day.endDate), "PP")}
+                        </Typography>
+                      </Box>
+                    </>
+                  ))}
                 </Box>
-              ) : items.status === "Rejected" ? (
-                <Chip label="Request rejected" color="error" />
-              ) : (
-                <Chip label="Request Approved" color="success" />
-              )}
-            </Grid>
-            <Grid item xs={4}>
-              <Box>
-                <Box
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  marginTop={5}
-                >
-                  {/* <img
+                {items.status === "Pending" ? (
+                  <Box sx={{ mt: 3, mb: 3 }}>
+                    <Stack direction="row" spacing={9}>
+                      <Button
+                        variant="contained"
+                        onClick={() => AcceptLeave(items._id)}
+                        startIcon={<CheckIcon />}
+                        sx={{
+                          fontSize: "12px",
+                          textTransform: "capitalize",
+                          backgroundColor: "#42992D",
+                          "&:hover": {
+                            backgroundColor: "#42992D", // Set the same color on hover to maintain the color
+                          },
+                        }}
+                      >
+                        Approved
+                      </Button>
+                      <Button
+                        // onClick={handleOpen}
+                        onClick={() => RejectRequest(items._id)}
+                        variant="contained"
+                        startIcon={<CloseIcon />}
+                        sx={{
+                          fontSize: "12px",
+                          textTransform: "capitalize",
+                          backgroundColor: "#BB1F11",
+                          "&:hover": {
+                            backgroundColor: "#BB1F11", // Set the same color on hover to maintain the color
+                          },
+                        }}
+                      >
+                        Denied
+                      </Button>
+                    </Stack>
+                  </Box>
+                ) : items.status === "Rejected" ? (
+                  <Chip label="Request rejected" color="error" />
+                ) : (
+                  <Chip label="Request Approved" color="success" />
+                )}
+              </Grid>
+              <Grid item xs={4}>
+                <Box>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    marginTop={5}
+                  >
+                    {/* <img
                     src="argan_founder.png"
                     alt="my-img"
                     className="border-2 border-gray-400"
@@ -203,11 +195,12 @@ const Notification = () => {
                       height: "50px",
                     }}
                   /> */}
+                  </Box>
                 </Box>
-              </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        ))}
+          ))
+        )}
       </Box>
     </>
   );
