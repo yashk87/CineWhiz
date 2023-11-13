@@ -79,7 +79,10 @@ const Application = () => {
               ) : item.status === "Approved" ? (
                 <Chip label={item.message} color="success" />
               ) : (
-                <Chip label={item.message} color="primary" />
+                <Chip
+                  label={"you request is in pending status"}
+                  color="primary"
+                />
               )}
             </Grid>
           </Grid>
