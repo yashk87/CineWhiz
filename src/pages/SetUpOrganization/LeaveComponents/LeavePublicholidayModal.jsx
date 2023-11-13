@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useState } from "react";
 
 // import AddIcon from "@mui/icons-material/Add";
 // import axios from "axios";
-import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
 import axios from "axios";
@@ -15,8 +14,6 @@ const LeavePublicholidayModal = ({ open, handleClose, id }) => {
   // const getHolidays = holiday.getHolidays();
 
   const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
-  const { handleAlert } = useContext(TestContext);
 
   // const createLeave = async () => {
   //   console.log(leaveTypes);

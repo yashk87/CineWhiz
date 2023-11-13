@@ -1,5 +1,4 @@
 import React from "react";
-
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import RuleIcon from "@mui/icons-material/Rule";
@@ -13,9 +12,6 @@ const Setup = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [openHoliday, setOpenHoliday] = React.useState(false);
-  const handleHolidayOpen = () => setOpenHoliday(true);
-  const handleHolidayClose = () => setOpenHoliday(false);
 
   return (
     <>

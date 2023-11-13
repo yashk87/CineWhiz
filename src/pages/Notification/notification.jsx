@@ -9,16 +9,11 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
-import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-
-  // const [open, setOpen] = React.useState(false);
-  // // const handleOpen = () => setOpen(true);
-  // // const handleClose = () => setOpen(false);
 
   const [workFlow, setWorkFlow] = useState([]);
 
@@ -79,6 +74,7 @@ const Notification = () => {
 
   useEffect(() => {
     GetApproval();
+    // eslint-disable-next-line
   }, []);
   return (
     <>

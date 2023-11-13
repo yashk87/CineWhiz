@@ -5,26 +5,24 @@ import {
   Modal,
   OutlinedInput,
   Stack,
-  Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
 
+import SendIcon from "@mui/icons-material/Send";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  Grid,
-  TextField,
-  InputAdornment,
   IconButton,
+  InputAdornment,
+  TextField,
 } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 
 const LeaveModal = ({ open, handleClose, id }) => {
   const [leaveTypes, setLeaveTypes] = useState([
@@ -34,7 +32,6 @@ const LeaveModal = ({ open, handleClose, id }) => {
   ]);
 
   const [newLeaveType, setNewLeaveType] = useState("");
-  const [newLeaveTypeEnabled, setNewLeaveTypeEnabled] = useState(false);
   const [isinputOpen, setIsinputOpen] = useState(false);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -51,7 +48,6 @@ const LeaveModal = ({ open, handleClose, id }) => {
         { leaveName: newLeaveType, isActive: true },
       ]);
       setNewLeaveType("");
-      setNewLeaveTypeEnabled(false);
     }
 
     setIsinputOpen(false);
