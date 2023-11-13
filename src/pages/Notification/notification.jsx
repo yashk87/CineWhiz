@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);

@@ -2,14 +2,15 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
-import Notification from "./components/profieicon/components/notification";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import AddRole from "./pages/AddRole/AddRole";
+import Application from "./pages/Application/Application";
 import Home from "./pages/Home/Home";
 import AddEmployee from "./pages/Home/components/addemployee";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
+import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
@@ -46,6 +47,7 @@ const App = () => {
       />
       <Route exact path="/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/notification" element={<Notification />} />
+      <Route exact path="/application" element={<Application />} />
       <Route exact path="/setup/:id" element={<Setup />} />
       <Route exact path="/leave/:id" element={<LeaveRequisitiion />} />
       <Route
