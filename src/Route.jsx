@@ -49,7 +49,7 @@ const App = () => {
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
       <Route exact path="/setup/:id" element={<Setup />} />
-      <Route exact path="/leave/:id" element={<LeaveRequisitiion />} />
+      <Route exact path="/leave" element={<LeaveRequisitiion />} />
       <Route
         exact
         path="/setup/:id/public-holidays"

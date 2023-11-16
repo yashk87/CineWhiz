@@ -88,7 +88,7 @@ const Setup = () => {
               Shift Allowence
             </h1>
 
-            <Link to={`/add-roles/${id}`}>
+            <Link to={`/set-shifts`}>
               <div className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
                 <div className="px-4  py-2">
                   <WorkHistoryIcon className="h-20 w-20 text-gray-700 !text-[2.5rem]" />

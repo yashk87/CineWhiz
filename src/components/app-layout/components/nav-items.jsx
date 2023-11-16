@@ -34,14 +34,12 @@ const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
-  console.log(token);
-  console.log("userole", userRole);
+  // console.log(token);
+  // console.log("userole", userRole);
 
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(token);
-      console.log(decodedToken);
-      console.log(decodedToken.user.profile);
       if (decodedToken && decodedToken.user.profile) {
         setUserRole(decodedToken.user.profile);
       } else {
@@ -107,7 +105,7 @@ const NavItems = ({ toggleDrawer }) => {
                                 <ListItem disablePadding>
                                   <Link
                                     onClick={() => toggleDrawer()}
-                                    to="#"
+                                    to="/leave"
                                     className="w-full"
                                   >
                                     <ListItemButton className="!p-2 !rounded-lg w-full">
