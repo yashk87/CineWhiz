@@ -30,11 +30,11 @@ const Setup = () => {
             </h1>
 
             <Link to={`/add-roles/${id}`}>
-              <div className="w-[200px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-5 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
-                <div className="px-4  py-2">
-                  <GroupAddIcon className="h-20 w-20 text-gray-700 !text-[2.5rem]" />
+              <div className="w-[150px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-4 flex items-center space-y-3 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
+                <div className="px-4 py-1">
+                  <GroupAddIcon className="h-10 text-gray-700 !text-[1.7rem]" />
                 </div>
-                <h1 className="text-md pb-2 text-gray-400 font-medium">
+                <h1 className="text-[1rem] pb-2 text-gray-400 font-medium">
                   Create Roles
                 </h1>
               </div>

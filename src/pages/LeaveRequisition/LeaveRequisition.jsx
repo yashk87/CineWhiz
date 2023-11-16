@@ -21,10 +21,15 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import LeaveTabel from "./components/LeaveTabel";
 import { TestContext } from "../../State/Function/Main";
+import { format } from "date-fns";
 
 const LeaveRequisition = () => {
   const [leavesTypes, setleavesTypes] = useState([]);
   const [vactionList, setVactionList] = useState([]);
+
+  const dataList =
+    Array.isArray(vactionList?.daysOfLeaveArray) &&
+    vactionList?.daysOfLeaveArray.map((item) => console.log(item));
 
   const [value, setValue] = useState([]);
   const { cookies } = useContext(UseContext);
@@ -138,9 +143,9 @@ const LeaveRequisition = () => {
                       Leave Request Form
                     </h1>
                   </div>
-                  <div className="w-full  ">
+                  <div className="w-full  datePicker-tailwind-css">
                     <div className="mb-2 ">
-                      <p className="text-gray-400 font-semibold mb-2 ">
+                      <p className="text-gray-400 font-semibold mb-2">
                         Select Leave Period
                       </p>
                     </div>
@@ -150,14 +155,21 @@ const LeaveRequisition = () => {
                       popoverDirection="down"
                       showShortcuts={true}
                       placeholder={"Dates..."}
+                      disabledDates={
+                        Array.isArray(vactionList.daysOfLeaveArray) &&
+                        vactionList.daysOfLeaveArray.map((item) => ({
+                          startDate: format(new Date(item.startDate), "PP"),
+                          endDate: format(new Date(item.endDate), "PP"),
+                        }))
+                      }
                       showFooter={true}
                       containerClassName={
-                        "relative cursor-pointer border-[.5px] border-gray-400 rounded-lg"
+                        "relative cursor-pointer border-[.5px] border-gray-400 rounded-lg  "
                       }
-                      minDate={new Date()}
+                      // minDate={new Date()}
                       configs={{
                         shortcuts: {
-                          today: "Today",
+                          // today: "Today",
                         },
                         footer: {
                           cancel: "Reject",
