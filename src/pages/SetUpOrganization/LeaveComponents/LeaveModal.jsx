@@ -17,12 +17,14 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Divider,
 } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import CloseIcon from "@mui/icons-material/Close";
 
 const LeaveModal = ({ open, handleClose, id }) => {
   const [leaveTypes, setLeaveTypes] = useState([
@@ -49,7 +51,6 @@ const LeaveModal = ({ open, handleClose, id }) => {
       ]);
       setNewLeaveType("");
     }
-
     setIsinputOpen(false);
   };
 
@@ -69,7 +70,6 @@ const LeaveModal = ({ open, handleClose, id }) => {
   };
 
   const createLeave = async () => {
-    console.log(leaveTypes);
     try {
       const createLeave = await axios.post(
         `${process.env.REACT_APP_API}/route/leave-types/create/${id}`,
@@ -111,18 +111,21 @@ const LeaveModal = ({ open, handleClose, id }) => {
     >
       <Box
         sx={style}
-        className="border-none md:w-[40%] w-[40%] shadow-md outline-none rounded-md"
+        className="border-none !pt-0 !px-0 md:w-[40%] w-[40%] shadow-md outline-none rounded-md"
       >
-        <header className="flex items-center mb-4 gap-2">
-          <WorkHistoryIcon className="h-4 w-4 text-gray-700 !text-[1.7rem]" />
-          <h1
-            id="modal-modal-title"
-            className="text-xl font-semibold leading-relaxed "
-          >
+        <div className="flex justify-between py-4 items-center  px-4">
+          <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
             Add Leave Types
           </h1>
-        </header>
-        <ul className="mb-2 space-y-4">
+          <IconButton onClick={handleClose}>
+            <CloseIcon className="!text-[16px]" />
+          </IconButton>
+        </div>
+
+        <div className="w-full">
+          <Divider variant="fullWidth" orientation="horizontal" />
+        </div>
+        <ul className="my-2 px-8 space-y-4">
           {leaveTypes.map((leaveType, index) => (
             <li key={index}>
               <FormControlLabel
@@ -138,6 +141,7 @@ const LeaveModal = ({ open, handleClose, id }) => {
               {leaveType.isActive && (
                 <TextField
                   type="number"
+                  size="small"
                   label="Number of Leaves"
                   value={leaveType.count}
                   onChange={(e) =>
@@ -149,40 +153,22 @@ const LeaveModal = ({ open, handleClose, id }) => {
           ))}
         </ul>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 px-8 items-center">
           <div className="w-max p-2  cursor-pointer rounded-full border ring-sky-300 shadow-md">
             <AddIcon onClick={handleInput} className="!text-2xl" />
           </div>
           {isinputOpen && (
-            // <TextField
-            //   label="New Leave Type"
-            //   fullWidth
-            //   size="small"
-            //   variant="outlined"
-            //   value={newLeaveType}
-            //   InputProps={{
-            //     endAdornment: (
-            //       <InputAdornment position="end">
-            //         <IconButton
-            //           onClick={() => console.log("hellow")}
-            //           disabled={newLeaveType.length <= 0 ? true : false}
-            //         >
-            //           <SendIcon color="primary" />
-            //         </IconButton>
-            //       </InputAdornment>
-            //     ),
-            //   }}
-            //   onChange={(e) => setNewLeaveType(e.target.value)}
-            // />
-
-            <Stack width="100%">
-              <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
+            <Stack width="100%" className="px-8">
+              <FormControl
+                size="small"
+                sx={{ m: 1, width: "100%" }}
+                variant="outlined"
+              >
                 <InputLabel htmlFor="outlined-adornment-password">
                   Add leave type
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  size="small"
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -208,21 +194,11 @@ const LeaveModal = ({ open, handleClose, id }) => {
             </Stack>
           )}
         </div>
-        <div className="flex gap-4 mt-4 justify-end">
-          <Button
-            size="small"
-            onClick={handleClose}
-            color="error"
-            variant="contained"
-          >
+        <div className="flex gap-4 px-8 mt-4 justify-end">
+          <Button onClick={handleClose} color="error" variant="outlined">
             cancal
           </Button>
-          <Button
-            onClick={createLeave}
-            size="small"
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={createLeave} variant="contained" color="primary">
             Apply
           </Button>
         </div>

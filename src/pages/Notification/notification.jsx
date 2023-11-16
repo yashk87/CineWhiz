@@ -10,6 +10,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
+import { NotificationImportant } from "@mui/icons-material";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
@@ -88,7 +89,7 @@ const Notification = () => {
         {workFlow.length <= 0 ? (
           <>
             <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
-              <NotificationImportantIcon className="!text-4xl" />
+              <NotificationImportant className="!text-4xl" />
               <h1 className="text-2xl font-semibold">No notification</h1>
             </div>
           </>
