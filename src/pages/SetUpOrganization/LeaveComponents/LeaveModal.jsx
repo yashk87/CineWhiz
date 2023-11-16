@@ -195,10 +195,20 @@ const LeaveModal = ({ open, handleClose, id }) => {
           )}
         </div>
         <div className="flex gap-4 px-8 mt-4 justify-end">
-          <Button onClick={handleClose} color="error" variant="outlined">
+          <Button
+            onClick={handleClose}
+            size="small"
+            color="error"
+            variant="outlined"
+          >
             cancal
           </Button>
-          <Button onClick={createLeave} variant="contained" color="primary">
+          <Button
+            onClick={createLeave}
+            size="small"
+            variant="contained"
+            color="primary"
+          >
             Apply
           </Button>
         </div>
