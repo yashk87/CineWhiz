@@ -1,17 +1,15 @@
+import EastIcon from "@mui/icons-material/East";
+import WestIcon from "@mui/icons-material/West";
 import { Divider, Typography } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 import { useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import TextCycler from "./components/cyclic-text";
 import Organisation from "./components/Organisation";
-import "react-multi-carousel/lib/styles.css";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-import WestIcon from "@mui/icons-material/West";
-import EastIcon from "@mui/icons-material/East";
-import axios from "axios";
-import { useState } from "react";
+import TextCycler from "./components/cyclic-text";
 
 const Home = () => {
   const { cookies } = useContext(UseContext);
@@ -26,7 +24,7 @@ const Home = () => {
       redirect("/sign-in");
       handleAlert(true, "warning", "Please login first.");
     }
-  }, [redirect, cookies, handleAlert]);
+  }, [redirect, cookies, handleAlert, authToken]);
 
   const getData = async () => {
     const data = await axios.get(
@@ -43,6 +41,7 @@ const Home = () => {
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line
   }, []);
 
   const dotsresponsive = {
@@ -63,11 +62,7 @@ const Home = () => {
     },
   };
 
-  const CustomRightArrow = ({ onClick, ...rest }) => {
-    const {
-      onMove,
-      carouselState: { currentSlide, deviceType },
-    } = rest;
+  const CustomRightArrow = ({ onClick }) => {
     // onMove means if dragging or swiping in progress.
     return (
       <button
@@ -79,11 +74,7 @@ const Home = () => {
     );
   };
 
-  const CustomLeftArrow = ({ onClick, ...rest }) => {
-    const {
-      onMove,
-      carouselState: { currentSlide, deviceType },
-    } = rest;
+  const CustomLeftArrow = ({ onClick }) => {
     return (
       <button
         className="p-2 rounded-full text-[2px] border-sky-600 font-bold bg-slate-300 text-sky-600 border absolute left-0"

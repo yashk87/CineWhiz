@@ -1,19 +1,16 @@
-import { Box, Button, Divider, Stack, Typography } from "@mui/material";
-import React from "react";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import InsertLinkIcon from "@mui/icons-material/InsertLink";
-import EmailIcon from "@mui/icons-material/Email";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import FactoryIcon from "@mui/icons-material/Factory";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import EastIcon from "@mui/icons-material/East";
 import CorporateFareIcon from "@mui/icons-material/CorporateFare";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DescriptionIcon from "@mui/icons-material/Description";
+import EastIcon from "@mui/icons-material/East";
+import EmailIcon from "@mui/icons-material/Email";
+import FactoryIcon from "@mui/icons-material/Factory";
+import InsertLinkIcon from "@mui/icons-material/InsertLink";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Box, Button, Divider, Stack, Typography } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const SingleOrganization = () => {
   const { id } = useParams("");
@@ -29,6 +26,7 @@ const SingleOrganization = () => {
 
   useEffect(() => {
     getSingleData();
+    // eslint-disable-next-line
   }, [id]);
 
   return (

@@ -1,4 +1,18 @@
 import { ExpandMore } from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AddAlertIcon from "@mui/icons-material/AddAlert";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CategoryIcon from "@mui/icons-material/Category";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import PeopleIcon from "@mui/icons-material/People";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ReportIcon from "@mui/icons-material/Report";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Accordion,
   AccordionDetails,
@@ -14,21 +28,6 @@ import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import EventNoteIcon from "@mui/icons-material/EventNote";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ReportIcon from "@mui/icons-material/Report";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddAlertIcon from "@mui/icons-material/AddAlert";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import PeopleIcon from "@mui/icons-material/People";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import CategoryIcon from "@mui/icons-material/Category";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import AddIcon from "@mui/icons-material/Add";
 
 const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
@@ -50,7 +49,8 @@ const NavItems = ({ toggleDrawer }) => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
-  }, [token]);
+    // eslint-disable-next-line
+  }, []);
   let isCommonComponentsRendered = false;
   return (
     <div className="bg-blue">

@@ -13,11 +13,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
-import { TestContext } from "../../../State/Function/Main";
-import useProfileForm from "../../../hooks/useProfileForm";
-import { UseContext } from "../../../State/UseState/UseContext";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import useProfileForm from "../../../hooks/useProfileForm";
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -120,6 +120,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
+    // eslint-disable-next-line
   }, [id]);
 
   const passwordRegex =
