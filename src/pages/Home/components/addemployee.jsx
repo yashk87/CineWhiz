@@ -18,9 +18,36 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
+import { jwtDecode } from "jwt-decode";
+import Checkbox from "@mui/material/Checkbox";
+import Autocomplete from "@mui/material/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  const [userId, setUserId] = useState(null);
+  console.log("userId", userId);
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      console.log(decodedToken);
+      console.log(decodedToken.user._id);
+      if (decodedToken && decodedToken.user._id) {
+        setUserId(decodedToken.user._id);
+      } else {
+        setUserId("");
+      }
+    } catch (error) {
+      console.error("Failed to decode the token:", error);
+    }
+    // eslint-disable-next-line
+  }, []);
+
   const { handleAlert } = useContext(TestContext);
   const {
     first_name,
@@ -121,7 +148,7 @@ const AddEmployee = () => {
   useEffect(() => {
     fetchAvailableProfiles();
     // eslint-disable-next-line
-  }, [id]);
+  }, []);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -145,6 +172,8 @@ const AddEmployee = () => {
       selectedValue,
       joining_date,
       profile: profile.length <= 0 ? "Employee" : profile,
+      organizationId: id,
+      creatorId: userId,
     };
     console.log(user);
     try {
@@ -159,6 +188,7 @@ const AddEmployee = () => {
         }
       );
       console.log(`🚀 ~ response:`, response);
+
       if (response.data.success) {
         console.log("hii i am called as error");
         handleAlert(true, "error", "Invalid authorization");
@@ -377,7 +407,7 @@ const AddEmployee = () => {
                   </DemoContainer>
                 </LocalizationProvider>
               </div>
-              <div className="w-full">
+              {/* <div className="w-full">
                 <FormControl sx={{ width: "100%", mt: 1, mb: 2 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
                     Profile
@@ -401,17 +431,43 @@ const AddEmployee = () => {
                     ) : (
                       availableProfiles.map((name) => (
                         <MenuItem key={name._id} value={name.roleName}>
-                          {name.roleName}
-                          {/* <Checkbox
+                          {name.roleName} */}
+              {/* <Checkbox
                             checked={availableProfiles.indexOf(name) > -1}
                           /> */}
-                          {/* <ListItemText primary={name} /> */}
-                        </MenuItem>
+              {/* <ListItemText primary={name} /> */}
+              {/* </MenuItem>
                       ))
                     )}
                   </Select>
                 </FormControl>
-              </div>
+              </div> */}
+              <Autocomplete
+                multiple
+                id="checkboxes-tags-demo"
+                options={profile}
+                disableCloseOnSelect
+                getOptionLabel={(option) => option.title}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.title}
+                  </li>
+                )}
+                style={{ width: 500 }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Checkboxes"
+                    placeholder="Favorites"
+                  />
+                )}
+              />
 
               <div className="w-full">
                 <FormControl>

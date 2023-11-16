@@ -3,13 +3,11 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import SettingsIcon from "@mui/icons-material/Settings"; // Import the settings icon
-import { jwtDecode } from "jwt-decode";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
@@ -17,7 +15,6 @@ export default function ProfileIcon() {
   const token = cookies["aeigs"];
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [userName, setUserName] = useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,26 +35,6 @@ export default function ProfileIcon() {
     navigate("/notification");
     setAnchorEl(null);
   };
-
-  const handleSettingsClick = () => {
-    navigate("/account-settings"); // Replace with your account settings page
-    setAnchorEl(null);
-  };
-
-  useEffect(() => {
-    const decodeToken = () => {
-      try {
-        const decodedToken = jwtDecode(token);
-        console.log(decodedToken);
-      } catch (error) {
-        console.error("Error decoding token", error);
-      }
-    };
-
-    if (token) {
-      decodeToken();
-    }
-  }, [token]);
 
   return (
     <>
@@ -90,16 +67,12 @@ export default function ProfileIcon() {
       >
         {token ? (
           <>
-            <MenuItem onClick={handleSettingsClick} className="flex gap-2">
-              <SettingsIcon /> Account Settings
-            </MenuItem>
             <MenuItem onClick={handleSignOut} className="flex gap-2">
               <ExitToAppIcon /> Logout
             </MenuItem>
             <MenuItem className="flex gap-2" onClick={handleNotificationClick}>
               <NotificationsIcon /> Notification
             </MenuItem>
-            <MenuItem disabled>{userName}</MenuItem>
           </>
         ) : (
           <>
