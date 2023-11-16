@@ -1156,6 +1156,109 @@ const NavItems = ({ toggleDrawer }) => {
                                       id="panel1a-header"
                                     >
                                       <Typography className="text-white">
+                                        Organization
+                                      </Typography>
+                                    </AccordionSummary>
+                                    <List>
+                                      <ListItem disablePadding>
+                                        <Link
+                                          onClick={() => toggleDrawer()}
+                                          to="#"
+                                          className="w-full"
+                                        >
+                                          <ListItemButton className="!p-2 !rounded-lg w-full">
+                                            <ListItemIcon className="p-2 !min-w-[25px]">
+                                              <AddIcon className="text-white" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                              primaryTypographyProps={{
+                                                style: { fontSize: 13 },
+                                              }}
+                                              style={{ fontSize: "10px" }}
+                                              className="text-white text-sm"
+                                              primary={"Add Organization"}
+                                            />
+                                          </ListItemButton>
+                                        </Link>
+                                      </ListItem>
+                                      <ListItem disablePadding>
+                                        <Link
+                                          onClick={() => toggleDrawer()}
+                                          to="#"
+                                          className="w-full"
+                                        >
+                                          <ListItemButton className="!p-2 !rounded-lg w-full">
+                                            <ListItemIcon className="p-2 !min-w-[25px]">
+                                              <EditIcon className="text-white" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                              primaryTypographyProps={{
+                                                style: { fontSize: 13 },
+                                              }}
+                                              style={{ fontSize: "10px" }}
+                                              className="text-white text-sm"
+                                              primary={"Update Organization"}
+                                            />
+                                          </ListItemButton>
+                                        </Link>
+                                      </ListItem>
+                                      <ListItem disablePadding>
+                                        <Link
+                                          onClick={() => toggleDrawer()}
+                                          to="#"
+                                          className="w-full"
+                                        >
+                                          <ListItemButton className="!p-2 !rounded-lg w-full">
+                                            <ListItemIcon className="p-2 !min-w-[25px]">
+                                              <DeleteIcon className="text-white" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                              primaryTypographyProps={{
+                                                style: { fontSize: 13 },
+                                              }}
+                                              style={{ fontSize: "10px" }}
+                                              className="text-white text-sm"
+                                              primary={"Delete Organization"}
+                                            />
+                                          </ListItemButton>
+                                        </Link>
+                                      </ListItem>
+                                      <ListItem disablePadding>
+                                        <Link
+                                          onClick={() => toggleDrawer()}
+                                          to="#"
+                                          className="w-full"
+                                        >
+                                          <ListItemButton className="!p-2 !rounded-lg w-full">
+                                            <ListItemIcon className="p-2 !min-w-[25px]">
+                                              <ListAltIcon className="text-white" />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                              primaryTypographyProps={{
+                                                style: { fontSize: 13 },
+                                              }}
+                                              style={{ fontSize: "10px" }}
+                                              className="text-white text-sm"
+                                              primary={"Organization List"}
+                                            />
+                                          </ListItemButton>
+                                        </Link>
+                                      </ListItem>
+                                    </List>
+                                  </Accordion>
+
+                                  <Accordion
+                                    className="w-full !shadow-none border-[#0093d6] border"
+                                    style={{ background: "rgb(14, 165, 233)" }}
+                                  >
+                                    <AccordionSummary
+                                      expandIcon={
+                                        <ExpandMoreIcon className="text-white" />
+                                      }
+                                      aria-controls="panel1a-content"
+                                      id="panel1a-header"
+                                    >
+                                      <Typography className="text-white">
                                         Employee
                                       </Typography>
                                     </AccordionSummary>
