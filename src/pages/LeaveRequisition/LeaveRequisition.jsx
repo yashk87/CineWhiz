@@ -104,6 +104,8 @@ const LeaveRequisition = () => {
     // Assuming 'start' is a property of the 'event' object
     const start = event.start;
 
+    console.log(event, "e");
+
     if (isDateDisabled(start)) {
       // Show an alert or perform other actions for disabled dates
       alert("This date is disabled and cannot be selected!");

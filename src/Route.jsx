@@ -35,7 +35,7 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/add-role" element={<AddRole />} />
-      <Route exact path="/set-shifts" element={<Shifts />} />
+      <Route exact path="/set-shifts/:id" element={<Shifts />} />
       <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} />
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />

@@ -75,7 +75,7 @@ const Setup = () => {
               Shift Allowence
             </h1>
 
-            <Link className="w-fit h-fit flex" to={`/set-shifts`}>
+            <Link className="w-fit h-fit flex" to={`/set-shifts/${id}`}>
               <div className="w-[150px] border-b-[4px] hover:shadow-xl border-green-400 cursor-pointer p-2 flex items-center space-y-3 rounded-lg justify-center flex-col bg-white mt-4  shadow-md">
                 <div className="px-4  py-2">
                   <WorkHistoryIcon className="!h-5 !w-5 text-gray-700 !text-[2.5rem]" />
