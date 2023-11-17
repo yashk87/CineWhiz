@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import Divider from "@mui/material/Divider";
-import ErrorIcon from "@mui/icons-material/Error";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import axios from "axios";
-import { useQuery } from "react-query";
+import ErrorIcon from "@mui/icons-material/Error";
 import { Skeleton } from "@mui/material";
+import Divider from "@mui/material/Divider";
+import axios from "axios";
+import React from "react";
+import { useQuery } from "react-query";
 
 const LeaveTabel = ({
   subtractedLeaves,
@@ -64,6 +63,7 @@ const LeaveTabel = ({
     updateLeaveCounts(response.data);
     return response.data;
   });
+  console.log(`🚀 ~ data:`, data);
 
   if (isLoading) {
     return (
