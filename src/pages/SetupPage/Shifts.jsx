@@ -2,6 +2,7 @@ import {
   Button,
   Container,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -15,6 +16,9 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ShiftDisplay from "./ShiftDisplay";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ShiftModal from "../../components/Modal/shift/ShiftModal";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -25,6 +29,10 @@ const Shifts = () => {
   const [shiftName, setShiftName] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
   const [error, setError] = useState("");
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleStartTimeChange = (time) => {
     setSelectedStartTime(time);
@@ -97,8 +105,11 @@ const Shifts = () => {
             <h1 className="text-xl font-semibold">Shift Section</h1>
             <p className="text-md">Setup shifts for the organization</p>
           </div>
-
-          <Button className="!text-semibold" variant="contained">
+          <Button
+            className="!font-semibold"
+            onClick={handleOpen}
+            variant="contained"
+          >
             Create Shift
           </Button>
         </div>
@@ -123,6 +134,9 @@ const Shifts = () => {
                         <th scope="col" class="px-6 py-4">
                           Handle
                         </th>
+                        <th scope="col" class="px-6 py-4">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -130,25 +144,20 @@ const Shifts = () => {
                         <td class="whitespace-nowrap px-6 py-4 font-medium">
                           1
                         </td>
-                        <td class="whitespace-nowrap px-6 py-4">Mark</td>
-                        <td class="whitespace-nowrap px-6 py-4">Otto</td>
-                        <td class="whitespace-nowrap px-6 py-4">@mdo</td>
-                      </tr>
-                      <tr class="border-b dark:border-neutral-500">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium">
-                          2
-                        </td>
-                        <td class="whitespace-nowrap px-6 py-4">Jacob</td>
-                        <td class="whitespace-nowrap px-6 py-4">Thornton</td>
-                        <td class="whitespace-nowrap px-6 py-4">@fat</td>
-                      </tr>
-                      <tr class="border-b dark:border-neutral-500">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium">
-                          3
-                        </td>
                         <td class="whitespace-nowrap px-6 py-4">Larry</td>
                         <td class="whitespace-nowrap px-6 py-4">Wild</td>
                         <td class="whitespace-nowrap px-6 py-4">@twitter</td>
+                        <td class="whitespace-nowrap px-6 py-4">
+                          <IconButton>
+                            <DeleteIcon className="!text-xl" color="error" />
+                          </IconButton>
+                          <IconButton>
+                            <BorderColorIcon
+                              className="!text-xl"
+                              color="success"
+                            />
+                          </IconButton>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -158,7 +167,8 @@ const Shifts = () => {
           </div>
         </article>
       </section>
-      {/* <form style={{ width: "100%", display: "flex" }} action="">
+      <ShiftModal open={open} handleClose={handleClose} />
+      <form style={{ width: "100%", display: "flex" }} action="">
         <Container
           style={{
             display: "flex",
@@ -322,10 +332,11 @@ const Shifts = () => {
             </Typography>
           )}
         </Container>
-         <Container>
+        <Container>
           <ShiftDisplay />
-        </Container> *
-      </form> */}
+        </Container>{" "}
+        *
+      </form>
     </>
   );
 };
