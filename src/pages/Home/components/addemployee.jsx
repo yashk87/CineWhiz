@@ -31,7 +31,7 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [userId, setUserId] = useState(null);
-  console.log("userId", userId);
+
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
@@ -45,7 +45,6 @@ const AddEmployee = () => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
-    // eslint-disable-next-line
   }, []);
 
   const { handleAlert } = useContext(TestContext);
@@ -94,15 +93,15 @@ const AddEmployee = () => {
     },
   };
   const [profile, setProfile] = React.useState([]);
-
-  const handleRoleChange = (event) => {
+  const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-
-    setProfile(typeof value === "string" ? value.split(",") : value);
+    setProfile(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
   };
-  // display the role dynamically depend existing role
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
 
@@ -148,7 +147,7 @@ const AddEmployee = () => {
   useEffect(() => {
     fetchAvailableProfiles();
     // eslint-disable-next-line
-  }, []);
+  }, [id]);
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -387,27 +386,8 @@ const AddEmployee = () => {
                 fullWidth
                 margin="normal"
               />
+
               <div className="w-full">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    className="w-full"
-                    components={["DatePicker"]}
-                    required
-                  >
-                    <DatePicker
-                      label="Joining Date"
-                      value={joining_date}
-                      onChange={(newDate) => {
-                        setJoiningDate(newDate);
-                      }}
-                      slotProps={{
-                        textField: { size: "small", fullWidth: true },
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </div>
-              {/* <div className="w-full">
                 <FormControl sx={{ width: "100%", mt: 1, mb: 2 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
                     Profile
@@ -417,7 +397,7 @@ const AddEmployee = () => {
                     id="demo-multiple-checkbox"
                     multiple
                     value={profile}
-                    onChange={handleRoleChange}
+                    onChange={handleChange}
                     input={<OutlinedInput label="profile" />}
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
@@ -431,43 +411,13 @@ const AddEmployee = () => {
                     ) : (
                       availableProfiles.map((name) => (
                         <MenuItem key={name._id} value={name.roleName}>
-                          {name.roleName} */}
-              {/* <Checkbox
-                            checked={availableProfiles.indexOf(name) > -1}
-                          /> */}
-              {/* <ListItemText primary={name} /> */}
-              {/* </MenuItem>
+                          {name.roleName}
+                        </MenuItem>
                       ))
                     )}
                   </Select>
                 </FormControl>
-              </div> */}
-              <Autocomplete
-                multiple
-                id="checkboxes-tags-demo"
-                options={profile}
-                disableCloseOnSelect
-                getOptionLabel={(option) => option.title}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option.title}
-                  </li>
-                )}
-                style={{ width: 500 }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Checkboxes"
-                    placeholder="Favorites"
-                  />
-                )}
-              />
+              </div>
 
               <div className="w-full">
                 <FormControl>
