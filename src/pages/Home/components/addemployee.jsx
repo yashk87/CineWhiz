@@ -22,11 +22,6 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
-import { jwtDecode } from "jwt-decode";
-import dayjs from "dayjs";
-import { ListItemText, Checkbox } from "@mui/material";
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Tooltip from "@mui/material/Tooltip";
 import { useLocation } from "react-router-dom";
 const AddEmployee = () => {
@@ -158,6 +153,21 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const hasDepartmentAdmin = availableProfiles.some(
+      (profile) => profile.roleName === "Department Admin"
+    );
+
+    if (hasDepartmentAdmin) {
+      const confirmCreateProfile = window.confirm(
+        "A Department Admin profile already exists. Do you want to create another?"
+      );
+
+      if (!confirmCreateProfile) {
+        return;
+      }
+    }
+
     const user = {
       first_name,
       last_name,
@@ -174,6 +184,7 @@ const AddEmployee = () => {
       organizationId: id,
       creatorId: userId,
     };
+    console.log(user);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
