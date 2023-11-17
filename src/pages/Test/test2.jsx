@@ -27,6 +27,7 @@ const MyCalendar = () => {
     end: new Date(),
     color: "pink", // Default color for new selections
   });
+  console.log(`🚀 ~ leaveData:`, leaveData);
 
   const [selectedDateArray, setSelectedDateArray] = useState([]);
   console.log(`🚀 ~ selectedDateArray:`, selectedDateArray);
@@ -66,14 +67,14 @@ const MyCalendar = () => {
     setCalendarOpen(true);
   };
 
-  const handlePopoverClose = (event) => {
-    if (anchorEl && anchorEl.contains(event.target)) {
-      // Click inside the popover, do nothing
-      return;
-    }
+  // const handlePopoverClose = (event) => {
+  //   if (anchorEl && anchorEl.contains(event.target)) {
+  //     // Click inside the popover, do nothing
+  //     return;
+  //   }
 
-    setCalendarOpen(false);
-  };
+  //   setCalendarOpen(false);
+  // };
 
   return (
     <div className="relative">
