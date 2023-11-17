@@ -113,7 +113,8 @@ const AddEmployee = () => {
           },
         }
       );
-
+      console.log(response.data);
+      console.log(response.data.roles);
       if (response.data && response.data.roles) {
         if (response.data.roles.length > 0) {
           const filteredProfiles = response.data.roles.filter((role) => {
