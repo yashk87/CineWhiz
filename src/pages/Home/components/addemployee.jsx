@@ -19,35 +19,17 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
 import { jwtDecode } from "jwt-decode";
-import Checkbox from "@mui/material/Checkbox";
-import Autocomplete from "@mui/material/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+import dayjs from "dayjs";
+import { ListItemText, Checkbox } from "@mui/material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 
 const AddEmployee = () => {
+  const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    try {
-      const decodedToken = jwtDecode(authToken);
-      console.log(decodedToken);
-      console.log(decodedToken.user._id);
-      if (decodedToken && decodedToken.user._id) {
-        setUserId(decodedToken.user._id);
-      } else {
-        setUserId("");
-      }
-    } catch (error) {
-      console.error("Failed to decode the token:", error);
-    }
-  }, []);
-
-  const { handleAlert } = useContext(TestContext);
+  const { id } = useParams();
   const {
     first_name,
     middle_name,
@@ -78,6 +60,27 @@ const AddEmployee = () => {
     joining_date,
     setJoiningDate,
   } = useProfileForm();
+
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    return emailRegex.test(email);
+  };
+
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      if (decodedToken && decodedToken.user._id) {
+        setUserId(decodedToken.user._id);
+      } else {
+        setUserId("");
+      }
+    } catch (error) {
+      console.error("Failed to decode the token:", error);
+    }
+  }, []);
+
   const [selectedValue, setSelectedValue] = useState("");
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
@@ -97,16 +100,9 @@ const AddEmployee = () => {
     const {
       target: { value },
     } = event;
-    setProfile(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setProfile(typeof value === "string" ? value.split(",") : value);
   };
-
   const [availableProfiles, setAvailableProfiles] = useState([]);
-
-  const { id } = useParams();
-
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -117,15 +113,13 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log(response);
-      console.log(response.data.roles);
+
       if (response.data && response.data.roles) {
         if (response.data.roles.length > 0) {
           const filteredProfiles = response.data.roles.filter((role) => {
             return role.isActive;
           });
 
-          console.log(filteredProfiles.length);
           if (filteredProfiles.length > 0) {
             setAvailableProfiles(filteredProfiles);
           } else {
@@ -146,15 +140,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
-    // eslint-disable-next-line
   }, [id]);
-
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  const isValidEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    return emailRegex.test(email);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -174,9 +160,7 @@ const AddEmployee = () => {
       organizationId: id,
       creatorId: userId,
     };
-    console.log(user);
     try {
-      console.log(process.env.REACT_APP_API);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
@@ -186,16 +170,13 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log(`🚀 ~ response:`, response);
 
       if (response.data.success) {
-        console.log("hii i am called as error");
         handleAlert(true, "error", "Invalid authorization");
       }
 
       handleAlert(true, "success", response.data.message);
     } catch (error) {
-      console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
     }
   };
@@ -388,7 +369,7 @@ const AddEmployee = () => {
               />
 
               <div className="w-full">
-                <FormControl sx={{ width: "100%", mt: 1, mb: 2 }}>
+                <FormControl sx={{ width: 330 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
                     Profile
                   </InputLabel>
@@ -399,11 +380,35 @@ const AddEmployee = () => {
                     value={profile}
                     onChange={handleChange}
                     input={<OutlinedInput label="profile" />}
-                    renderValue={(selected) => selected.join(", ")}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip
+                            key={value}
+                            label={
+                              <>
+                                {value}
+                                <span
+                                  style={{
+                                    cursor: "pointer",
+                                    marginLeft: "4px",
+                                  }}
+                                  onClick={() => {
+                                    const updatedProfile = profile.filter(
+                                      (item) => item !== value
+                                    );
+                                    setProfile(updatedProfile);
+                                  }}
+                                ></span>
+                              </>
+                            }
+                          />
+                        ))}
+                      </Box>
+                    )}
                     MenuProps={MenuProps}
                   >
                     {availableProfiles.length === 0 ? (
-                      // Display an error message if no roles are available
                       <MenuItem disabled>
                         No roles available. Please add roles for your
                         organization.
@@ -411,12 +416,38 @@ const AddEmployee = () => {
                     ) : (
                       availableProfiles.map((name) => (
                         <MenuItem key={name._id} value={name.roleName}>
-                          {name.roleName}
+                          <Checkbox
+                            checked={profile.indexOf(name.roleName) > -1}
+                          />
+                          <ListItemText primary={name.roleName} />
                         </MenuItem>
                       ))
                     )}
                   </Select>
                 </FormControl>
+              </div>
+
+              <div className="w-full">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    className="w-full"
+                    components={["DatePicker"]}
+                    required
+                  >
+                    <DatePicker
+                      label="Joining Date"
+                      value={joining_date}
+                      onChange={(newDate) => {
+                        const formattedDate =
+                          dayjs(newDate).format("YYYY-MM-DD");
+                        setJoiningDate(formattedDate);
+                      }}
+                      slotProps={{
+                        textField: { size: "small", fullWidth: true },
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </div>
 
               <div className="w-full">
