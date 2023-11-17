@@ -30,7 +30,7 @@ export default function AppAlert() {
           severity={appAlert.type}
           componentsProps={{ closeButton: { className: " !text-2xl" } }}
           sx={{ width: "100%" }}
-          className="flex items-center !p-4 !px-8 !shadow-2xl !text-[1.1rem] !font-semibold"
+          className="flex items-center !p-4 !px-8 !shadow-2xl !text-[1.1rem] !font-medium"
         >
           {appAlert.msg}
         </Alert>

@@ -1,12 +1,14 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Pacifico&family=Roboto&family=Work+Sans:wght@300&display=swap");
 body {
   margin: 0;
   height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: "Roboto", sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -249,4 +251,20 @@ button:active {
 
 #svgContainer svg {
   width: 20% !important;
+}
+
+.datePicker-tailwind-css button {
+  margin: 0 5px !important;
+  transform: scale(0.9em);
+  margin-left: 2px;
+}
+.datePicker-tailwind-css button:disabled {
+  background: #e0e0e0 !important;
+  border: 2px solid white !important;
+  color: rgb(188, 186, 186) !important;
+  text-decoration: none;
+  border-radius: 50%;
+
+  transition: box-shadow 0.2s ease-in-out;
+  outline: none;
 }

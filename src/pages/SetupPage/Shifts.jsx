@@ -91,7 +91,74 @@ const Shifts = () => {
 
   return (
     <>
-      <form style={{ width: "100%", display: "flex" }} action="">
+      <section className="min-h-screen px-20 bg-gray-50">
+        <div className="flex justify-between w-full  py-8  h-max items-center">
+          <div>
+            <h1 className="text-xl font-semibold">Shift Section</h1>
+            <p className="text-md">Setup shifts for the organization</p>
+          </div>
+
+          <Button className="!text-semibold" variant="contained">
+            Create Shift
+          </Button>
+        </div>
+
+        <article>
+          <div class="flex flex-col">
+            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div class="overflow-hidden">
+                  <table class="min-w-full text-left text-sm font-light">
+                    <thead class="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" class="px-6 py-4">
+                          SR NO
+                        </th>
+                        <th scope="col" class="px-6 py-4">
+                          First
+                        </th>
+                        <th scope="col" class="px-6 py-4">
+                          Last
+                        </th>
+                        <th scope="col" class="px-6 py-4">
+                          Handle
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b dark:border-neutral-500">
+                        <td class="whitespace-nowrap px-6 py-4 font-medium">
+                          1
+                        </td>
+                        <td class="whitespace-nowrap px-6 py-4">Mark</td>
+                        <td class="whitespace-nowrap px-6 py-4">Otto</td>
+                        <td class="whitespace-nowrap px-6 py-4">@mdo</td>
+                      </tr>
+                      <tr class="border-b dark:border-neutral-500">
+                        <td class="whitespace-nowrap px-6 py-4 font-medium">
+                          2
+                        </td>
+                        <td class="whitespace-nowrap px-6 py-4">Jacob</td>
+                        <td class="whitespace-nowrap px-6 py-4">Thornton</td>
+                        <td class="whitespace-nowrap px-6 py-4">@fat</td>
+                      </tr>
+                      <tr class="border-b dark:border-neutral-500">
+                        <td class="whitespace-nowrap px-6 py-4 font-medium">
+                          3
+                        </td>
+                        <td class="whitespace-nowrap px-6 py-4">Larry</td>
+                        <td class="whitespace-nowrap px-6 py-4">Wild</td>
+                        <td class="whitespace-nowrap px-6 py-4">@twitter</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+      {/* <form style={{ width: "100%", display: "flex" }} action="">
         <Container
           style={{
             display: "flex",
@@ -255,10 +322,10 @@ const Shifts = () => {
             </Typography>
           )}
         </Container>
-        <Container>
+         <Container>
           <ShiftDisplay />
-        </Container>
-      </form>
+        </Container> *
+      </form> */}
     </>
   );
 };

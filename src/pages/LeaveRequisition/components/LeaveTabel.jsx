@@ -96,7 +96,7 @@ const LeaveTabel = ({
           </div>
           <div className="mt-6">
             <Skeleton variant="text" className="w-[15%] h-6 text-lg " />
-            <Skeleton variant="text" className="w-[25%] !h-8 !mb-4 text-md " />
+            <Skeleton variant="text" className="w-[25%] !h-8 !mb- text-md " />
           </div>
         </div>
       </article>
