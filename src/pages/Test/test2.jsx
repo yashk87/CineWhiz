@@ -17,7 +17,7 @@ const MyCalendar = () => {
       title: "Maternity Leave",
       start: new Date(2023, 10, 15), // November is 10 (zero-based month)
       end: new Date(2023, 10, 17),
-      color: "pink",
+      color: "pink", // Set initial color to blue
     },
     // Add more previously added events
   ]);
@@ -25,11 +25,11 @@ const MyCalendar = () => {
     title: "",
     start: new Date(),
     end: new Date(),
-    color: "pink", // Default color for maternity leave
+    color: "pink", // Default color for new selections
   });
-  console.log(`🚀 ~ leaveData:`, leaveData);
 
   const [selectedDateArray, setSelectedDateArray] = useState([]);
+  console.log(`🚀 ~ selectedDateArray:`, selectedDateArray);
 
   const handleSelectSlot = ({ start, end }) => {
     const newLeave = {
@@ -39,7 +39,7 @@ const MyCalendar = () => {
       color: "blue", // Adjust the color as needed
     };
 
-    setEvents([newLeave]);
+    setEvents((prevEvents) => [...prevEvents, newLeave]); // Preserve existing events and add the new one
     setLeaveData(newLeave);
 
     const selectedDates = {
@@ -47,7 +47,7 @@ const MyCalendar = () => {
       endDate: moment(end).toISOString(),
     };
 
-    setSelectedDateArray([selectedDates]);
+    setSelectedDateArray((prevDates) => [...prevDates, selectedDates]); // Preserve existing dates and add the new one
   };
 
   const handleSelectEvent = (event) => {
@@ -59,7 +59,6 @@ const MyCalendar = () => {
   const handleSubmit = () => {
     // Handle the submission logic as needed
     setCalendarOpen(false);
-    console.log(selectedDateArray);
   };
 
   const handlePopoverOpen = (event) => {
@@ -67,14 +66,14 @@ const MyCalendar = () => {
     setCalendarOpen(true);
   };
 
-  // const handlePopoverClose = (event) => {
-  //   if (anchorEl && anchorEl.contains(event.target)) {
-  //     // Click inside the popover, do nothing
-  //     return;
-  //   }
+  const handlePopoverClose = (event) => {
+    if (anchorEl && anchorEl.contains(event.target)) {
+      // Click inside the popover, do nothing
+      return;
+    }
 
-  //   setCalendarOpen(false);
-  // };
+    setCalendarOpen(false);
+  };
 
   return (
     <div className="relative">
