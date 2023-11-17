@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
 import moment from "moment";
+import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css"; // Import Tailwind CSS
 
-import Datepicker from "react-tailwindcss-datepicker";
-import Divider from "@mui/material/Divider";
-import ErrorIcon from "@mui/icons-material/Error";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import WestIcon from "@mui/icons-material/West";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DeleteIcon from "@mui/icons-material/Delete";
+import WestIcon from "@mui/icons-material/West";
 import {
   Button,
   FormControl,
@@ -19,16 +16,16 @@ import {
   OutlinedInput,
   Select,
 } from "@mui/material";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import Divider from "@mui/material/Divider";
 import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
 import { useContext } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
 
-import { Link } from "react-router-dom";
-import LeaveTabel from "./components/LeaveTabel";
-import { TestContext } from "../../State/Function/Main";
-import { format } from "date-fns";
 import { Close } from "@mui/icons-material";
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import LeaveTabel from "./components/LeaveTabel";
 
 // Set up the localizer for moment.js
 const localizer = momentLocalizer(moment);
@@ -70,6 +67,7 @@ const LeaveRequisition = () => {
     end: new Date(),
     color: "pink", // Default color for maternity leave
   });
+  console.log(`🚀 ~ leaveData:`, leaveData);
 
   const handleInputChange = () => {
     // Open the calendar on input bar click
@@ -119,29 +117,29 @@ const LeaveRequisition = () => {
     setCalendarOpen(true);
   };
 
-  const formatLeaveRange = (start, end) => {
-    const startFormatted = moment(start).format("MMMM Do, YYYY");
-    const endFormatted = moment(end).format("MMMM Do, YYYY");
-    return `${startFormatted} to ${endFormatted}`;
-  };
+  // const formatLeaveRange = (start, end) => {
+  //   const startFormatted = moment(start).format("MMMM Do, YYYY");
+  //   const endFormatted = moment(end).format("MMMM Do, YYYY");
+  //   return `${startFormatted} to ${endFormatted}`;
+  // };
 
   /* ----------------------------- Leave Calender ----------------------------- */
 
-  const handleValueChange = (newValue) => {
-    const isDuplicate = value.some(
-      (existingValue) =>
-        existingValue.startDate === newValue.startDate ||
-        existingValue.endDate === newValue.endDate
-    );
+  // const handleValueChange = (newValue) => {
+  //   const isDuplicate = value.some(
+  //     (existingValue) =>
+  //       existingValue.startDate === newValue.startDate ||
+  //       existingValue.endDate === newValue.endDate
+  //   );
 
-    if (isDuplicate) {
-      alert("You have already selected the specific time");
-    }
+  //   if (isDuplicate) {
+  //     alert("You have already selected the specific time");
+  //   }
 
-    if (!isDuplicate) {
-      setValue((prev) => [...prev, { ...newValue }]);
-    }
-  };
+  //   if (!isDuplicate) {
+  //     setValue((prev) => [...prev, { ...newValue }]);
+  //   }
+  // };
 
   const genrateLeaveRequest = async () => {
     try {
