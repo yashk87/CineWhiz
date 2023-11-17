@@ -1,4 +1,6 @@
-import { Button, TextField } from "@mui/material";
+import { Button, Checkbox, ListItemText, TextField } from "@mui/material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
@@ -13,6 +15,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
+import dayjs from "dayjs";
+import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
@@ -85,6 +89,7 @@ const AddEmployee = () => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
+    // eslint-disable-next-line
   }, []);
 
   const [selectedValue, setSelectedValue] = useState("");
@@ -148,6 +153,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
+    // eslint-disable-next-line
   }, [id]);
 
   const handleSubmit = async (e) => {

@@ -19,7 +19,7 @@ import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
-import DateRangeCalendarValue from "./pages/Test/test2";
+import MyCalendar from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 const App = () => {
@@ -31,7 +31,7 @@ const App = () => {
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
       <Route exact path="/add-department" element={<Department />} />
-      <Route exact path="/menu" element={<DateRangeCalendarValue />} />
+      <Route exact path="/menu" element={<MyCalendar />} />
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/add-role" element={<AddRole />} />
