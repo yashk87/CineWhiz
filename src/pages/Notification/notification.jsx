@@ -1,3 +1,4 @@
+import { NotificationImportant } from "@mui/icons-material";
 import CheckIcon from "@mui/icons-material/Check"; // Import the accept icon
 import CloseIcon from "@mui/icons-material/Close"; // Import the reject icon
 import { Chip } from "@mui/material";
@@ -10,7 +11,6 @@ import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-import { NotificationImportant } from "@mui/icons-material";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
@@ -125,8 +125,8 @@ const Notification = () => {
                     <>
                       <Box key={id}>
                         <Typography className=" text-gray-400" variant="body2">
-                          Leave from {format(new Date(day.startDate), "PP")} to{" "}
-                          {format(new Date(day.endDate), "PP")}
+                          Leave from {format(new Date(day.start), "PP")} to{" "}
+                          {format(new Date(day.end), "PP")}
                         </Typography>
                       </Box>
                     </>
