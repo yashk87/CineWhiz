@@ -4,6 +4,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Organisation = ({ item }) => {
   const navigate = useNavigate();
+  const handleCreateProfile = () => {
+    navigate(`/organisation/${item._id}/add-employee`, {
+      state: { orgName: item.name },
+    });
+  };
   return (
     <Card
       className=" hover:shadow-lg !transition-all  h-max    !w-[320px]"
@@ -57,7 +62,8 @@ const Organisation = ({ item }) => {
           size="small"
           className=" cursor-pointer"
           variant="contained"
-          onClick={() => navigate(`/organisation/${item._id}/add-employee`)}
+          onClick={handleCreateProfile}
+          // onClick={() => navigate(`/organisation/${item._id}/add-employee`)}
         >
           Create Profile
         </Button>

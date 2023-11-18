@@ -22,11 +22,16 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
-
+import Tooltip from "@mui/material/Tooltip";
+import { useLocation } from "react-router-dom";
 const AddEmployee = () => {
+  const locations = useLocation();
+  const { orgName } = locations.state;
+
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+
   const [userId, setUserId] = useState(null);
   const { id } = useParams();
   const {
@@ -70,6 +75,7 @@ const AddEmployee = () => {
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
+
       if (decodedToken && decodedToken.user._id) {
         setUserId(decodedToken.user._id);
       } else {
@@ -113,6 +119,7 @@ const AddEmployee = () => {
           },
         }
       );
+      console.log(response);
       console.log(response.data);
       console.log(response.data.roles);
       if (response.data && response.data.roles) {
@@ -120,7 +127,7 @@ const AddEmployee = () => {
           const filteredProfiles = response.data.roles.filter((role) => {
             return role.isActive;
           });
-
+          console.log(filteredProfiles);
           if (filteredProfiles.length > 0) {
             setAvailableProfiles(filteredProfiles);
           } else {
@@ -146,6 +153,27 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const hasDepartmentAdmin = availableProfiles.some(
+      (profile) => profile.roleName === "Department Admin"
+    );
+    console.log(hasDepartmentAdmin);
+    // Check if the selected profile is not "Department Admin"
+    const selectedIsNotDepartmentAdmin = selectedValue !== "Department Admin";
+
+    // If a Department Admin profile exists and the selected profile is not "Department Admin", prompt the user
+    if (hasDepartmentAdmin && selectedIsNotDepartmentAdmin) {
+      const confirmCreateProfile = window.confirm(
+        "A Department Admin profile already exists. Do you want to create another?"
+      );
+
+      if (!confirmCreateProfile) {
+        // User chose not to create another profile
+        return;
+      }
+      // Proceed to create the profile
+    }
+
     const user = {
       first_name,
       last_name,
@@ -162,6 +190,7 @@ const AddEmployee = () => {
       organizationId: id,
       creatorId: userId,
     };
+    console.log(user);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
@@ -182,6 +211,7 @@ const AddEmployee = () => {
       handleAlert(true, "error", error.response.data.message);
     }
   };
+  const staticTitle = "This form for";
   return (
     <>
       <div
@@ -195,9 +225,10 @@ const AddEmployee = () => {
       >
         <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
           <div className="w-[400px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
-            <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
-              Add Employee
-            </h4>
+            <Tooltip title={`${staticTitle} ${orgName}`}>
+              <Button>Add Profile</Button>
+            </Tooltip>
+
             <form
               onSubmit={handleSubmit}
               className="flex flex-col items-center space-y-5"
