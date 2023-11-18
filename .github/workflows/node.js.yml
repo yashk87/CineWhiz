@@ -30,14 +30,23 @@ jobs:
         name: static-site
         path: build/
 
-  # release-project:
-  #   name: Release project
-  #   runs-on: self-hosted
-  #   needs: build
-  #   steps:
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: static-site
-  #     - name: Test artifact download
-  #       run: ls -R
+  release-project:
+    name: Release project
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: static-site
+
+      - name: Test artifact download
+        run: ls -R
+
+# Advantages:
+# - Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
+# - Artifact Management: Uses GitHub Actions to manage and transfer artifacts (the build output) between jobs.
+
+# Disadvantages:
+# - Self-Hosted Runner Dependency: The "release-project" job relies on a self-hosted runner, which may require additional setup and maintenance.
+# - Limited Explanation: It's recommended to provide more detailed comments or explanations within the workflow file for better documentation and understanding.
