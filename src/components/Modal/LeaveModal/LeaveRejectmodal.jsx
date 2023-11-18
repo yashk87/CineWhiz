@@ -1,22 +1,9 @@
-import {
-  Box,
-  Button,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import { Box, Button, Modal } from "@mui/material";
+import React from "react";
 
 // import AddIcon from "@mui/icons-material/Add";
 // import axios from "axios";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { TestContext } from "../../../State/Function/Main";
-
-import axios from "axios";
 
 const LeaveRejectmodal = ({ open, handleClose, id }) => {
   const style = {
@@ -28,7 +15,7 @@ const LeaveRejectmodal = ({ open, handleClose, id }) => {
     p: 4,
   };
 
-  console.log(id, "id");
+  // console.log(id, "id");
 
   return (
     <>
