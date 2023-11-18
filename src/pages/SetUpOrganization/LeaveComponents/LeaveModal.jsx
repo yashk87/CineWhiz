@@ -24,8 +24,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import CloseIcon from "@mui/icons-material/Close";
-import { useMutation } from "react-query";
 
 const LeaveModal = ({ open, handleClose, id }) => {
   const [leaveTypes, setLeaveTypes] = useState([

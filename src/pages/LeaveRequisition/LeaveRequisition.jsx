@@ -188,19 +188,18 @@ const LeaveRequisition = () => {
   };
 
   const removeItem = (idToRemove) => {
-    // const updatedData = selectedDateArray.filter(
-    //   (item) => item.startDate !== idToRemove
-    // );
+    const updatedData = selectedDateArray.filter(
+      (item) => item.startDate !== idToRemove
+    );
+    setSelectedDateArray(updatedData);
 
     const updateEvents = events.filter((item, i) => {
-      console.log(i + 1, "i");
-      console.log(idToRemove, "idToReomve");
+      // console.log(i + 1, "i");
+      // console.log(idToRemove, "idToReomve");
 
       return i + 1 !== idToRemove;
     });
-    // setSelectedDateArray(updatedData);
-    console.log(updateEvents, "event");
-
+    // console.log(updateEvents, "event");
     setEvents(updateEvents);
   };
 
