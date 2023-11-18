@@ -27,9 +27,8 @@ import { UseContext } from "../../../State/UseState/UseContext";
 
 const LeaveModal = ({ open, handleClose, id }) => {
   const [leaveTypes, setLeaveTypes] = useState([
-    { leaveName: "Vacation", isActive: false, count: 0 },
+    { leaveName: "Vacation Leave", isActive: false, count: 0 },
     { leaveName: "Sick Leave", isActive: false, count: 0 },
-    { leaveName: "Maternity Leave", isActive: false, count: 0 },
   ]);
 
   const [newLeaveType, setNewLeaveType] = useState("");
