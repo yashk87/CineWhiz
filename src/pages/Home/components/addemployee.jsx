@@ -1,10 +1,8 @@
 import { Button, TextField } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import InputLabel from "@mui/material/InputLabel";
-import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Radio from "@mui/material/Radio";
@@ -15,14 +13,40 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import axios from "axios";
-import React, { useContext, useState, useEffect } from "react";
-import { TestContext } from "../../../State/Function/Main";
-import useProfileForm from "../../../hooks/useProfileForm";
-import { UseContext } from "../../../State/UseState/UseContext";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import useProfileForm from "../../../hooks/useProfileForm";
+import { jwtDecode } from "jwt-decode";
+import Checkbox from "@mui/material/Checkbox";
+import Autocomplete from "@mui/material/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
+
 const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      console.log(decodedToken);
+      console.log(decodedToken.user._id);
+      if (decodedToken && decodedToken.user._id) {
+        setUserId(decodedToken.user._id);
+      } else {
+        setUserId("");
+      }
+    } catch (error) {
+      console.error("Failed to decode the token:", error);
+    }
+  }, []);
+
   const { handleAlert } = useContext(TestContext);
   const {
     first_name,
@@ -69,20 +93,20 @@ const AddEmployee = () => {
     },
   };
   const [profile, setProfile] = React.useState([]);
-  // const [profileSelected, setProfileSelected] = React.useState([]);
-
-  const handleRoleChange = (event) => {
+  const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-
-    setProfile(typeof value === "string" ? value.split(",") : value);
+    setProfile(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
   };
-  // display the role dynamically depend existing role
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
 
   const { id } = useParams();
+
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -95,22 +119,23 @@ const AddEmployee = () => {
       );
       console.log(response);
       console.log(response.data.roles);
-      if (response.data.roles.length > 0) {
-        // Filter profiles based on isActive property
-        let activeProfiles = response.data.roles.filter(
-          (role) => role.isActive
-        );
-        console.log(activeProfiles);
-        if (activeProfiles.length > 0) {
-          setAvailableProfiles(activeProfiles);
-        } else {
-          console.log(availableProfiles);
-          // Handle error if no active profiles are available
-          handleAlert(
-            true,
-            "error",
-            "No active profiles available. Please add active profiles for your organization."
-          );
+      if (response.data && response.data.roles) {
+        if (response.data.roles.length > 0) {
+          const filteredProfiles = response.data.roles.filter((role) => {
+            return role.isActive;
+          });
+
+          console.log(filteredProfiles.length);
+          if (filteredProfiles.length > 0) {
+            setAvailableProfiles(filteredProfiles);
+          } else {
+            console.log(availableProfiles);
+            handleAlert(
+              true,
+              "error",
+              "No active profiles available. Please add active profiles for your organization."
+            );
+          }
         }
       }
     } catch (error) {
@@ -121,6 +146,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
+    // eslint-disable-next-line
   }, [id]);
 
   const passwordRegex =
@@ -145,13 +171,14 @@ const AddEmployee = () => {
       selectedValue,
       joining_date,
       profile: profile.length <= 0 ? "Employee" : profile,
+      organizationId: id,
+      creatorId: userId,
     };
     console.log(user);
     try {
       console.log(process.env.REACT_APP_API);
-
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/profile/create`,
+        `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
         {
           headers: {
@@ -160,6 +187,7 @@ const AddEmployee = () => {
         }
       );
       console.log(`🚀 ~ response:`, response);
+
       if (response.data.success) {
         console.log("hii i am called as error");
         handleAlert(true, "error", "Invalid authorization");
@@ -358,26 +386,7 @@ const AddEmployee = () => {
                 fullWidth
                 margin="normal"
               />
-              <div className="w-full">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    className="w-full"
-                    components={["DatePicker"]}
-                    required
-                  >
-                    <DatePicker
-                      label="Joining Date"
-                      value={joining_date}
-                      onChange={(newDate) => {
-                        setJoiningDate(newDate);
-                      }}
-                      slotProps={{
-                        textField: { size: "small", fullWidth: true },
-                      }}
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </div>
+
               <div className="w-full">
                 <FormControl sx={{ width: "100%", mt: 1, mb: 2 }}>
                   <InputLabel id="demo-multiple-checkbox-label">
@@ -388,7 +397,7 @@ const AddEmployee = () => {
                     id="demo-multiple-checkbox"
                     multiple
                     value={profile}
-                    onChange={handleRoleChange}
+                    onChange={handleChange}
                     input={<OutlinedInput label="profile" />}
                     renderValue={(selected) => selected.join(", ")}
                     MenuProps={MenuProps}
@@ -403,10 +412,6 @@ const AddEmployee = () => {
                       availableProfiles.map((name) => (
                         <MenuItem key={name._id} value={name.roleName}>
                           {name.roleName}
-                          {/* <Checkbox
-                            checked={availableProfiles.indexOf(name) > -1}
-                          /> */}
-                          {/* <ListItemText primary={name} /> */}
                         </MenuItem>
                       ))
                     )}

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
+import axios from 'axios';
 import {
   Button,
   Dialog,
@@ -29,6 +31,53 @@ const AddOrganizationLocations = () => {
   const [pinCode, setPinCode] = useState('');
   const [country, setCountry] = useState('');
   const [editIndex, setEditIndex] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+
+  useEffect(() => {
+    // Fetch countries
+    axios
+      .get('http://api.geonames.org/countryInfoJSON', {
+        params: {
+          username: 'your_geonames_username', // Replace with your Geonames username
+        },
+      })
+      .then((response) => {
+        const countryOptions = response.data.geonames.map((country) => ({
+          value: country.countryCode,
+          label: country.countryName,
+        }));
+        setCountries(countryOptions);
+      })
+      .catch((error) => {
+        console.error('Error fetching countries:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch states based on the selected country
+    if (selectedCountry) {
+      axios
+        .get('http://api.geonames.org/childrenJSON', {
+          params: {
+            username: 'your_geonames_username', // Replace with your Geonames username
+            geonameId: selectedCountry.value,
+          },
+        })
+        .then((response) => {
+          const stateOptions = response.data.geonames.map((state) => ({
+            value: state.geonameId,
+            label: state.name,
+          }));
+          setStates(stateOptions);
+        })
+        .catch((error) => {
+          console.error('Error fetching states:', error);
+        });
+    }
+  }, [selectedCountry]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -43,6 +92,8 @@ const AddOrganizationLocations = () => {
     setState('');
     setPinCode('');
     setCountry('');
+    setSelectedCountry(null);
+    setSelectedState(null);
   };
 
   const handleAddLocation = () => {
@@ -50,9 +101,9 @@ const AddOrganizationLocations = () => {
       addressLine1,
       addressLine2,
       city,
-      state,
+      state: selectedState ? selectedState.label : '',
       pinCode,
-      country,
+      country: selectedCountry ? selectedCountry.label : '',
     };
 
     if (editIndex !== null) {
@@ -75,6 +126,12 @@ const AddOrganizationLocations = () => {
     setState(selectedLocation.state);
     setPinCode(selectedLocation.pinCode);
     setCountry(selectedLocation.country);
+    setSelectedCountry(
+      countries.find((country) => country.label === selectedLocation.country) || null
+    );
+    setSelectedState(
+      states.find((state) => state.label === selectedLocation.state) || null
+    );
     setOpen(true);
   };
 
@@ -84,35 +141,43 @@ const AddOrganizationLocations = () => {
     setLocationList(updatedList);
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      handleAddLocation();
-      handleClose();
-    }
-  };
-
   return (
     <IntlProvider locale="en">
       <Container>
-        <Typography 
-        variant="h4" 
-        gutterBottom
-        color={"primary"}
-        fontWeight={800}
-        fontSize={20}
-        className="text-2xl pt-5">
-          <FormattedMessage id="organizationLocations" defaultMessage="Organization Locations" />
+        <Typography
+          variant="h4"
+          gutterBottom
+          color={'primary'}
+          fontWeight={800}
+          fontSize={20}
+          className="text-2xl pt-5"
+        >
+          <FormattedMessage
+            id="organizationLocations"
+            defaultMessage="Organization Locations"
+          />
         </Typography>
 
-        <Button variant="contained" color="primary" onClick={handleOpen} style={{ marginBottom: '16px' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpen}
+          style={{ marginBottom: '16px' }}
+        >
           <FormattedMessage id="addLocation" defaultMessage="Add Location" />
         </Button>
 
         <List>
           {locationList.map((location, index) => (
             <ListItem key={index} style={{ marginBottom: '8px' }}>
-              <Card variant="outlined" style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+              <Card
+                variant="outlined"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <CardContent>
                   <Typography variant="body1">
                     {location.addressLine1 && `${location.addressLine1}, `}
@@ -123,12 +188,24 @@ const AddOrganizationLocations = () => {
                     {location.country && `${location.country}`}
                   </Typography>
                 </CardContent>
-                <CardActions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <CardActions
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
                   <div>
-                    <IconButton onClick={() => handleEditLocation(index)} aria-label="edit">
+                    <IconButton
+                      onClick={() => handleEditLocation(index)}
+                      aria-label="edit"
+                    >
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteLocation(index)} aria-label="delete">
+                    <IconButton
+                      onClick={() => handleDeleteLocation(index)}
+                      aria-label="delete"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </div>
@@ -138,7 +215,7 @@ const AddOrganizationLocations = () => {
           ))}
         </List>
 
-        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
+        <Dialog open={open} onClose={handleClose}>
           <DialogTitle>
             {editIndex !== null ? (
               <FormattedMessage id="editLocation" defaultMessage="Edit Location" />
@@ -186,14 +263,25 @@ const AddOrganizationLocations = () => {
                 onChange={(e) => setPinCode(e.target.value)}
                 style={{ flex: '1' }}
               />
-              <TextField
-                label={<FormattedMessage id="country" defaultMessage="Country" />}
-                variant="outlined"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
+              <Select
+                options={countries}
+                value={selectedCountry}
+                onChange={(selectedOption) => setSelectedCountry(selectedOption)}
+                placeholder="Select Country"
+                isClearable
                 style={{ flex: '1' }}
               />
             </div>
+            {selectedCountry && (
+              <Select
+                options={states}
+                value={selectedState}
+                onChange={(selectedOption) => setSelectedState(selectedOption)}
+                placeholder="Select State"
+                isClearable
+                style={{ marginTop: '8px' }}
+              />
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">
@@ -201,7 +289,10 @@ const AddOrganizationLocations = () => {
             </Button>
             <Button onClick={handleAddLocation} color="primary">
               {editIndex !== null ? (
-                <FormattedMessage id="saveChanges" defaultMessage="Save Changes" />
+                <FormattedMessage
+                  id="saveChanges"
+                  defaultMessage="Save Changes"
+                />
               ) : (
                 <FormattedMessage id="add" defaultMessage="Add" />
               )}
