@@ -109,6 +109,7 @@ const AddEmployee = () => {
     setProfile(typeof value === "string" ? value.split(",") : value);
   };
   const [availableProfiles, setAvailableProfiles] = useState([]);
+  console.log(availableProfiles);
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -119,15 +120,13 @@ const AddEmployee = () => {
           },
         }
       );
-      console.log(response);
-      console.log(response.data);
-      console.log(response.data.roles);
+
       if (response.data && response.data.roles) {
         if (response.data.roles.length > 0) {
           const filteredProfiles = response.data.roles.filter((role) => {
             return role.isActive;
           });
-          console.log(filteredProfiles);
+
           if (filteredProfiles.length > 0) {
             setAvailableProfiles(filteredProfiles);
           } else {
@@ -151,28 +150,29 @@ const AddEmployee = () => {
     // eslint-disable-next-line
   }, [id]);
 
+  const [existingProfile, setExistingProfile] = useState([]);
+  const fetchExistingRoles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-profile`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      setExistingProfile(response.data.role);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch available profiles");
+    }
+  };
+  useEffect(() => {
+    fetchExistingRoles();
+  }, [id]);
+  console.log(existingProfile);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const hasDepartmentAdmin = availableProfiles.some(
-      (profile) => profile.roleName === "Department Admin"
-    );
-    console.log(hasDepartmentAdmin);
-    // Check if the selected profile is not "Department Admin"
-    const selectedIsNotDepartmentAdmin = selectedValue !== "Department Admin";
-
-    // If a Department Admin profile exists and the selected profile is not "Department Admin", prompt the user
-    if (hasDepartmentAdmin && selectedIsNotDepartmentAdmin) {
-      const confirmCreateProfile = window.confirm(
-        "A Department Admin profile already exists. Do you want to create another?"
-      );
-
-      if (!confirmCreateProfile) {
-        // User chose not to create another profile
-        return;
-      }
-      // Proceed to create the profile
-    }
 
     const user = {
       first_name,
