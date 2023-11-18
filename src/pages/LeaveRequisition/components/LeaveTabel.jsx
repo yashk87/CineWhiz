@@ -63,7 +63,7 @@ const LeaveTabel = ({
     updateLeaveCounts(response.data);
     return response.data;
   });
-  console.log(`🚀 ~ data:`, data);
+  // console.log(`🚀 ~ data:`, data);
 
   if (isLoading) {
     return (

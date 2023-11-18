@@ -32,88 +32,78 @@ import LeaveTabel from "./components/LeaveTabel";
 const localizer = momentLocalizer(moment);
 
 const LeaveRequisition = () => {
-  const [leavesTypes, setleavesTypes] = useState([]);
+  const [leavesTypes, setLeavesTypes] = useState([]);
   const [vactionList, setVactionList] = useState([]);
-
-  // const dataList =
-  //   Array.isArray(vactionList?.daysOfLeaveArray) &&
-  //   vactionList?.daysOfLeaveArray.map((item) => console.log(item));
-
   const [value, setValue] = useState([]);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
   const [subtractedLeaves, setSubtractedLeaves] = useState([]);
 
-  /* ----------------------------- Leave Calender ----------------------------- */
-
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState([]);
   const [selectedDateArray, setSelectedDateArray] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  // console.log(vactionList, "v");
-
-  const [events, setEvents] = useState([
+  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([
     {
       title: "Maternity Leave",
-      start: new Date(2023, 10, 15), // November is 10 (zero-based month)
+      start: new Date(2023, 10, 15),
       end: new Date(2023, 10, 17),
       color: "pink",
     },
-    // Add more previously added events
   ]);
+  const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
+  console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
 
   const [leaveData, setLeaveData] = useState({
     title: "",
     start: new Date(),
     end: new Date(),
-    color: "pink", // Default color for maternity leave
+    color: "pink",
   });
 
+  console.log("[...appliedLeaveEvents, ...newAppliedLeaveEvents]", [
+    ...appliedLeaveEvents,
+    ...newAppliedLeaveEvents,
+  ]);
+
   const handleSubmit = () => {
-    // Handle the submission logic as needed
     setCalendarOpen(false);
   };
 
   const handleInputChange = () => {
-    // Open the calendar on input bar click
     setCalendarOpen(true);
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    const newLeave = {
-      title: "Selected Leave",
-      start,
-      end,
-      color: "blue", // Adjust the color as needed
-    };
+    const selectedStartDate = moment(start);
+    const selectedEndDate = moment(end);
 
-    setEvents((prevEvents) => [...prevEvents, newLeave]); // Preserve existing events and add the new one
-    setLeaveData(newLeave);
-
-    const selectedDates = {
-      startDate: moment(start).toISOString(),
-      endDate: moment(end).toISOString(),
-    };
-
-    // Check for duplicates in selectedDateArray
-    const isDuplicate = selectedDateArray.some(
-      (item) =>
-        item.startDate === selectedDates.startDate ||
-        item.endDate === selectedDates.endDate
+    const isOverlap = appliedLeaveEvents.some(
+      (event) =>
+        (selectedStartDate.isSameOrAfter(moment(event.start)) &&
+          selectedStartDate.isBefore(moment(event.end))) ||
+        (selectedEndDate.isAfter(moment(event.start)) &&
+          selectedEndDate.isSameOrBefore(moment(event.end))) ||
+        (selectedStartDate.isBefore(moment(event.start)) &&
+          selectedEndDate.isAfter(moment(event.end)))
     );
 
-    if (isDuplicate) {
-      handleAlert(true, "warning", "you have alrady selected the leave");
-    }
+    if (isOverlap) {
+      handleAlert(true, "warning", "You have already selected this leave");
+    } else {
+      const newLeave = {
+        title: "Selected Leave",
+        start,
+        end,
+        color: "blue",
+      };
 
-    if (!isDuplicate) {
-      // Add to selectedDateArray if not a duplicate
-      setSelectedDateArray((prevDates) => [...prevDates, selectedDates]);
+      setSelectedDateArray((prevDates) => [...prevDates, newLeave]);
+      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+      setLeaveData(newLeave);
     }
-
-    // setSelectedDateArray((prevDates) => [...prevDates, selectedDates]); // Preserve existing dates and add the new one
   };
 
   const handleSelectEvent = (event) => {
@@ -121,30 +111,6 @@ const LeaveRequisition = () => {
     setLeaveData(event);
     setCalendarOpen(true);
   };
-
-  // const formatLeaveRange = (start, end) => {
-  //   const startFormatted = moment(start).format("MMMM Do, YYYY");
-  //   const endFormatted = moment(end).format("MMMM Do, YYYY");
-  //   return `${startFormatted} to ${endFormatted}`;
-  // };
-
-  /* ----------------------------- Leave Calender ----------------------------- */
-
-  // const handleValueChange = (newValue) => {
-  //   const isDuplicate = value.some(
-  //     (existingValue) =>
-  //       existingValue.startDate === newValue.startDate ||
-  //       existingValue.endDate === newValue.endDate
-  //   );
-
-  //   if (isDuplicate) {
-  //     alert("You have already selected the specific time");
-  //   }
-
-  //   if (!isDuplicate) {
-  //     setValue((prev) => [...prev, { ...newValue }]);
-  //   }
-  // };
 
   const genrateLeaveRequest = async () => {
     try {
@@ -163,8 +129,7 @@ const LeaveRequisition = () => {
       );
 
       if (!data.data.success) {
-        alert("you have alrady selected the leave");
-        handleAlert(true, "warning", "you have alrady selected the leave");
+        handleAlert(true, "warning", "You have already selected this leave");
         setValue([]);
       }
 
@@ -172,40 +137,34 @@ const LeaveRequisition = () => {
         handleAlert(
           true,
           "success",
-          data.data.message || "leave generated successfuly."
+          data.data.message || "Leave generated successfully."
         );
         setValue([]);
-        setleavesTypes("");
+        setLeavesTypes("");
       }
     } catch (error) {
       console.log(error, "err");
       handleAlert(
         true,
         "error",
-        error?.response?.data?.message || "Server Error please try later."
+        error?.response?.data?.message || "Server Error, please try later."
       );
     }
   };
 
   const removeItem = (idToRemove) => {
-    // const updatedData = selectedDateArray.filter(
-    //   (item) => item.startDate !== idToRemove
-    // );
-
-    const updateEvents = events.filter((item, i) => {
-      console.log(i + 1, "i");
-      console.log(idToRemove, "idToReomve");
-
-      return i + 1 !== idToRemove;
-    });
-    // setSelectedDateArray(updatedData);
-    console.log(updateEvents, "event");
-
-    setEvents(updateEvents);
+    const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
+      (item, i) => {
+        console.log(`🚀 ~ item, idToRemove:`, i, idToRemove);
+        return i !== idToRemove;
+      }
+    );
+    console.log(`🚀 ~ updatedAppliedLeaveEvents:`, updatedAppliedLeaveEvents);
+    setNewAppliedLeaveEvents(updatedAppliedLeaveEvents);
   };
 
   const handleChange = (event) => {
-    setleavesTypes(event.target.value);
+    setLeavesTypes(event.target.value);
   };
 
   return (
@@ -283,7 +242,7 @@ const LeaveRequisition = () => {
                   <Calendar
                     localizer={localizer}
                     views={["month"]}
-                    events={events}
+                    events={[...appliedLeaveEvents, ...newAppliedLeaveEvents]}
                     startAccessor="start"
                     endAccessor="end"
                     style={{
@@ -311,70 +270,53 @@ const LeaveRequisition = () => {
               </div>
             </Popover>
 
-            {/* {Array.isArray(selectedLeave) && */}
-            {/* selectedLeave.map((item) => ( */}
-            {/* <div> */}
-            {/* <h2>Selected Leave Details:</h2> */}
-            {/* <p>Title: {item.title}</p> */}
-            {/* <p>Leave Range: {formatLeaveRange(item.start, item.end)}</p> */}
-            {/* Add more details as needed */}
-            {/* </div>                ))} */}
-
-            {/* {vactionList?.totalLeaveCount -
-              vactionList?.totalEmployeeLeaveCount <=
-            0 ? (
-              <div className="h-max text-red-600 !text-2xl flex items-center gap-4 bg-white py-6 px-8 shadow-lg rounded-lg">
-                <ErrorIcon className="!text-3xl" />
-                <h1 className="font-semibold">No leaves left</h1>
-              </div>
-            ) : (
-              <>
-                <div className="h-max  bg-white py-6 px-8 shadow-lg rounded-lg">
-                  <div className="mb-4 ">
-                    <h1 className="text-xl font-semibold">
-                      Leave Request Form
+            {newAppliedLeaveEvents.length > 0 &&
+              Array.isArray(newAppliedLeaveEvents) && (
+                <>
+                  <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
+                    <h1 className="text-gray-400 font-semibold mb-4 text-md">
+                      Leave time
                     </h1>
-                  </div>
-                  <div className="w-full  datePicker-tailwind-css">
-                    <div className="mb-2 ">
-                      <p className="text-gray-400 font-semibold mb-2">
-                        Select Leave Period
-                      </p>
-                    </div>
+                    {newAppliedLeaveEvents?.map((item, index) => {
+                      return (
+                        <>
+                          <div
+                            key={index}
+                            className="h-max  flex gap-4 items-center rounded-lg"
+                          >
+                            <div className="p-2 rounded-full shadow-lg bg-sky-50">
+                              <CalendarTodayIcon className="text-gray-400 !text-[1.2rem]" />
+                            </div>
 
-                    <Datepicker
-                      primaryColor={"blue"}
-                      popoverDirection="down"
-                      showShortcuts={true}
-                      placeholder={"Dates..."}
-                      disabledDates={
-                        Array.isArray(vactionList.daysOfLeaveArray) &&
-                        vactionList.daysOfLeaveArray.map((item) => ({
-                          startDate: format(new Date(item.startDate), "PP"),
-                          endDate: format(new Date(item.endDate), "PP"),
-                        }))
-                      }
-                      showFooter={true}
-                      containerClassName={
-                        "relative cursor-pointer border-[.5px] border-gray-400 rounded-lg  "
-                      }
-                      // minDate={new Date()}
-                      configs={{
-                        shortcuts: {
-                          // today: "Today",
-                        },
-                        footer: {
-                          cancel: "Reject",
-                          apply: "Accept",
-                        },
-                      }}
-                      value={value}
-                      onChange={handleValueChange}
-                    />
-                  </div>
-                </div> */}
+                            <div className="flex w-full justify-between">
+                              <div className="flex items-center gap-2">
+                                <p className="text-md">
+                                  Start date:{" "}
+                                  {format(new Date(item.start), "PP")}
+                                </p>
+                                <Divider orientation="vertical" flexItem />
+                                <p className="text-md">
+                                  Ending date:{" "}
+                                  {format(new Date(item.end), "PP")}
+                                </p>
+                              </div>
 
-            {selectedDateArray.length > 0 &&
+                              <IconButton onClick={() => removeItem(index)}>
+                                <DeleteIcon className="!h-5" color="error" />
+                              </IconButton>
+                            </div>
+                          </div>
+
+                          <div className="w-full h-max">
+                            <Divider />
+                          </div>
+                        </>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            {/* {selectedDateArray.length > 0 &&
               Array.isArray(selectedDateArray) && (
                 <>
                   <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
@@ -417,7 +359,7 @@ const LeaveRequisition = () => {
                     ))}
                   </div>
                 </>
-              )}
+              )} */}
 
             <div className="h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg">
               <p className="!text-gray-400 font-semibold mb-2">Select Leaves</p>
