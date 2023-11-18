@@ -30,18 +30,18 @@ jobs:
         name: static-site
         path: build/
 
-  release-project:
-    name: Release project
-    runs-on: self-hosted
-    needs: build
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: static-site
+  # release-project:
+  #   name: Release project
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: static-site
 
-      - name: Test artifact download
-        run: ls -R
+  #     - name: Test artifact download
+  #       run: ls -R
 
 # Advantages:
 # - Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
