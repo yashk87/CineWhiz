@@ -157,15 +157,21 @@ const AddEmployee = () => {
     const hasDepartmentAdmin = availableProfiles.some(
       (profile) => profile.roleName === "Department Admin"
     );
+    console.log(hasDepartmentAdmin);
+    // Check if the selected profile is not "Department Admin"
+    const selectedIsNotDepartmentAdmin = selectedValue !== "Department Admin";
 
-    if (hasDepartmentAdmin) {
+    // If a Department Admin profile exists and the selected profile is not "Department Admin", prompt the user
+    if (hasDepartmentAdmin && selectedIsNotDepartmentAdmin) {
       const confirmCreateProfile = window.confirm(
         "A Department Admin profile already exists. Do you want to create another?"
       );
 
       if (!confirmCreateProfile) {
+        // User chose not to create another profile
         return;
       }
+      // Proceed to create the profile
     }
 
     const user = {
