@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: 🚀 Build and Deploy
 
 on:
   push:
@@ -10,43 +10,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: 🔄 Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Node.js
+    - name: ⚙️ Set up Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 14
 
-    - name: Install dependencies
+    - name: 📦 Install dependencies
       run: npm install
 
-    - name: Build
+    - name: 🏗️ Build
       run: npm run build
 
-    - name: Upload build
+    - name: 🚀 Upload build
       uses: actions/upload-artifact@v2
       with:
         name: static-site
         path: build/
 
   # release-project:
-  #   name: Release project
+  #   name: 🚀 Release project
   #   runs-on: self-hosted
   #   needs: build
   #   steps:
-  #     - name: Download artifact
+  #     - name: 📥 Download artifact
   #       uses: actions/download-artifact@v2
   #       with:
   #         name: static-site
 
-  #     - name: Test artifact download
+  #     - name: 🧪 Test artifact download
   #       run: ls -R
 
 # Advantages:
-# - Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
-# - Artifact Management: Uses GitHub Actions to manage and transfer artifacts (the build output) between jobs.
+# - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
+# - 📦 Artifact Management: Uses GitHub Actions to manage and transfer artifacts (the build output) between jobs.
 
 # Disadvantages:
-# - Self-Hosted Runner Dependency: The "release-project" job relies on a self-hosted runner, which may require additional setup and maintenance.
-# - Limited Explanation: It's recommended to provide more detailed comments or explanations within the workflow file for better documentation and understanding.
+# - 🏠 Self-Hosted Runner Dependency: The "release-project" job relies on a self-hosted runner, which may require additional setup and maintenance.
+# - 📝 Limited Explanation: It's recommended to provide more detailed comments or explanations within the workflow file for better documentation and understanding.
