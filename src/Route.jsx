@@ -22,6 +22,7 @@ import Signup from "./pages/SignUp/Signup";
 import MyCalendar from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import AddOrganizationLocations from "./pages/SetUpOrganization/addOrganizationLocations";
 const App = () => {
   return (
     <Routes>
@@ -35,7 +36,7 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/add-role" element={<AddRole />} />
-      <Route exact path="/set-shifts" element={<Shifts />} />
+      <Route exact path="/set-shifts/:id" element={<Shifts />} />
       <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} />
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
@@ -46,6 +47,7 @@ const App = () => {
         element={<AddEmployee />}
       />
       <Route exact path="/add-roles/:id" element={<AddRoles />} />
+      <Route exact path="/add-locations/:id" element={<AddOrganizationLocations />} />
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
       <Route exact path="/setup/:id" element={<Setup />} />

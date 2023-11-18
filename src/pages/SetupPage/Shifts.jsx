@@ -19,10 +19,12 @@ import ShiftDisplay from "./ShiftDisplay";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
+import { useParams } from "react-router";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const Shifts = () => {
+  const { id } = useParams("");
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [workingFrom, setWorkingFrom] = useState(null);
@@ -119,8 +121,8 @@ const Shifts = () => {
             <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                 <div class="overflow-hidden">
-                  <table class="min-w-full text-left text-sm font-light">
-                    <thead class="border-b font-medium dark:border-neutral-500">
+                  <table class="min-w-full bg-white shadow-lg rounded-md text-left text-sm font-light">
+                    <thead class="border-b bg-gray-200  font-medium dark:border-neutral-500">
                       <tr>
                         <th scope="col" class="px-6 py-4">
                           SR NO
@@ -167,7 +169,7 @@ const Shifts = () => {
           </div>
         </article>
       </section>
-      <ShiftModal open={open} handleClose={handleClose} />
+      <ShiftModal id={id} open={open} handleClose={handleClose} />
       <form style={{ width: "100%", display: "flex" }} action="">
         <Container
           style={{

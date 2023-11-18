@@ -13,33 +13,36 @@ const AddRoles = () => {
 
   const initialRoles = [
     {
-      placeholder: "DH",
+      placeholder: "Department Head",
       label: "departmentHead",
       isApprover: false,
       isActive: false,
     },
     {
-      placeholder: "DDH",
+      placeholder: "Department Head Delegate",
       label: "delegateDepartmentHead",
       isApprover: false,
       isActive: false,
     },
     {
-      placeholder: "DA",
+      placeholder: "Department Admin",
       label: "departmentAdmin",
       isApprover: false,
       isActive: false,
     },
 
     {
-      placeholder: "DDA",
+      placeholder: "Department Delegate Admin",
       label: "delegateDepartmentAdmin",
       isApprover: false,
       isActive: false,
     },
-    { placeholder: "HR", label: "hr", isApprover: false, isActive: false },
+    { placeholder: "Human Resource", 
+      label: "hr", 
+      isApprover: false, 
+      isActive: false },
     {
-      placeholder: "DHR",
+      placeholder: "Department Head Delegate",
       label: "delegateHr",
       isApprover: false,
       isActive: false,
