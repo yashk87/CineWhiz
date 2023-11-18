@@ -1,35 +1,42 @@
-import React, { useEffect, useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import Divider from "@mui/material/Divider";
-import ErrorIcon from "@mui/icons-material/Error";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import WestIcon from "@mui/icons-material/West";
+import moment from "moment";
+import React, { useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "tailwindcss/tailwind.css"; // Import Tailwind CSS
+
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DeleteIcon from "@mui/icons-material/Delete";
+import WestIcon from "@mui/icons-material/West";
 import {
   Button,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Select,
 } from "@mui/material";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import Divider from "@mui/material/Divider";
 import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
 import { useContext } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
 
-import { Link } from "react-router-dom";
-import LeaveTabel from "./components/LeaveTabel";
-import { TestContext } from "../../State/Function/Main";
+import { Close } from "@mui/icons-material";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import { TestContext } from "../../State/Function/Main";
+import LeaveTabel from "./components/LeaveTabel";
+
+// Set up the localizer for moment.js
+const localizer = momentLocalizer(moment);
 
 const LeaveRequisition = () => {
   const [leavesTypes, setleavesTypes] = useState([]);
   const [vactionList, setVactionList] = useState([]);
 
-  const dataList =
-    Array.isArray(vactionList?.daysOfLeaveArray) &&
-    vactionList?.daysOfLeaveArray.map((item) => console.log(item));
+  // const dataList =
+  //   Array.isArray(vactionList?.daysOfLeaveArray) &&
+  //   vactionList?.daysOfLeaveArray.map((item) => console.log(item));
 
   const [value, setValue] = useState([]);
   const { cookies } = useContext(UseContext);
@@ -37,21 +44,100 @@ const LeaveRequisition = () => {
   const { handleAlert } = useContext(TestContext);
   const [subtractedLeaves, setSubtractedLeaves] = useState([]);
 
-  const handleValueChange = (newValue) => {
-    const isDuplicate = value.some(
-      (existingValue) =>
-        existingValue.startDate === newValue.startDate ||
-        existingValue.endDate === newValue.endDate
+  /* ----------------------------- Leave Calender ----------------------------- */
+
+  const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const [selectedLeave, setSelectedLeave] = useState([]);
+
+  // console.log(selectedLeave, "se");
+
+  const [events, setEvents] = useState([
+    {
+      title: "Maternity Leave",
+      start: new Date(2023, 10, 15), // November is 10 (zero-based month)
+      end: new Date(2023, 10, 17),
+      color: "pink",
+    },
+    // Add more previously added events
+  ]);
+
+  const [leaveData, setLeaveData] = useState({
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    color: "pink", // Default color for maternity leave
+  });
+  console.log(`🚀 ~ leaveData:`, leaveData);
+
+  const handleInputChange = () => {
+    // Open the calendar on input bar click
+    setCalendarOpen(true);
+  };
+
+  const handleSelectSlot = ({ start, end }) => {
+    // Handle selection of the time slot in the calendar
+    const newLeave = {
+      title: "Selected Leave",
+      start,
+      end,
+      color: "blue", // Adjust the color as needed
+    };
+
+    // Update the events array with the selected leave
+    setEvents((prevEvents) => [...prevEvents, newLeave]);
+    // Set the selected leave in the input bar
+    setLeaveData(newLeave);
+    // Set the selected leave to trigger rendering in the input bar
+    setSelectedLeave((pre) => [newLeave, ...pre]);
+    // Close the calendar after selection
+    setCalendarOpen(false);
+  };
+
+  const isDateDisabled = (date) =>
+    selectedLeave.some((disabledDate) =>
+      moment(disabledDate).isSame(date, "start")
     );
 
-    if (isDuplicate) {
-      alert("You have already selected the specific time");
-    }
+  const handleSelectEvent = (event) => {
+    // Assuming 'start' is a property of the 'event' object
+    const start = event.start;
 
-    if (!isDuplicate) {
-      setValue((prev) => [...prev, { ...newValue }]);
+    if (isDateDisabled(start)) {
+      // Show an alert or perform other actions for disabled dates
+      alert("This date is disabled and cannot be selected!");
+      return false;
     }
+    // Handle selection of an existing event in the calendar
+    setSelectedLeave((pre) => [event, ...pre]);
+    // Set the selected leave in the input bar
+    setLeaveData(event);
+    // Open the calendar on event click
+    setCalendarOpen(true);
   };
+
+  // const formatLeaveRange = (start, end) => {
+  //   const startFormatted = moment(start).format("MMMM Do, YYYY");
+  //   const endFormatted = moment(end).format("MMMM Do, YYYY");
+  //   return `${startFormatted} to ${endFormatted}`;
+  // };
+
+  /* ----------------------------- Leave Calender ----------------------------- */
+
+  // const handleValueChange = (newValue) => {
+  //   const isDuplicate = value.some(
+  //     (existingValue) =>
+  //       existingValue.startDate === newValue.startDate ||
+  //       existingValue.endDate === newValue.endDate
+  //   );
+
+  //   if (isDuplicate) {
+  //     alert("You have already selected the specific time");
+  //   }
+
+  //   if (!isDuplicate) {
+  //     setValue((prev) => [...prev, { ...newValue }]);
+  //   }
+  // };
 
   const genrateLeaveRequest = async () => {
     try {
@@ -97,8 +183,10 @@ const LeaveRequisition = () => {
   };
 
   const removeItem = (idToRemove) => {
-    const updatedData = value.filter((item) => item.startDate !== idToRemove);
-    setValue(updatedData);
+    const updatedData = selectedLeave.filter(
+      (item) => item.start !== idToRemove
+    );
+    setSelectedLeave(updatedData);
   };
 
   const handleChange = (event) => {
@@ -127,8 +215,79 @@ const LeaveRequisition = () => {
             setVactionList={setVactionList}
           />
 
-          <article className="md:w-[60%] space-y-2">
-            {vactionList?.totalLeaveCount -
+          <article className="relative md:w-[60%] space-y-2">
+            <div className="space-y-2 mb-4  h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg  relative">
+              <p className="!text-gray-400 font-semibold mb-2">
+                Select Leaves time
+              </p>
+              <FormControl
+                size="small"
+                sx={{ m: 1, width: "100%" }}
+                className="!cursor-pointer"
+                variant="outlined"
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Select your dates
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  value={"click here to select leave time"}
+                  onClick={handleInputChange}
+                  className="!cursor-pointer"
+                  label="Select leave date"
+                />
+              </FormControl>
+            </div>
+
+            {isCalendarOpen && (
+              <div className="absolute bg-white shadow-lg  z-10 mt-2">
+                <div className="flex justify-between py-2  items-center  px-4">
+                  <h1 className="text-lg pl-2 ">Select leave time</h1>
+                  <IconButton onClick={() => setCalendarOpen(false)}>
+                    <Close />
+                  </IconButton>
+                </div>
+
+                <div className="w-full mb-2">
+                  <Divider variant="fullWidth" orientation="horizontal" />
+                </div>
+
+                <div className="p-4">
+                  <Calendar
+                    localizer={localizer}
+                    views={["month"]}
+                    events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    style={{
+                      height: "400px",
+                      width: "800px",
+                      background: "#fff",
+                    }}
+                    selectable
+                    onSelectSlot={handleSelectSlot}
+                    onSelectEvent={handleSelectEvent}
+                    datePropGetter={selectedLeave}
+                    eventPropGetter={(event) => ({
+                      style: {
+                        backgroundColor: event.color,
+                      },
+                    })}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* {Array.isArray(selectedLeave) && */}
+            {/* selectedLeave.map((item) => ( */}
+            {/* <div> */}
+            {/* <h2>Selected Leave Details:</h2> */}
+            {/* <p>Title: {item.title}</p> */}
+            {/* <p>Leave Range: {formatLeaveRange(item.start, item.end)}</p> */}
+            {/* Add more details as needed */}
+            {/* </div>                ))} */}
+
+            {/* {vactionList?.totalLeaveCount -
               vactionList?.totalEmployeeLeaveCount <=
             0 ? (
               <div className="h-max text-red-600 !text-2xl flex items-center gap-4 bg-white py-6 px-8 shadow-lg rounded-lg">
@@ -180,96 +339,90 @@ const LeaveRequisition = () => {
                       onChange={handleValueChange}
                     />
                   </div>
-                </div>
+                </div> */}
 
-                {value.length > 0 && (
-                  <>
-                    <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
-                      <h1 className="text-gray-400 font-semibold mb-4 text-md">
-                        Leave time
-                      </h1>
-                      {value.map((item, index) => (
-                        <>
-                          <div
-                            key={index}
-                            className="h-max  flex gap-4 items-center rounded-lg"
-                          >
-                            <div className="p-2 rounded-full shadow-lg bg-sky-50">
-                              <CalendarTodayIcon className="text-gray-400 !text-[1.2rem]" />
-                            </div>
+            {selectedLeave.length > 0 && Array.isArray(selectedLeave) && (
+              <>
+                <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
+                  <h1 className="text-gray-400 font-semibold mb-4 text-md">
+                    Leave time
+                  </h1>
+                  {selectedLeave?.map((item, index) => (
+                    <>
+                      <div
+                        key={index}
+                        className="h-max  flex gap-4 items-center rounded-lg"
+                      >
+                        <div className="p-2 rounded-full shadow-lg bg-sky-50">
+                          <CalendarTodayIcon className="text-gray-400 !text-[1.2rem]" />
+                        </div>
 
-                            <div className="flex w-full justify-between">
-                              <div className="flex items-center gap-2">
-                                <p className="text-md">
-                                  Start date: {item.startDate}
-                                </p>
-                                <Divider orientation="vertical" flexItem />
-                                <p className="text-md">
-                                  Ending date: {item.endDate}
-                                </p>
-                              </div>
-
-                              <IconButton
-                                onClick={() => removeItem(item.startDate)}
-                              >
-                                <DeleteIcon className="!h-5" color="error" />
-                              </IconButton>
-                            </div>
+                        <div className="flex w-full justify-between">
+                          <div className="flex items-center gap-2">
+                            <p className="text-md">
+                              Start date: {format(new Date(item.start), "PP")}
+                            </p>
+                            <Divider orientation="vertical" flexItem />
+                            <p className="text-md">
+                              Ending date: {format(new Date(item.end), "PP")}
+                            </p>
                           </div>
 
-                          <div className="w-full h-max">
-                            <Divider />
-                          </div>
-                        </>
-                      ))}
-                    </div>
-                  </>
-                )}
+                          <IconButton onClick={() => removeItem(item.start)}>
+                            <DeleteIcon className="!h-5" color="error" />
+                          </IconButton>
+                        </div>
+                      </div>
 
-                <div className="h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg">
-                  <p className="!text-gray-400 font-semibold mb-2">
-                    Select Leaves
-                  </p>
-                  <FormControl size="small" fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Select Leave Type
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={leavesTypes}
-                      label="Select Leave Type"
-                      onChange={handleChange}
-                    >
-                      {subtractedLeaves?.map(
-                        (item, index) =>
-                          item.isActive &&
-                          item.count > 0 && (
-                            <MenuItem id={index} value={item}>
-                              {item.leaveName}
-                            </MenuItem>
-                          )
-                      )}
-                    </Select>
-                  </FormControl>
-
-                  <div className=" mt-4">
-                    <Button
-                      disabled={
-                        value.length <= 0 || leavesTypes.length === 0
-                          ? true
-                          : false
-                      }
-                      onClick={genrateLeaveRequest}
-                      variant="contained"
-                      className="font-bold "
-                    >
-                      Apply for leave
-                    </Button>
-                  </div>
+                      <div className="w-full h-max">
+                        <Divider />
+                      </div>
+                    </>
+                  ))}
                 </div>
               </>
             )}
+
+            <div className="h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg">
+              <p className="!text-gray-400 font-semibold mb-2">Select Leaves</p>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Select Leave Type
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={leavesTypes}
+                  label="Select Leave Type"
+                  onChange={handleChange}
+                >
+                  {subtractedLeaves?.map(
+                    (item, index) =>
+                      item.isActive &&
+                      item.count > 0 && (
+                        <MenuItem id={index} value={item}>
+                          {item.leaveName}
+                        </MenuItem>
+                      )
+                  )}
+                </Select>
+              </FormControl>
+
+              <div className=" mt-4">
+                <Button
+                  disabled={
+                    value.length <= 0 || leavesTypes.length === 0 ? true : false
+                  }
+                  onClick={genrateLeaveRequest}
+                  variant="contained"
+                  className="font-bold"
+                >
+                  Apply for leave
+                </Button>
+              </div>
+            </div>
+            {/* </> */}
+            {/* )} */}
           </article>
         </div>
       </section>

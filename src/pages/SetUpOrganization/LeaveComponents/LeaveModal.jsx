@@ -9,22 +9,21 @@ import {
 import React, { useContext, useState } from "react";
 
 import SendIcon from "@mui/icons-material/Send";
-import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import {
   Checkbox,
+  Divider,
   FormControl,
   FormControlLabel,
   IconButton,
   InputAdornment,
   TextField,
-  Divider,
 } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import CloseIcon from "@mui/icons-material/Close";
 
 const LeaveModal = ({ open, handleClose, id }) => {
   const [leaveTypes, setLeaveTypes] = useState([
