@@ -13,8 +13,8 @@ const LeaveTabel = ({
   vactionList,
   setVactionList,
   setNewAppliedLeaveEvents,
-  newAppliedLeaveEvents,
 }) => {
+  console.log(`🚀 ~ vactionList:`, vactionList);
   console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
 
   const updateLeaveCounts = (data) => {
@@ -161,7 +161,7 @@ const LeaveTabel = ({
                   </div>
                   <Avatar
                     sx={{
-                      bgcolor: item.colorCode,
+                      bgcolor: item.color,
                       width: 24,
                       height: 24,
                       fontSize: 16,
@@ -196,7 +196,7 @@ const LeaveTabel = ({
                   <Avatar
                     key={i}
                     sx={{
-                      bgcolor: item.colorCode,
+                      bgcolor: item.color,
                       width: 24,
                       height: 24,
                       fontSize: 16,

@@ -6,7 +6,7 @@ import {
   OutlinedInput,
   Stack,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import SendIcon from "@mui/icons-material/Send";
 import {
@@ -22,19 +22,67 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import Close from "@mui/icons-material/Close";
 import axios from "axios";
+import randomColor from "randomcolor";
+import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 
 const LeaveModal = ({ open, handleClose, id }) => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   const [leaveTypes, setLeaveTypes] = useState([
-    { leaveName: "Vacation Leave", isActive: false, count: 0 },
-    { leaveName: "Sick Leave", isActive: false, count: 0 },
+    {
+      leaveName: "Vacation Leave",
+      isActive: false,
+      count: 0,
+    },
+    {
+      leaveName: "Sick Leave",
+      isActive: false,
+      count: 0,
+    },
   ]);
+  const {
+    data: newLeaveTypes = [],
+    isLoading,
+    isError,
+  } = useQuery("leaveTypes", async () => {
+    const config = {
+      headers: { "Content-Type": "application/json", Authorization: authToken },
+    };
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/leave-types`,
+      config
+    );
+    console.log(`🚀 ~ response:`, response);
+
+    // const data = await response.json();
+    return response.data.data || [];
+  });
+
+  // Initialize newLeaveType with the first leave type from the fetched data
+  useEffect(() => {
+    console.log(`🚀 ~ newLeaveTypes:`, newLeaveTypes);
+    if (newLeaveTypes.length > 0) {
+      setLeaveTypes(newLeaveTypes[0].typesOfLeave);
+    }
+  }, [newLeaveTypes]);
+  useEffect(() => {
+    setLeaveTypes((prevLeaveTypes) => {
+      const updatedLeaveTypes = prevLeaveTypes?.map((leaveType) => ({
+        ...leaveType,
+        color: randomColor({
+          seed: leaveType.leaveName,
+          luminosity: "dark",
+        }),
+      }));
+      return updatedLeaveTypes;
+    });
+  }, [leaveTypes.length]);
 
   const [newLeaveType, setNewLeaveType] = useState("");
   const [isinputOpen, setIsinputOpen] = useState(false);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+
   const { handleAlert } = useContext(TestContext);
 
   const handleInput = () => {
@@ -125,7 +173,7 @@ const LeaveModal = ({ open, handleClose, id }) => {
         </div>
         <ul className="my-2 px-8 space-y-4">
           {leaveTypes.map((leaveType, index) => (
-            <li key={index}>
+            <li className="flex gap-4 justify-between" key={index}>
               <FormControlLabel
                 size="small"
                 control={
@@ -136,17 +184,42 @@ const LeaveModal = ({ open, handleClose, id }) => {
                 }
                 label={leaveType.leaveName}
               />
-              {leaveType.isActive && (
-                <TextField
-                  type="number"
-                  size="small"
-                  label="Number of Leaves"
-                  value={leaveType.count}
-                  onChange={(e) =>
-                    handleLeaveCountChange(index, e.target.value)
-                  }
-                />
-              )}
+              <div className="flex gap-2">
+                {leaveType.isActive && (
+                  <TextField
+                    type="number"
+                    size="small"
+                    label="Number of Leaves"
+                    value={leaveType.count}
+                    onChange={(e) =>
+                      handleLeaveCountChange(index, e.target.value)
+                    }
+                  />
+                )}
+                <div
+                  className="rounded-full overflow-hidden relative"
+                  style={{
+                    height: "40px", // adjust the size as needed
+                    width: "40px",
+                  }}
+                >
+                  <input
+                    className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    style={{
+                      height: "60px", // adjust the size as needed
+                      width: "60px",
+                      padding: "0",
+                      border: "none",
+                    }}
+                    type="color"
+                    id="favcolor"
+                    value={leaveType.color}
+                    onChange={(e) =>
+                      handleLeaveCountChange(index, e.target.value)
+                    }
+                  />
+                </div>
+              </div>
             </li>
           ))}
         </ul>
