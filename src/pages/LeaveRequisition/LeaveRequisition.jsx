@@ -14,6 +14,7 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
+  Popover,
   Select,
 } from "@mui/material";
 import Divider from "@mui/material/Divider";
@@ -48,8 +49,10 @@ const LeaveRequisition = () => {
 
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState([]);
+  const [selectedDateArray, setSelectedDateArray] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  // console.log(selectedLeave, "se");
+  // console.log(vactionList, "v");
 
   const [events, setEvents] = useState([
     {
@@ -67,7 +70,11 @@ const LeaveRequisition = () => {
     end: new Date(),
     color: "pink", // Default color for maternity leave
   });
-  console.log(`🚀 ~ leaveData:`, leaveData);
+
+  const handleSubmit = () => {
+    // Handle the submission logic as needed
+    setCalendarOpen(false);
+  };
 
   const handleInputChange = () => {
     // Open the calendar on input bar click
@@ -75,7 +82,6 @@ const LeaveRequisition = () => {
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    // Handle selection of the time slot in the calendar
     const newLeave = {
       title: "Selected Leave",
       start,
@@ -83,37 +89,36 @@ const LeaveRequisition = () => {
       color: "blue", // Adjust the color as needed
     };
 
-    // Update the events array with the selected leave
-    setEvents((prevEvents) => [...prevEvents, newLeave]);
-    // Set the selected leave in the input bar
+    setEvents((prevEvents) => [...prevEvents, newLeave]); // Preserve existing events and add the new one
     setLeaveData(newLeave);
-    // Set the selected leave to trigger rendering in the input bar
-    setSelectedLeave((pre) => [newLeave, ...pre]);
-    // Close the calendar after selection
-    setCalendarOpen(false);
-  };
 
-  const isDateDisabled = (date) =>
-    selectedLeave.some((disabledDate) =>
-      moment(disabledDate).isSame(date, "start")
+    const selectedDates = {
+      startDate: moment(start).toISOString(),
+      endDate: moment(end).toISOString(),
+    };
+
+    // Check for duplicates in selectedDateArray
+    const isDuplicate = selectedDateArray.some(
+      (item) =>
+        item.startDate === selectedDates.startDate ||
+        item.endDate === selectedDates.endDate
     );
 
-  const handleSelectEvent = (event) => {
-    // Assuming 'start' is a property of the 'event' object
-    const start = event.start;
-
-    console.log(event, "e");
-
-    if (isDateDisabled(start)) {
-      // Show an alert or perform other actions for disabled dates
-      alert("This date is disabled and cannot be selected!");
-      return false;
+    if (isDuplicate) {
+      handleAlert(true, "warning", "you have alrady selected the leave");
     }
-    // Handle selection of an existing event in the calendar
-    setSelectedLeave((pre) => [event, ...pre]);
-    // Set the selected leave in the input bar
+
+    if (!isDuplicate) {
+      // Add to selectedDateArray if not a duplicate
+      setSelectedDateArray((prevDates) => [...prevDates, selectedDates]);
+    }
+
+    // setSelectedDateArray((prevDates) => [...prevDates, selectedDates]); // Preserve existing dates and add the new one
+  };
+
+  const handleSelectEvent = (event) => {
+    setSelectedLeave(event);
     setLeaveData(event);
-    // Open the calendar on event click
     setCalendarOpen(true);
   };
 
@@ -164,7 +169,6 @@ const LeaveRequisition = () => {
       }
 
       if (data.data.success) {
-        // alert("leave generated successfuly");
         handleAlert(
           true,
           "success",
@@ -174,7 +178,6 @@ const LeaveRequisition = () => {
         setleavesTypes("");
       }
     } catch (error) {
-      // alert("something went wrong");
       console.log(error, "err");
       handleAlert(
         true,
@@ -185,10 +188,20 @@ const LeaveRequisition = () => {
   };
 
   const removeItem = (idToRemove) => {
-    const updatedData = selectedLeave.filter(
-      (item) => item.start !== idToRemove
-    );
-    setSelectedLeave(updatedData);
+    // const updatedData = selectedDateArray.filter(
+    //   (item) => item.startDate !== idToRemove
+    // );
+
+    const updateEvents = events.filter((item, i) => {
+      console.log(i + 1, "i");
+      console.log(idToRemove, "idToReomve");
+
+      return i + 1 !== idToRemove;
+    });
+    // setSelectedDateArray(updatedData);
+    console.log(updateEvents, "event");
+
+    setEvents(updateEvents);
   };
 
   const handleChange = (event) => {
@@ -217,8 +230,8 @@ const LeaveRequisition = () => {
             setVactionList={setVactionList}
           />
 
-          <article className="relative md:w-[60%] space-y-2">
-            <div className="space-y-2 mb-4  h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg  relative">
+          <article className=" md:w-[60%]  space-y-2">
+            <div className="space-y-2 mb-4 w-full  h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg ">
               <p className="!text-gray-400 font-semibold mb-2">
                 Select Leaves time
               </p>
@@ -233,7 +246,7 @@ const LeaveRequisition = () => {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  value={"click here to select leave time"}
+                  value={""}
                   onClick={handleInputChange}
                   className="!cursor-pointer"
                   label="Select leave date"
@@ -241,8 +254,20 @@ const LeaveRequisition = () => {
               </FormControl>
             </div>
 
-            {isCalendarOpen && (
-              <div className="absolute bg-white shadow-lg  z-10 mt-2">
+            <Popover
+              open={isCalendarOpen}
+              anchorEl={anchorEl}
+              onClose={() => setCalendarOpen(false)}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "center",
+                horizontal: "center",
+              }}
+            >
+              <div className=" bg-white shadow-lg  z-10 mt-2">
                 <div className="flex justify-between py-2  items-center  px-4">
                   <h1 className="text-lg pl-2 ">Select leave time</h1>
                   <IconButton onClick={() => setCalendarOpen(false)}>
@@ -254,7 +279,7 @@ const LeaveRequisition = () => {
                   <Divider variant="fullWidth" orientation="horizontal" />
                 </div>
 
-                <div className="p-4">
+                <div className="p-4 w-full">
                   <Calendar
                     localizer={localizer}
                     views={["month"]}
@@ -262,7 +287,7 @@ const LeaveRequisition = () => {
                     startAccessor="start"
                     endAccessor="end"
                     style={{
-                      height: "400px",
+                      height: "300px",
                       width: "800px",
                       background: "#fff",
                     }}
@@ -278,7 +303,13 @@ const LeaveRequisition = () => {
                   />
                 </div>
               </div>
-            )}
+
+              <div className="!px-4 !py-2 bg-white">
+                <Button variant="contained" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              </div>
+            </Popover>
 
             {/* {Array.isArray(selectedLeave) && */}
             {/* selectedLeave.map((item) => ( */}
@@ -343,47 +374,50 @@ const LeaveRequisition = () => {
                   </div>
                 </div> */}
 
-            {selectedLeave.length > 0 && Array.isArray(selectedLeave) && (
-              <>
-                <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
-                  <h1 className="text-gray-400 font-semibold mb-4 text-md">
-                    Leave time
-                  </h1>
-                  {selectedLeave?.map((item, index) => (
-                    <>
-                      <div
-                        key={index}
-                        className="h-max  flex gap-4 items-center rounded-lg"
-                      >
-                        <div className="p-2 rounded-full shadow-lg bg-sky-50">
-                          <CalendarTodayIcon className="text-gray-400 !text-[1.2rem]" />
-                        </div>
-
-                        <div className="flex w-full justify-between">
-                          <div className="flex items-center gap-2">
-                            <p className="text-md">
-                              Start date: {format(new Date(item.start), "PP")}
-                            </p>
-                            <Divider orientation="vertical" flexItem />
-                            <p className="text-md">
-                              Ending date: {format(new Date(item.end), "PP")}
-                            </p>
+            {selectedDateArray.length > 0 &&
+              Array.isArray(selectedDateArray) && (
+                <>
+                  <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
+                    <h1 className="text-gray-400 font-semibold mb-4 text-md">
+                      Leave time
+                    </h1>
+                    {selectedDateArray?.map((item, index) => (
+                      <>
+                        <div
+                          key={index}
+                          className="h-max  flex gap-4 items-center rounded-lg"
+                        >
+                          <div className="p-2 rounded-full shadow-lg bg-sky-50">
+                            <CalendarTodayIcon className="text-gray-400 !text-[1.2rem]" />
                           </div>
 
-                          <IconButton onClick={() => removeItem(item.start)}>
-                            <DeleteIcon className="!h-5" color="error" />
-                          </IconButton>
-                        </div>
-                      </div>
+                          <div className="flex w-full justify-between">
+                            <div className="flex items-center gap-2">
+                              <p className="text-md">
+                                Start date:{" "}
+                                {format(new Date(item.startDate), "PP")}
+                              </p>
+                              <Divider orientation="vertical" flexItem />
+                              <p className="text-md">
+                                Ending date:{" "}
+                                {format(new Date(item.endDate), "PP")}
+                              </p>
+                            </div>
 
-                      <div className="w-full h-max">
-                        <Divider />
-                      </div>
-                    </>
-                  ))}
-                </div>
-              </>
-            )}
+                            <IconButton onClick={() => removeItem(index)}>
+                              <DeleteIcon className="!h-5" color="error" />
+                            </IconButton>
+                          </div>
+                        </div>
+
+                        <div className="w-full h-max">
+                          <Divider />
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                </>
+              )}
 
             <div className="h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg">
               <p className="!text-gray-400 font-semibold mb-2">Select Leaves</p>

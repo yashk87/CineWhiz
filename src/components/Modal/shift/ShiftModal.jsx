@@ -104,17 +104,11 @@ const ShiftModal = ({ handleClose, open, id }) => {
   };
 
   const handleEndDateTimeChange = (newDateTime) => {
-    console.log("Start Date Time:", startDateTime.format("hh:mm A"));
-    console.log("New Date Time:", newDateTime.format("hh:mm A"));
-
     // Check if the time difference is at least 9 hours
     const timeDifferenceInMilliseconds = newDateTime.diff(startDateTime);
     const timeDifferenceInHours = Math.abs(
       timeDifferenceInMilliseconds / (1000 * 60 * 60)
     );
-
-    console.log("Time Difference (hours):", timeDifferenceInHours);
-
     // Check if AM/PM changes
     const amPmChange = startDateTime.format("A") !== newDateTime.format("A");
 
@@ -122,8 +116,6 @@ const ShiftModal = ({ handleClose, open, id }) => {
     const adjustedDifferenceInHours = amPmChange
       ? timeDifferenceInHours
       : timeDifferenceInHours % 12 || 12;
-
-    console.log("Adjusted Difference (hours):", adjustedDifferenceInHours);
 
     if (adjustedDifferenceInHours >= 9) {
       setEndDateTime(newDateTime);
@@ -272,7 +264,7 @@ const ShiftModal = ({ handleClose, open, id }) => {
                 <ToggleButton
                   key={day.label}
                   value={day.value}
-                  className="!rounded-full !border-[1px] !border-gray-200 !text-sm font-semibold"
+                  className="!rounded-full !border-[1px] !border-gray-200 !text-xs font-semibold"
                   style={{
                     width: "40px",
                     height: "40px",
