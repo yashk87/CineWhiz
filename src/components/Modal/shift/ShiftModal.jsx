@@ -21,7 +21,7 @@ import dayjs from "dayjs";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import moment from "moment";
 import { TestContext } from "../../../State/Function/Main";
@@ -35,11 +35,59 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const {
-    data: shift,
-    isLoading,
-    isError,
-  } = GetSingleShift(shiftId, authToken);
+  const { data, isLoading, isError } = useQuery(
+    ["shift", shiftId],
+    async () => {
+      if (open && shiftId !== null) {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/getSingleshifts/${shiftId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return response.data;
+      }
+    },
+    {
+      enabled: open && shiftId !== null,
+    }
+  );
+
+  const changeTimeFormatForEdit = (timeString, setState) => {
+    const [hours, minutes] = timeString?.split(":");
+
+    // Get the current date
+    const currentDate = dayjs();
+    // Set the hours and minutes to create a new date
+    const newDate = currentDate
+      .set("hour", parseInt(hours))
+      .set("minute", parseInt(minutes));
+    // Set other state values accordingly
+    setState(newDate);
+  };
+
+  useEffect(() => {
+    if (data && data.shifts) {
+      const shiftData = data.shifts;
+      setWorkingFrom(shiftData.workingFrom || "");
+      setShiftName(shiftData.shiftName || "");
+      setSelectedDays(shiftData.selectedDays || "");
+
+      changeTimeFormatForEdit(shiftData?.startTime, setStartDateTime);
+      changeTimeFormatForEdit(shiftData?.endTime, setEndDateTime);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // Clear states when the modal is closed
+    if (!open) {
+      setWorkingFrom("");
+      setShiftName("");
+      // Clear other state values accordingly
+    }
+  }, [open]);
 
   const daysOfWeek = [
     { label: "Mon", value: "Monday" },
@@ -55,7 +103,9 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     startDateTime.add(9, "hour")
   );
   const [validationError, setValidationError] = useState(false);
-  const [workingFrom, setWorkingFrom] = useState("");
+  const [workingFrom, setWorkingFrom] = useState(
+    data ? data?.shifts?.workingFrom : ""
+  );
   const [shiftName, setShiftName] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [error, setError] = useState("");
@@ -64,15 +114,13 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
 
   const handleStartDateTimeChange = (newDateTime) => {
     setStartDateTime(newDateTime);
-
     // Adjust end time when start time changes
     setEndDateTime(newDateTime.add(9, "hour"));
-
     // Reset validation error
     setValidationError(false);
   };
 
-  const mutation = useMutation(
+  const AddShift = useMutation(
     (data) =>
       axios.post(`${process.env.REACT_APP_API}/route/shifts/create`, data),
     {
@@ -87,8 +135,46 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
     }
   );
 
+  const EditShift = useMutation(
+    (data) =>
+      axios.patch(
+        `${process.env.REACT_APP_API}/route/shifts/${shiftId}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["shifts"] });
+        handleClose();
+        handleAlert(true, "success", "Shift updated succesfully");
+      },
+      onError: () => {
+        setError("An error occurred while creating a new shift");
+      },
+    }
+  );
+
+  const handleError = (error) => {
+    setError(error);
+    return false;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (workingFrom === "") return handleError("Shift type field is mandatory");
+    else if (shiftName === "")
+      return handleError("Shift name field is mandatory");
+    else if (startDateTime === null)
+      return handleError("Start time is mandatory");
+    else if (endDateTime === null)
+      return handleError("end time field is mandatory");
+    else if (selectedDays.length <= 0)
+      return handleError("Please select Week days");
 
     try {
       const data = {
@@ -100,9 +186,12 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
         organizationId: id,
       };
 
-      // Use the mutation function from React Query
-      await mutation.mutateAsync(data);
-
+      if (shiftId) {
+        await EditShift.mutateAsync(data);
+      } else {
+        // Use the AddShift function from React Query
+        await AddShift.mutateAsync(data);
+      }
       // Reset form state
       setError("");
       setStartDateTime("");
@@ -186,13 +275,14 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
 
         <div className="px-5 space-y-4 mt-4">
           {error && <p className="text-red-500">*{error}</p>}
+
           <div className="space-y-2 ">
             <label className="text-sm" htmlFor="demo-simple-select-label">
-              Select shift type
+              {shiftId && isLoading ? "loading" : "Select shift type"}
             </label>
             <FormControl size="small" fullWidth>
               <InputLabel id="demo-simple-select-label">
-                Select Leave Type
+                Select shift Type
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -291,7 +381,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
                 <ToggleButton
                   key={day.label}
                   value={day.value}
-                  className="!rounded-full !border-[1px] !border-gray-200 !text-xs font-semibold"
+                  className="!rounded-full !border-[2px] !border-gray-200 !text-xs font-semibold"
                   style={{
                     width: "40px",
                     height: "40px",
@@ -299,7 +389,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
                     backgroundColor: isSelected(day.value)
                       ? "#1976d2"
                       : "transparent",
-                    color: isSelected(day.value) ? "white" : "#737d90",
+                    color: isSelected(day.value) ? "white" : "black",
                   }}
                 >
                   {day.label}
@@ -308,27 +398,32 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </ToggleButtonGroup>
           </div>
           <div className="flex gap-4  mt-4 justify-end">
-            <Button
-              onClick={handleClose}
-              // size="small"
-              color="error"
-              variant="outlined"
-            >
+            <Button onClick={handleClose} color="error" variant="outlined">
               Cancel
             </Button>
-            <Button
-              onClick={handleSubmit}
-              // size="small"
-              variant="contained"
-              color="primary"
-              disabled={mutation.isLoading}
-            >
-              {mutation.isLoading ? (
-                <CircularProgress className="h-4" />
-              ) : (
-                "submit"
-              )}
-            </Button>
+            {shiftId ? (
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                disabled={EditShift.isLoading}
+              >
+                {EditShift.isLoading ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  "Edit Shift"
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+                disabled={AddShift.isLoading}
+              >
+                {AddShift.isLoading ? <CircularProgress size={20} /> : "submit"}
+              </Button>
+            )}
           </div>
         </div>
       </Box>
