@@ -1,5 +1,9 @@
 import {
+  Avatar,
+  AvatarGroup,
+  Badge,
   Button,
+  Chip,
   Container,
   FormControl,
   IconButton,
@@ -20,11 +24,23 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import { useParams } from "react-router";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import axios from "axios";
+import { UseContext } from "../../State/UseState/UseContext";
+import { useContext } from "react";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import { TestContext } from "../../State/Function/Main";
+import randomColor from "randomcolor";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const Shifts = () => {
   const { id } = useParams("");
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
+
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [workingFrom, setWorkingFrom] = useState(null);
@@ -33,8 +49,54 @@ const Shifts = () => {
   const [error, setError] = useState("");
 
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [ShiftId, setShiftId] = useState(null);
+  const handleOpen = () => {
+    setOpen(true);
+    setShiftId(null);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setEditModalOpen(false);
+  };
+
+  const handleEditModalOpen = (shiftId) => {
+    setEditModalOpen(true);
+    setShiftId(shiftId); // Set the shiftId for editing
+  };
+
+  const { data, isLoading, isError } = useQuery("shifts", async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/shifts/${id}`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  });
+
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(`${process.env.REACT_APP_API}/route/shifts/${id}`, {
+        headers: {
+          Authorization: authToken,
+        },
+      }),
+    {
+      onSuccess: () => {
+        // Invalidate and refetch the data after successful deletion
+        queryClient.invalidateQueries("shifts");
+        handleAlert(true, "success", "Shift deleted succesfully");
+      },
+    }
+  );
+
+  const handleDelete = (id) => {
+    // Call the deleteMutation function with the id of the item to delete
+    deleteMutation.mutate(id);
+  };
 
   const handleStartTimeChange = (time) => {
     setSelectedStartTime(time);
@@ -117,50 +179,119 @@ const Shifts = () => {
         </div>
 
         <article>
-          <div class="flex flex-col">
-            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                <div class="overflow-hidden">
-                  <table class="min-w-full bg-white shadow-lg rounded-md text-left text-sm font-light">
-                    <thead class="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                      <tr>
-                        <th scope="col" class="px-6 py-4">
+          <div className="flex flex-col">
+            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div className="overflow-hidden !rounded-md border-[.5px] border-gray-200">
+                  <table className="min-w-full bg-white  text-left text-sm font-light">
+                    <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                      <tr className=" shadow-lg">
+                        <th scope="col" className="px-6 py-3 ">
                           SR NO
                         </th>
-                        <th scope="col" class="px-6 py-4">
-                          First
+                        <th scope="col" className="px-6 py-3 ">
+                          Shift Name
                         </th>
-                        <th scope="col" class="px-6 py-4">
-                          Last
+                        <th scope="col" className="px-6 py-3 ">
+                          Working From
                         </th>
-                        <th scope="col" class="px-6 py-4">
-                          Handle
+                        <th scope="col" className="px-6 py-3 ">
+                          Shift start time
                         </th>
-                        <th scope="col" class="px-6 py-4">
+                        <th scope="col" className="px-6 py-3 ">
+                          Shift ends time
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
+                          Week days
+                        </th>
+                        <th scope="col" className="px-6 py-3 ">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="border-b dark:border-neutral-500">
-                        <td class="whitespace-nowrap px-6 py-4 font-medium">
-                          1
-                        </td>
-                        <td class="whitespace-nowrap px-6 py-4">Larry</td>
-                        <td class="whitespace-nowrap px-6 py-4">Wild</td>
-                        <td class="whitespace-nowrap px-6 py-4">@twitter</td>
-                        <td class="whitespace-nowrap px-6 py-4">
-                          <IconButton>
-                            <DeleteIcon className="!text-xl" color="error" />
-                          </IconButton>
-                          <IconButton>
-                            <BorderColorIcon
-                              className="!text-xl"
-                              color="success"
-                            />
-                          </IconButton>
-                        </td>
-                      </tr>
+                      {data?.shifts &&
+                        data?.shifts?.map((items, index) => (
+                          <tr
+                            id={index}
+                            className={`${
+                              index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                            } border-b dark:border-neutral-500`}
+                          >
+                            <td className="whitespace-nowrap px-6 py-2 font-medium">
+                              {index + 1}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-2">
+                              {items.shiftName}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-2">
+                              {items.workingFrom}
+                            </td>
+                            <td className="whitespace-nowrap font-semibold px-6 py-2">
+                              <Chip
+                                icon={<AccessTimeFilledIcon />}
+                                size="small"
+                                variant="outlined"
+                                color="success"
+                                label={items.startTime}
+                              />
+                            </td>
+                            <td className="whitespace-nowrap font-semibold px-6 py-2">
+                              <Chip
+                                icon={<AccessTimeFilledIcon />}
+                                variant="outlined"
+                                size="small"
+                                color="error"
+                                label={items.endTime}
+                              />
+                            </td>
+
+                            <td className="whitespace-nowrap text-left px-6 py-2">
+                              <AvatarGroup max={6}>
+                                {items?.selectedDays.map((item) => (
+                                  <Avatar
+                                    src="dsadsa"
+                                    key={item}
+                                    className="!text-xs "
+                                    sx={{
+                                      width: 35,
+                                      height: 35,
+                                      backgroundColor: randomColor({
+                                        seed: item,
+                                        luminosity: "dark",
+                                      }),
+                                    }}
+                                  >
+                                    {item.slice(0, 3)}
+                                  </Avatar>
+                                ))}
+                              </AvatarGroup>
+                            </td>
+                            {/* <td className=" px-6  flex gap-6 flex-wrap  py-2">
+                              {items?.selectedDays.map((item) => (
+                                <Badge badgeContent={item} color="primary" />
+                              ))}
+                            </td> */}
+                            <td className="whitespace-nowrap px-6 py-2">
+                              <IconButton
+                                onClick={() => handleDelete(items._id)}
+                              >
+                                <DeleteIcon
+                                  className="!text-xl"
+                                  color="error"
+                                />
+                              </IconButton>
+                              <IconButton
+                                onClick={() => handleEditModalOpen(items._id)}
+                              >
+                                <BorderColorIcon
+                                  className="!text-xl"
+                                  color="success"
+                                />
+                              </IconButton>
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>
@@ -170,6 +301,13 @@ const Shifts = () => {
         </article>
       </section>
       <ShiftModal id={id} open={open} handleClose={handleClose} />
+      <ShiftModal
+        handleClose={handleClose}
+        id={id}
+        open={editModalOpen}
+        shiftId={ShiftId}
+      />
+      {/* <ShiftModal id={id} open={open} handleClose={handleClose} /> */}
       <form style={{ width: "100%", display: "flex" }} action="">
         <Container
           style={{

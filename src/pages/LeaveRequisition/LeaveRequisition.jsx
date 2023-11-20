@@ -45,14 +45,8 @@ const LeaveRequisition = () => {
   const [selectedDateArray, setSelectedDateArray] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([
-    {
-      title: "Maternity Leave",
-      start: new Date(2023, 10, 15),
-      end: new Date(2023, 10, 17),
-      color: "pink",
-    },
-  ]);
+  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
+  console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
 
@@ -62,11 +56,6 @@ const LeaveRequisition = () => {
     end: new Date(),
     color: "pink",
   });
-
-  console.log("[...appliedLeaveEvents, ...newAppliedLeaveEvents]", [
-    ...appliedLeaveEvents,
-    ...newAppliedLeaveEvents,
-  ]);
 
   const handleSubmit = () => {
     setCalendarOpen(false);
@@ -117,7 +106,7 @@ const LeaveRequisition = () => {
       const data = await axios.post(
         `${process.env.REACT_APP_API}/route/leave/create`,
         {
-          daysOfLeave: value,
+          daysOfLeave: newAppliedLeaveEvents.map(({ title, ...rest }) => rest),
           leaveTypeId: leavesTypes._id,
           description: leavesTypes.leaveName,
         },
@@ -187,6 +176,8 @@ const LeaveRequisition = () => {
             authToken={authToken}
             vactionList={vactionList}
             setVactionList={setVactionList}
+            setNewAppliedLeaveEvents={setAppliedLeaveEvents}
+            newAppliedLeaveEvents={appliedLeaveEvents}
           />
 
           <article className=" md:w-[60%]  space-y-2">
@@ -316,51 +307,6 @@ const LeaveRequisition = () => {
                   </div>
                 </>
               )}
-            {/* {selectedDateArray.length > 0 &&
-              Array.isArray(selectedDateArray) && (
-                <>
-                  <div className="h-max !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
-                    <h1 className="text-gray-400 font-semibold mb-4 text-md">
-                      Leave time
-                    </h1>
-                    {selectedDateArray?.map((item, index) => (
-                      <>
-                        <div
-                          key={index}
-                          className="h-max  flex gap-4 items-center rounded-lg"
-                        >
-                          <div className="p-2 rounded-full shadow-lg bg-sky-50">
-                            <CalendarTodayIcon className="text-gray-400 !text-[1.2rem]" />
-                          </div>
-
-                          <div className="flex w-full justify-between">
-                            <div className="flex items-center gap-2">
-                              <p className="text-md">
-                                Start date:{" "}
-                                {format(new Date(item.startDate), "PP")}
-                              </p>
-                              <Divider orientation="vertical" flexItem />
-                              <p className="text-md">
-                                Ending date:{" "}
-                                {format(new Date(item.endDate), "PP")}
-                              </p>
-                            </div>
-
-                            <IconButton onClick={() => removeItem(index)}>
-                              <DeleteIcon className="!h-5" color="error" />
-                            </IconButton>
-                          </div>
-                        </div>
-
-                        <div className="w-full h-max">
-                          <Divider />
-                        </div>
-                      </>
-                    ))}
-                  </div>
-                </>
-              )} */}
-
             <div className="h-max !mt-4 bg-white py-3 px-8 shadow-lg rounded-lg">
               <p className="!text-gray-400 font-semibold mb-2">Select Leaves</p>
               <FormControl size="small" fullWidth>
@@ -388,9 +334,11 @@ const LeaveRequisition = () => {
 
               <div className=" mt-4">
                 <Button
-                  disabled={
-                    value.length <= 0 || leavesTypes.length === 0 ? true : false
-                  }
+                  // disabled={
+                  //   value.length <= 0 || newAppliedLeaveEvents?.length === 0
+                  //     ? true
+                  //     : false
+                  // }
                   onClick={genrateLeaveRequest}
                   variant="contained"
                   className="font-bold"
