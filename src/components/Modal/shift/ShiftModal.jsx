@@ -23,10 +23,8 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import moment from "moment";
 import { TestContext } from "../../../State/Function/Main";
 import { useContext } from "react";
-import GetSingleShift from "../../../hooks/Shift/GetSingleShift";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { useEffect } from "react";
 
@@ -35,7 +33,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading } = useQuery(
     ["shift", shiftId],
     async () => {
       if (open && shiftId !== null) {
