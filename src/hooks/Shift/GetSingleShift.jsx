@@ -1,14 +1,12 @@
-import { useQuery } from "react-query";
 import axios from "axios";
-import { useContext } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
+import { useQuery } from "react-query";
 
 const fetchSingleShift = async (shiftId, authToken) => {
   console.log(shiftId, "shiftid");
 
   try {
     const response = await axios.get(
-      s`${process.env.REACT_APP_API}/route/getSingleshifts/${shiftId}`,
+      `${process.env.REACT_APP_API}/route/getSingleshifts/${shiftId}`,
       {
         headers: {
           Authorization: authToken,

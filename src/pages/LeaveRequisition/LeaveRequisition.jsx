@@ -45,14 +45,7 @@ const LeaveRequisition = () => {
   const [selectedDateArray, setSelectedDateArray] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([
-    {
-      title: "Maternity Leave",
-      start: new Date(2023, 10, 15),
-      end: new Date(2023, 10, 17),
-      color: "pink",
-    },
-  ]);
+  const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
