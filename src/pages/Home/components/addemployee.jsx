@@ -108,6 +108,7 @@ const AddEmployee = () => {
     } = event;
     setProfile(typeof value === "string" ? value.split(",") : value);
   };
+
   const [availableProfiles, setAvailableProfiles] = useState([]);
   console.log(availableProfiles);
   const fetchAvailableProfiles = async () => {
@@ -147,52 +148,94 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
-    // eslint-disable-next-line
   }, [id]);
 
-  const [existingProfile, setExistingProfile] = useState([]);
-  const fetchExistingRoles = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-profile`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      setExistingProfile(response.data.role);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch available profiles");
-    }
-  };
-  useEffect(() => {
-    fetchExistingRoles();
-  }, [id]);
-  console.log(existingProfile);
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const user = {
+  //     first_name,
+  //     last_name,
+  //     middle_name,
+  //     email,
+  //     password,
+  //     phone_number,
+  //     emergency_contact,
+  //     address,
+  //     location,
+  //     selectedValue,
+  //     joining_date,
+  //     profile: profile.length <= 0 ? "Employee" : profile,
+  //     organizationId: id,
+  //     creatorId: userId,
+  //   };
+  //   console.log(user);
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API}/route/employee/create-profile`,
+  //       user,
+  //       {
+  //         headers: {
+  //           Authorization: authToken,
+  //         },
+  //       }
+  //     );
+
+  //     if (response.data.success) {
+  //       handleAlert(true, "error", "Invalid authorization");
+  //     }
+
+  //     handleAlert(true, "success", response.data.message);
+  //   } catch (error) {
+  //     handleAlert(true, "error", error.response.data.message);
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    console.log("Hello", profile);
 
-    const user = {
-      first_name,
-      last_name,
-      middle_name,
-      email,
-      password,
-      phone_number,
-      emergency_contact,
-      address,
-      location,
-      selectedValue,
-      joining_date,
-      profile: profile.length <= 0 ? "Employee" : profile,
-      organizationId: id,
-      creatorId: userId,
-    };
-    console.log(user);
     try {
+      // Check if employees with specified profiles exist
+      const isProfileData = await axios.post(
+        "http://localhost:4000/route/employee/is-profiledata",
+        { profile }
+      );
+
+      console.log(isProfileData.data);
+      console.log(isProfileData.data.employeesWithProfiles);
+      console.log(profile);
+      if (isProfileData.data && isProfileData.data.employeesWithProfiles) {
+        const confirmCreateProfile = window.confirm(
+          `${profile} is already exist . Do you want to create one More ?`
+        );
+
+        if (!confirmCreateProfile) {
+          // User chose not to create another profile
+          return;
+        }
+        // Proceed to create the profile
+      }
+
+      // Assuming 'profile' is an array of profiles, if empty, default to "Employee"
+      const user = {
+        first_name,
+        last_name,
+        middle_name,
+        email,
+        password,
+        phone_number,
+        emergency_contact,
+        address,
+        location,
+        selectedValue,
+        joining_date,
+        profile: profile.length <= 0 ? "Employee" : profile,
+        organizationId: id,
+        creatorId: userId,
+      };
+      console.log(user);
+
+      // Create a new employee profile
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
@@ -203,15 +246,22 @@ const AddEmployee = () => {
         }
       );
 
+      // Handle the response from creating a profile
       if (response.data.success) {
         handleAlert(true, "error", "Invalid authorization");
+      } else {
+        handleAlert(true, "success", response.data.message);
       }
-
-      handleAlert(true, "success", response.data.message);
     } catch (error) {
-      handleAlert(true, "error", error.response.data.message);
+      // Handle errors for both requests
+      handleAlert(
+        true,
+        "error",
+        error.response ? error.response.data.message : error.message
+      );
     }
   };
+
   const staticTitle = "This form for";
   return (
     <>
