@@ -22,7 +22,11 @@ jobs:
         run: npm install
 
       - name: 🏗️ Build
-        run: npm run build
+        run: |
+          touch .env
+          echo "${{secrets.PROD_ENV_FILE}}" > .env
+          cat .env
+          npm run build
 
       - name: 🚀 Upload build
         uses: actions/upload-artifact@v2
@@ -43,8 +47,8 @@ jobs:
       - name: 🧪 Test artifact download
         run: |
           ls -R
-          touch .env
-          echo "${{secrets.PROD_ENV_FILE}}" > .env
+          cat .env
+          
 
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
