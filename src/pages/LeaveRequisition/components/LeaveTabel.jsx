@@ -77,7 +77,8 @@ const LeaveTabel = ({
 
       setNewAppliedLeaveEvents((prev) => [...prev, ...filteredNewLeaves]);
     }
-  }, [data?.daysOfLeaveArray]);
+    // eslint-disable-next-line
+  }, []);
 
   if (isLoading) {
     return (

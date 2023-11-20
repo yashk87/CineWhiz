@@ -28,7 +28,7 @@ const Home = () => {
 
   const getData = async () => {
     const data = await axios.get(
-      "http://localhost:4000/route/organization/get",
+      `${process.env.REACT_APP_API}/route/organization/get`,
       {
         headers: {
           Authorization: authToken,

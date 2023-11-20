@@ -15,6 +15,7 @@ import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import Setup from "./pages/SetUpOrganization/Setup";
+import AddOrganizationLocations from "./pages/SetUpOrganization/addOrganizationLocations";
 import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
@@ -22,8 +23,8 @@ import Signup from "./pages/SignUp/Signup";
 import MyCalendar from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import AddOrganizationLocations from "./pages/SetUpOrganization/addOrganizationLocations";
 const App = () => {
+  console.log("helo");
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
@@ -47,7 +48,11 @@ const App = () => {
         element={<AddEmployee />}
       />
       <Route exact path="/add-roles/:id" element={<AddRoles />} />
-      <Route exact path="/add-locations/:id" element={<AddOrganizationLocations />} />
+      <Route
+        exact
+        path="/add-locations/:id"
+        element={<AddOrganizationLocations />}
+      />
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
       <Route exact path="/setup/:id" element={<Setup />} />
