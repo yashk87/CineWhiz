@@ -173,6 +173,7 @@ const AddEmployee = () => {
   console.log(existingProfile);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
 
     const user = {
       first_name,
