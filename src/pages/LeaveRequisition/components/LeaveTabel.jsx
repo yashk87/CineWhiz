@@ -77,7 +77,9 @@ const LeaveTabel = ({
 
       setNewAppliedLeaveEvents((prev) => [...prev, ...filteredNewLeaves]);
     }
-  }, [data?.daysOfLeaveArray]);
+    // depenedency Array
+    // data?.daysOfLeaveArray;
+  }, []);
 
   if (isLoading) {
     return (

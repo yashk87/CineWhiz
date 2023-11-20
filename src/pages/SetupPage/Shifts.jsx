@@ -1,7 +1,6 @@
 import {
   Avatar,
   AvatarGroup,
-  Badge,
   Button,
   Chip,
   Container,
@@ -85,7 +84,7 @@ const Shifts = () => {
     setShiftId(shiftId); // Set the shiftId for editing
   };
 
-  const { data, isLoading, isError } = useQuery("shifts", async () => {
+  const { data, isLoading } = useQuery("shifts", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/shifts/${id}`,
       {

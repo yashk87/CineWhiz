@@ -46,16 +46,16 @@ const LeaveRequisition = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
-  console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
+  // console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
+  // console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
 
-  const [leaveData, setLeaveData] = useState({
-    title: "",
-    start: new Date(),
-    end: new Date(),
-    color: "pink",
-  });
+  // const [leaveData, setLeaveData] = useState({
+  //   title: "",
+  //   start: new Date(),
+  //   end: new Date(),
+  //   color: "pink",
+  // });
 
   const handleSubmit = () => {
     setCalendarOpen(false);
@@ -92,13 +92,13 @@ const LeaveRequisition = () => {
 
       // setSelectedDateArray((prevDates) => [...prevDates, newLeave]);
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-      setLeaveData(newLeave);
+      // setLeaveData(newLeave);
     }
   };
 
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
-    setLeaveData(event);
+    // setLeaveData(event);
     setCalendarOpen(true);
   };
 

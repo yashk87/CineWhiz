@@ -29,7 +29,7 @@ const AddOrganizationLocations = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [pinCode, setPinCode] = useState("");
-  const [country, setCountry] = useState("");
+  // const [country, setCountry] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -91,7 +91,7 @@ const AddOrganizationLocations = () => {
     setCity("");
     setState("");
     setPinCode("");
-    setCountry("");
+    // setCountry("");
     setSelectedCountry(null);
     setSelectedState(null);
   };
@@ -125,7 +125,7 @@ const AddOrganizationLocations = () => {
     setCity(selectedLocation.city);
     setState(selectedLocation.state);
     setPinCode(selectedLocation.pinCode);
-    setCountry(selectedLocation.country);
+    // setCountry(selectedLocation.country);
     setSelectedCountry(
       countries.find((country) => country.label === selectedLocation.country) ||
         null
