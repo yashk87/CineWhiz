@@ -112,7 +112,7 @@ const LeaveTabel = ({
       // eslint-disable-next-line
     }
     // eslint-disable-next-line
-  }, []);
+  }, [data?.daysOfLeaveArray]);
 
   if (isLoading) {
     return (

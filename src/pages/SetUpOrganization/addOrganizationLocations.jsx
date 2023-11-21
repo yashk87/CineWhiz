@@ -29,7 +29,7 @@ const AddOrganizationLocations = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [pinCode, setPinCode] = useState("");
-  // const [country, setCountry] = useState("");
+  const [country, setCountry] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -143,7 +143,7 @@ const AddOrganizationLocations = () => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       handleAddLocation();
       handleClose();
@@ -205,10 +205,16 @@ const AddOrganizationLocations = () => {
                   }}
                 >
                   <div>
-                    <IconButton onClick={() => handleEditLocation(index)} aria-label="edit">
+                    <IconButton
+                      onClick={() => handleEditLocation(index)}
+                      aria-label="edit"
+                    >
                       <EditIcon />
                     </IconButton>
-                    <IconButton onClick={() => handleDeleteLocation(index)} aria-label="delete">
+                    <IconButton
+                      onClick={() => handleDeleteLocation(index)}
+                      aria-label="delete"
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </div>
@@ -233,20 +239,27 @@ const AddOrganizationLocations = () => {
             )}
           </DialogTitle>
           <DialogContent>
-            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
               <TextField
-                label={<FormattedMessage id="pinCode" defaultMessage="Pin Code/Zip Code" />}
+                label={
+                  <FormattedMessage
+                    id="pinCode"
+                    defaultMessage="Pin Code/Zip Code"
+                  />
+                }
                 variant="outlined"
                 value={pinCode}
                 onChange={(e) => setPinCode(e.target.value)}
-                style={{ flex: '1' }}
+                style={{ flex: "1" }}
               />
               <TextField
-                label={<FormattedMessage id="country" defaultMessage="Country" />}
+                label={
+                  <FormattedMessage id="country" defaultMessage="Country" />
+                }
                 variant="outlined"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                style={{ flex: '1' }}
+                style={{ flex: "1" }}
               />
             </div>
             <TextField
@@ -336,7 +349,10 @@ const AddOrganizationLocations = () => {
             </Button>
             <Button onClick={handleAddLocation} color="primary">
               {editIndex !== null ? (
-                <FormattedMessage id="saveChanges" defaultMessage="Save Changes" />
+                <FormattedMessage
+                  id="saveChanges"
+                  defaultMessage="Save Changes"
+                />
               ) : (
                 <FormattedMessage id="add" defaultMessage="Add" />
               )}
