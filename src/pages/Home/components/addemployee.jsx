@@ -149,52 +149,11 @@ const AddEmployee = () => {
     fetchAvailableProfiles();
   }, [id]);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const user = {
-  //     first_name,
-  //     last_name,
-  //     middle_name,
-  //     email,
-  //     password,
-  //     phone_number,
-  //     emergency_contact,
-  //     address,
-  //     location,
-  //     selectedValue,
-  //     joining_date,
-  //     profile: profile.length <= 0 ? "Employee" : profile,
-  //     organizationId: id,
-  //     creatorId: userId,
-  //   };
-  //   console.log(user);
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.REACT_APP_API}/route/employee/create-profile`,
-  //       user,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data.success) {
-  //       handleAlert(true, "error", "Invalid authorization");
-  //     }
-
-  //     handleAlert(true, "success", response.data.message);
-  //   } catch (error) {
-  //     handleAlert(true, "error", error.response.data.message);
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Hello", profile);
 
     try {
-      // Check if employees with specified profiles exist
       const isProfileData = await axios.post(
         "http://localhost:4000/route/employee/is-profiledata",
         { profile }
@@ -209,13 +168,10 @@ const AddEmployee = () => {
         );
 
         if (!confirmCreateProfile) {
-          // User chose not to create another profile
           return;
         }
-        // Proceed to create the profile
       }
 
-      // Assuming 'profile' is an array of profiles, if empty, default to "Employee"
       const user = {
         first_name,
         last_name,
@@ -234,7 +190,6 @@ const AddEmployee = () => {
       };
       console.log(user);
 
-      // Create a new employee profile
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
@@ -245,14 +200,12 @@ const AddEmployee = () => {
         }
       );
 
-      // Handle the response from creating a profile
       if (response.data.success) {
         handleAlert(true, "error", "Invalid authorization");
       } else {
         handleAlert(true, "success", response.data.message);
       }
     } catch (error) {
-      // Handle errors for both requests
       handleAlert(
         true,
         "error",
