@@ -45,6 +45,8 @@ const LeaveRequisition = () => {
   // const [selectedDateArray, setSelectedDateArray] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  console.log(setAnchorEl, "se");
+
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   // console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
@@ -323,8 +325,8 @@ const LeaveRequisition = () => {
                   {subtractedLeaves?.map(
                     (item, index) =>
                       item.isActive &&
-                      item.count > 0 && (
-                        <MenuItem id={index} key={index} value={item}>
+                      item.subtractedCount > 0 && (
+                        <MenuItem id={index} value={item}>
                           {item.leaveName}
                         </MenuItem>
                       )
