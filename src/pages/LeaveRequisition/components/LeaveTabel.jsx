@@ -13,7 +13,7 @@ const LeaveTabel = ({
   authToken,
   vactionList,
   setVactionList,
-  setNewAppliedLeaveEvents,
+  setAppliedLeaveEvents,
 }) => {
   const [Total, setTotal] = useState();
 
@@ -52,6 +52,7 @@ const LeaveTabel = ({
               subtractedCount,
               color: orgLeaveType.color,
               isActive: orgLeaveType.isActive,
+              _id: orgLeaveType._id,
             });
           } else {
             // If no start and end dates, add the leave directly to the state array
@@ -60,6 +61,7 @@ const LeaveTabel = ({
               subtractedCount: orgLeaveType.count, // You can set it to 0 or any default value
               color: orgLeaveType.color,
               isActive: orgLeaveType.isActive,
+              _id: orgLeaveType._id,
             });
           }
         }
@@ -101,15 +103,13 @@ const LeaveTabel = ({
         ...leave,
         title: `${leave.title}`,
       }));
+      console.log(`🚀 ~ data.daysOfLeaveArray:`, data.daysOfLeaveArray);
+      console.log(`🚀 ~ newLeaves:`, newLeaves);
 
       // Filter out null values
       const filteredNewLeaves = newLeaves.filter((leave) => leave);
 
-      console.log("title", filteredNewLeaves);
-
-      setNewAppliedLeaveEvents((prev) => [...prev, ...filteredNewLeaves]);
-
-      // eslint-disable-next-line
+      setAppliedLeaveEvents((prev) => [...prev, ...filteredNewLeaves]);
     }
     // eslint-disable-next-line
   }, [data?.daysOfLeaveArray]);
