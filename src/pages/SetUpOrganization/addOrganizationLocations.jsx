@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import axios from "axios";
 import {
   Button,
   Dialog,
@@ -14,21 +16,68 @@ import {
   CardContent,
   CardActions,
   IconButton,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { FormattedMessage, IntlProvider } from 'react-intl';
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { FormattedMessage, IntlProvider } from "react-intl";
 
 const AddOrganizationLocations = () => {
   const [open, setOpen] = useState(false);
   const [locationList, setLocationList] = useState([]);
-  const [addressLine1, setAddressLine1] = useState('');
-  const [addressLine2, setAddressLine2] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [pinCode, setPinCode] = useState('');
-  const [country, setCountry] = useState('');
+  const [addressLine1, setAddressLine1] = useState("");
+  const [addressLine2, setAddressLine2] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [pinCode, setPinCode] = useState("");
+  const [country, setCountry] = useState("");
   const [editIndex, setEditIndex] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+
+  useEffect(() => {
+    // Fetch countries
+    axios
+      .get("http://api.geonames.org/countryInfoJSON", {
+        params: {
+          username: "your_geonames_username", // Replace with your Geonames username
+        },
+      })
+      .then((response) => {
+        const countryOptions = response.data.geonames.map((country) => ({
+          value: country.countryCode,
+          label: country.countryName,
+        }));
+        setCountries(countryOptions);
+      })
+      .catch((error) => {
+        console.error("Error fetching countries:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch states based on the selected country
+    if (selectedCountry) {
+      axios
+        .get("http://api.geonames.org/childrenJSON", {
+          params: {
+            username: "your_geonames_username", // Replace with your Geonames username
+            geonameId: selectedCountry.value,
+          },
+        })
+        .then((response) => {
+          const stateOptions = response.data.geonames.map((state) => ({
+            value: state.geonameId,
+            label: state.name,
+          }));
+          setStates(stateOptions);
+        })
+        .catch((error) => {
+          console.error("Error fetching states:", error);
+        });
+    }
+  }, [selectedCountry]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -37,12 +86,14 @@ const AddOrganizationLocations = () => {
   const handleClose = () => {
     setOpen(false);
     setEditIndex(null);
-    setAddressLine1('');
-    setAddressLine2('');
-    setCity('');
-    setState('');
-    setPinCode('');
-    setCountry('');
+    setAddressLine1("");
+    setAddressLine2("");
+    setCity("");
+    setState("");
+    setPinCode("");
+    setCountry("");
+    setSelectedCountry(null);
+    setSelectedState(null);
   };
 
   const handleAddLocation = () => {
@@ -50,9 +101,9 @@ const AddOrganizationLocations = () => {
       addressLine1,
       addressLine2,
       city,
-      state,
+      state: selectedState ? selectedState.label : "",
       pinCode,
-      country,
+      country: selectedCountry ? selectedCountry.label : "",
     };
 
     if (editIndex !== null) {
@@ -75,6 +126,13 @@ const AddOrganizationLocations = () => {
     setState(selectedLocation.state);
     setPinCode(selectedLocation.pinCode);
     setCountry(selectedLocation.country);
+    setSelectedCountry(
+      countries.find((country) => country.label === selectedLocation.country) ||
+        null
+    );
+    setSelectedState(
+      states.find((state) => state.label === selectedLocation.state) || null
+    );
     setOpen(true);
   };
 
@@ -95,24 +153,40 @@ const AddOrganizationLocations = () => {
   return (
     <IntlProvider locale="en">
       <Container>
-        <Typography 
-        variant="h4" 
-        gutterBottom
-        color={"primary"}
-        fontWeight={800}
-        fontSize={20}
-        className="text-2xl pt-5">
-          <FormattedMessage id="organizationLocations" defaultMessage="Organization Locations" />
+        <Typography
+          variant="h4"
+          gutterBottom
+          color={"primary"}
+          fontWeight={800}
+          fontSize={20}
+          className="text-2xl pt-5"
+        >
+          <FormattedMessage
+            id="organizationLocations"
+            defaultMessage="Organization Locations"
+          />
         </Typography>
 
-        <Button variant="contained" color="primary" onClick={handleOpen} style={{ marginBottom: '16px' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleOpen}
+          style={{ marginBottom: "16px" }}
+        >
           <FormattedMessage id="addLocation" defaultMessage="Add Location" />
         </Button>
 
         <List>
           {locationList.map((location, index) => (
-            <ListItem key={index} style={{ marginBottom: '8px' }}>
-              <Card variant="outlined" style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <ListItem key={index} style={{ marginBottom: "8px" }}>
+              <Card
+                variant="outlined"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
                 <CardContent>
                   <Typography variant="body1">
                     {location.pinCode && `${location.pinCode}, `}
@@ -123,7 +197,13 @@ const AddOrganizationLocations = () => {
                     {location.state && `${location.state} - `}
                   </Typography>
                 </CardContent>
-                <CardActions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <CardActions
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <div>
                     <IconButton onClick={() => handleEditLocation(index)} aria-label="edit">
                       <EditIcon />
@@ -141,9 +221,15 @@ const AddOrganizationLocations = () => {
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
           <DialogTitle>
             {editIndex !== null ? (
-              <FormattedMessage id="editLocation" defaultMessage="Edit Location" />
+              <FormattedMessage
+                id="editLocation"
+                defaultMessage="Edit Location"
+              />
             ) : (
-              <FormattedMessage id="addLocation" defaultMessage="Add Location" />
+              <FormattedMessage
+                id="addLocation"
+                defaultMessage="Add Location"
+              />
             )}
           </DialogTitle>
           <DialogContent>
@@ -164,19 +250,29 @@ const AddOrganizationLocations = () => {
               />
             </div>
             <TextField
-              label={<FormattedMessage id="addressLine1" defaultMessage="Address Line 1" />}
+              label={
+                <FormattedMessage
+                  id="addressLine1"
+                  defaultMessage="Address Line 1"
+                />
+              }
               variant="outlined"
               value={addressLine1}
               onChange={(e) => setAddressLine1(e.target.value)}
               fullWidth
             />
             <TextField
-              label={<FormattedMessage id="addressLine2" defaultMessage="Address Line 2" />}
+              label={
+                <FormattedMessage
+                  id="addressLine2"
+                  defaultMessage="Address Line 2"
+                />
+              }
               variant="outlined"
               value={addressLine2}
               onChange={(e) => setAddressLine2(e.target.value)}
               fullWidth
-              style={{ marginTop: '8px' }}
+              style={{ marginTop: "8px" }}
             />
             <TextField
               label={<FormattedMessage id="city" defaultMessage="City" />}
@@ -184,16 +280,55 @@ const AddOrganizationLocations = () => {
               value={city}
               onChange={(e) => setCity(e.target.value)}
               fullWidth
-              style={{ marginTop: '8px' }}
+              style={{ marginTop: "8px" }}
             />
             <TextField
-              label={<FormattedMessage id="state" defaultMessage="State/Province/Region" />}
+              label={
+                <FormattedMessage
+                  id="state"
+                  defaultMessage="State/Province/Region"
+                />
+              }
               variant="outlined"
               value={state}
               onChange={(e) => setState(e.target.value)}
               fullWidth
-              style={{ marginTop: '8px' }}
+              style={{ marginTop: "8px" }}
             />
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+              <TextField
+                label={
+                  <FormattedMessage
+                    id="pinCode"
+                    defaultMessage="Pin Code/Zip Code"
+                  />
+                }
+                variant="outlined"
+                value={pinCode}
+                onChange={(e) => setPinCode(e.target.value)}
+                style={{ flex: "1" }}
+              />
+              <Select
+                options={countries}
+                value={selectedCountry}
+                onChange={(selectedOption) =>
+                  setSelectedCountry(selectedOption)
+                }
+                placeholder="Select Country"
+                isClearable
+                style={{ flex: "1" }}
+              />
+            </div>
+            {selectedCountry && (
+              <Select
+                options={states}
+                value={selectedState}
+                onChange={(selectedOption) => setSelectedState(selectedOption)}
+                placeholder="Select State"
+                isClearable
+                style={{ marginTop: "8px" }}
+              />
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">

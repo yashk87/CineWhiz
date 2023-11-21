@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   FormControl,
   IconButton,
@@ -20,11 +21,26 @@ import dayjs from "dayjs";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import React, { useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import axios from "axios";
 import moment from "moment";
+import { TestContext } from "../../../State/Function/Main";
+import { useContext } from "react";
+import GetSingleShift from "../../../hooks/Shift/GetSingleShift";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { useEffect } from "react";
 
-const ShiftModal = ({ handleClose, open, id }) => {
+const ShiftModal = ({ handleClose, open, id, shiftId }) => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+
+  const {
+    data: shift,
+    isLoading,
+    isError,
+  } = GetSingleShift(shiftId, authToken);
+
   const daysOfWeek = [
     { label: "Mon", value: "Monday" },
     { label: "Tus", value: "Tuesday" },
@@ -35,27 +51,40 @@ const ShiftModal = ({ handleClose, open, id }) => {
     { label: "Sun", value: "Sunday" },
   ];
   const [startDateTime, setStartDateTime] = useState(dayjs(new Date()));
-  const [endDateTime, setEndDateTime] = useState(startDateTime.add(9, "hour"));
+  const [endDateTime, setEndDateTime] = useState(() =>
+    startDateTime.add(9, "hour")
+  );
   const [validationError, setValidationError] = useState(false);
   const [workingFrom, setWorkingFrom] = useState("");
   const [shiftName, setShiftName] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [error, setError] = useState("");
 
-  console.log(dayjs(startDateTime).format("HH:mm"));
+  const queryClient = useQueryClient();
 
   const handleStartDateTimeChange = (newDateTime) => {
     setStartDateTime(newDateTime);
+
     // Adjust end time when start time changes
     setEndDateTime(newDateTime.add(9, "hour"));
-    // Reset validation error
-    setValidationError(false);
+
     // Reset validation error
     setValidationError(false);
   };
 
-  const mutation = useMutation((data) =>
-    axios.post(`${process.env.REACT_APP_API}/route/shifts/create`, data)
+  const mutation = useMutation(
+    (data) =>
+      axios.post(`${process.env.REACT_APP_API}/route/shifts/create`, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["shifts"] });
+        handleClose();
+        handleAlert(true, "success", "Shift generated succesfully");
+      },
+      onError: () => {
+        setError("An error occurred while creating a new shift");
+      },
+    }
   );
 
   const handleSubmit = async (e) => {
@@ -144,7 +173,7 @@ const ShiftModal = ({ handleClose, open, id }) => {
       >
         <div className="flex justify-between py-4 items-center  px-4">
           <h1 id="modal-modal-title" className="text-lg pl-2 font-semibold">
-            Create a shift
+            {shiftId ? "Edit shift" : "Create a shift"}
           </h1>
           <IconButton onClick={handleClose}>
             <CloseIcon className="!text-[16px]" />
@@ -156,6 +185,7 @@ const ShiftModal = ({ handleClose, open, id }) => {
         </div>
 
         <div className="px-5 space-y-4 mt-4">
+          {error && <p className="text-red-500">*{error}</p>}
           <div className="space-y-2 ">
             <label className="text-sm" htmlFor="demo-simple-select-label">
               Select shift type
@@ -176,7 +206,6 @@ const ShiftModal = ({ handleClose, open, id }) => {
               </Select>
             </FormControl>
           </div>
-
           <div className="space-y-2 ">
             <label className="text-sm" htmlFor="demo-simple-select-label">
               Enter shift name
@@ -193,7 +222,6 @@ const ShiftModal = ({ handleClose, open, id }) => {
               />
             </FormControl>
           </div>
-
           <div className="flex justify-between">
             <div className="space-y-2 w-[45%] ">
               <label className="text-sm" htmlFor="demo-simple-select-label">
@@ -242,7 +270,6 @@ const ShiftModal = ({ handleClose, open, id }) => {
               </LocalizationProvider>
             </div>
           </div>
-
           <div
             className="w-full"
             style={{ width: "100%", justifyContent: "center", gap: "2px" }}
@@ -280,7 +307,6 @@ const ShiftModal = ({ handleClose, open, id }) => {
               ))}
             </ToggleButtonGroup>
           </div>
-
           <div className="flex gap-4  mt-4 justify-end">
             <Button
               onClick={handleClose}
@@ -295,9 +321,13 @@ const ShiftModal = ({ handleClose, open, id }) => {
               // size="small"
               variant="contained"
               color="primary"
-              disabled={validationError}
+              disabled={mutation.isLoading}
             >
-              submit
+              {mutation.isLoading ? (
+                <CircularProgress className="h-4" />
+              ) : (
+                "submit"
+              )}
             </Button>
           </div>
         </div>
