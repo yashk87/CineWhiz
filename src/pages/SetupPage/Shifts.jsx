@@ -3,15 +3,27 @@ import {
   AvatarGroup,
   Button,
   Chip,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Skeleton,
+  TextField,
+  Typography,
 } from "@mui/material";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Axios from "axios";
 import React, { useState } from "react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ShiftDisplay from "./ShiftDisplay";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
@@ -26,6 +38,8 @@ import WarningIcon from "@mui/icons-material/Warning";
 import { AccessTimeFilled, Info, MoreTime } from "@mui/icons-material";
 import dayjs from "dayjs";
 
+const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 const Shifts = () => {
   const { id } = useParams("");
   const { cookies } = useContext(UseContext);
@@ -33,6 +47,11 @@ const Shifts = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
+  const [selectedStartTime, setSelectedStartTime] = useState(null);
+  const [selectedEndTime, setSelectedEndTime] = useState(null);
+  const [workingFrom, setWorkingFrom] = useState(null);
+  const [shiftName, setShiftName] = useState(null);
+  const [selectedDays, setSelectedDays] = useState([]);
   const [error, setError] = useState("");
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
@@ -99,10 +118,72 @@ const Shifts = () => {
     handleCloseConfirmation();
   };
 
+  const handleStartTimeChange = (time) => {
+    setSelectedStartTime(time);
+  };
+
+  const handleEndTimeChange = (time) => {
+    setSelectedEndTime(time);
+  };
+
+  const handleDaySelection = (event, newSelectedDays) => {
+    setSelectedDays(newSelectedDays);
+  };
+
   const convertTo12HourFormat = (timeString) => {
     const [hours, minutes] = timeString.split(":");
     const newDate = dayjs().hour(parseInt(hours)).minute(parseInt(minutes));
     return newDate.format("h:mm A");
+  };
+  const isSelected = (day) => {
+    return selectedDays.includes(day);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const startTime = selectedStartTime;
+    const endTime = selectedEndTime;
+    // console.log(startTime);
+
+    if (!startTime || !endTime || selectedDays.length === 0) {
+      setError("Please fill in all the mandatory fields");
+      return;
+    }
+
+    const timeDiffInMilliseconds = endTime - startTime;
+    const timeDiffInMinutes = timeDiffInMilliseconds / (1000 * 60);
+
+    if (timeDiffInMinutes >= 540) {
+      try {
+        const data = {
+          startTime,
+          endTime,
+          selectedDays,
+          workingFrom,
+          shiftName,
+        };
+
+        const response = await Axios.post(
+          "http://localhost:4000/route/shifts/create",
+          data
+        );
+
+        if (response.status === 201) {
+          setError("");
+          setSelectedStartTime("");
+          setSelectedEndTime("");
+          setWorkingFrom("");
+          setShiftName("");
+        } else {
+          setError("Failed to create a new shift");
+        }
+      } catch (error) {
+        console.error(error);
+        setError("An error occurred while creating a new shift");
+      }
+    } else {
+      setError("Time difference must be 9 hours or greater");
+    }
   };
 
   return (
@@ -311,7 +392,7 @@ const Shifts = () => {
         </DialogActions>
       </Dialog>
 
-      {/* <form style={{ width: "100%", display: "flex" }} action="">
+      <form style={{ width: "100%", display: "flex" }} action="">
         <Container
           style={{
             display: "flex",
@@ -479,7 +560,7 @@ const Shifts = () => {
           <ShiftDisplay />
         </Container>{" "}
         *
-      </form> */}
+      </form>
     </>
   );
 };
