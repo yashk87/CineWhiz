@@ -1,4 +1,5 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AddIcon from "@mui/icons-material/Add";
 import AddAlertIcon from "@mui/icons-material/AddAlert";
 import CategoryIcon from "@mui/icons-material/Category";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -7,11 +8,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import ReportIcon from "@mui/icons-material/Report";
 import SettingsIcon from "@mui/icons-material/Settings";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import {
   Accordion,
   AccordionDetails,
@@ -23,11 +24,10 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-  import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
-import AddIcon from "@mui/icons-material/Add";
 
 const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
