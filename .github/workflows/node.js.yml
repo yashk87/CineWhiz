@@ -10,25 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 🔄 Checkout code
-      uses: actions/checkout@v2
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v2
 
-    - name: ⚙️ Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 14
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
 
-    - name: 📦 Install dependencies
-      run: npm install
+      - name: 📦 Install dependencies
+        run: npm install
 
-    - name: 🏗️ Build
-      run: npm run build
+      - name: 🏗️ Build
+        run: |
+          touch .env
+          echo "${{secrets.PROD_ENV_FILE}}" > .env
+          cat .env
+          npm run build
 
-    - name: 🚀 Upload build
-      uses: actions/upload-artifact@v2
-      with:
-        name: static-site
-        path: build/
+      - name: 🚀 Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: static-site
+          path: build/
 
   # release-project:
   #   name: 🚀 Release project
@@ -39,9 +43,12 @@ jobs:
   #       uses: actions/download-artifact@v2
   #       with:
   #         name: static-site
-
+  
   #     - name: 🧪 Test artifact download
-  #       run: ls -R
+  #       run: |
+  #         ls -R
+  #         cat .env
+          
 
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.

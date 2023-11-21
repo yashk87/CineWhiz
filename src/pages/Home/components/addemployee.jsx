@@ -10,6 +10,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Select from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -18,12 +19,10 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
-import Tooltip from "@mui/material/Tooltip";
-import { useLocation } from "react-router-dom";
 const AddEmployee = () => {
   const locations = useLocation();
   const { orgName } = locations.state;
@@ -108,6 +107,7 @@ const AddEmployee = () => {
     } = event;
     setProfile(typeof value === "string" ? value.split(",") : value);
   };
+
   const [availableProfiles, setAvailableProfiles] = useState([]);
   console.log(availableProfiles);
   const fetchAvailableProfiles = async () => {
@@ -147,51 +147,49 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
-    // eslint-disable-next-line
   }, [id]);
 
-  const [existingProfile, setExistingProfile] = useState([]);
-  const fetchExistingRoles = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-profile`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      setExistingProfile(response.data.role);
-    } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch available profiles");
-    }
-  };
-  useEffect(() => {
-    fetchExistingRoles();
-  }, [id]);
-  console.log(existingProfile);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Hello", profile);
 
-    const user = {
-      first_name,
-      last_name,
-      middle_name,
-      email,
-      password,
-      phone_number,
-      emergency_contact,
-      address,
-      location,
-      selectedValue,
-      joining_date,
-      profile: profile.length <= 0 ? "Employee" : profile,
-      organizationId: id,
-      creatorId: userId,
-    };
-    console.log(user);
     try {
+      const isProfileData = await axios.post(
+        "http://localhost:4000/route/employee/is-profiledata",
+        { profile }
+      );
+
+      console.log(isProfileData.data);
+      console.log(isProfileData.data.employeesWithProfiles);
+      console.log(profile);
+      if (isProfileData.data && isProfileData.data.employeesWithProfiles) {
+        const confirmCreateProfile = window.confirm(
+          `${profile} is already exist . Do you want to create one More ?`
+        );
+
+        if (!confirmCreateProfile) {
+          return;
+        }
+      }
+
+      const user = {
+        first_name,
+        last_name,
+        middle_name,
+        email,
+        password,
+        phone_number,
+        emergency_contact,
+        address,
+        location,
+        selectedValue,
+        joining_date,
+        profile: profile.length <= 0 ? "Employee" : profile,
+        organizationId: id,
+        creatorId: userId,
+      };
+      console.log(user);
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
@@ -204,13 +202,18 @@ const AddEmployee = () => {
 
       if (response.data.success) {
         handleAlert(true, "error", "Invalid authorization");
+      } else {
+        handleAlert(true, "success", response.data.message);
       }
-
-      handleAlert(true, "success", response.data.message);
     } catch (error) {
-      handleAlert(true, "error", error.response.data.message);
+      handleAlert(
+        true,
+        "error",
+        error.response ? error.response.data.message : error.message
+      );
     }
   };
+
   const staticTitle = "This form for";
   return (
     <>

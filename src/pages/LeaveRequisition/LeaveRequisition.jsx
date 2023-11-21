@@ -34,7 +34,7 @@ const localizer = momentLocalizer(moment);
 const LeaveRequisition = () => {
   const [leavesTypes, setLeavesTypes] = useState([]);
   const [vactionList, setVactionList] = useState([]);
-  const [value, setValue] = useState([]);
+  // const [value, setValue] = useState([]);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
@@ -42,23 +42,24 @@ const LeaveRequisition = () => {
 
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState([]);
-  const [selectedDateArray, setSelectedDateArray] = useState([]);
+  // const [selectedDateArray, setSelectedDateArray] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
-  console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
+  // console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
+  // console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
 
-  const [leaveData, setLeaveData] = useState({
-    title: "",
-    start: new Date(),
-    end: new Date(),
-    color: "pink",
-  });
+  // const [leaveData, setLeaveData] = useState({
+  //   title: "",
+  //   start: new Date(),
+  //   end: new Date(),
+  //   color: "pink",
+  // });
 
   const handleSubmit = () => {
     setCalendarOpen(false);
+    setAnchorEl("");
   };
 
   const handleInputChange = () => {
@@ -89,15 +90,15 @@ const LeaveRequisition = () => {
         color: "blue",
       };
 
-      setSelectedDateArray((prevDates) => [...prevDates, newLeave]);
+      // setSelectedDateArray((prevDates) => [...prevDates, newLeave]);
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-      setLeaveData(newLeave);
+      // setLeaveData(newLeave);
     }
   };
 
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
-    setLeaveData(event);
+    // setLeaveData(event);
     setCalendarOpen(true);
   };
 
@@ -119,7 +120,7 @@ const LeaveRequisition = () => {
 
       if (!data.data.success) {
         handleAlert(true, "warning", "You have already selected this leave");
-        setValue([]);
+        // setValue([]);
       }
 
       if (data.data.success) {
@@ -128,7 +129,7 @@ const LeaveRequisition = () => {
           "success",
           data.data.message || "Leave generated successfully."
         );
-        setValue([]);
+        // setValue([]);
         setLeavesTypes("");
       }
     } catch (error) {

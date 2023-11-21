@@ -43,11 +43,7 @@ const LeaveModal = ({ open, handleClose, id }) => {
       count: 0,
     },
   ]);
-  const {
-    data: newLeaveTypes = [],
-    isLoading,
-    isError,
-  } = useQuery("leaveTypes", async () => {
+  const { data: newLeaveTypes = [] } = useQuery("leaveTypes", async () => {
     const config = {
       headers: { "Content-Type": "application/json", Authorization: authToken },
     };

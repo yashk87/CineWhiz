@@ -18,9 +18,7 @@ const SingleOrganization = () => {
   const [organization, setOrganization] = useState([]);
 
   const getSingleData = async () => {
-    const data = await axios.get(
-      `http://localhost:4000/route/organization/get/${id}`
-    );
+    const data = await axios.get(`${process.env.REACT_APP_API}/${id}`);
     setOrganization(data.data.organizations);
   };
 
