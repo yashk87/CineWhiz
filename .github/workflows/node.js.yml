@@ -22,7 +22,11 @@ jobs:
         run: npm install
 
       - name: 🏗️ Build
-        run: npm run build
+        run: |
+          touch .env
+          echo "${{secrets.PROD_ENV_FILE}}" > .env
+          cat .env
+          npm run build
 
       - name: 🚀 Upload build
         uses: actions/upload-artifact@v2
@@ -30,21 +34,21 @@ jobs:
           name: static-site
           path: build/
 
-  release-project:
-    name: 🚀 Release project
-    runs-on: self-hosted
-    needs: build
-    steps:
-      - name: 📥 Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: static-site
+  # release-project:
+  #   name: 🚀 Release project
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #     - name: 📥 Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: static-site
   
-      - name: 🧪 Test artifact download
-        run: |
-          ls -R
-          touch .env
-          echo "${{secrets.PROD_ENV_FILE}}" > .env
+  #     - name: 🧪 Test artifact download
+  #       run: |
+  #         ls -R
+  #         cat .env
+          
 
 # Advantages:
 # - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.

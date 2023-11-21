@@ -142,6 +142,14 @@ const AddOrganizationLocations = () => {
     setLocationList(updatedList);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleAddLocation();
+      handleClose();
+    }
+  };
+
   return (
     <IntlProvider locale="en">
       <Container>
@@ -181,12 +189,12 @@ const AddOrganizationLocations = () => {
               >
                 <CardContent>
                   <Typography variant="body1">
+                    {location.pinCode && `${location.pinCode}, `}
+                    {location.country && `${location.country}`}
                     {location.addressLine1 && `${location.addressLine1}, `}
                     {location.addressLine2 && `${location.addressLine2}, `}
                     {location.city && `${location.city}, `}
                     {location.state && `${location.state} - `}
-                    {location.pinCode && `${location.pinCode}, `}
-                    {location.country && `${location.country}`}
                   </Typography>
                 </CardContent>
                 <CardActions
@@ -197,16 +205,10 @@ const AddOrganizationLocations = () => {
                   }}
                 >
                   <div>
-                    <IconButton
-                      onClick={() => handleEditLocation(index)}
-                      aria-label="edit"
-                    >
+                    <IconButton onClick={() => handleEditLocation(index)} aria-label="edit">
                       <EditIcon />
                     </IconButton>
-                    <IconButton
-                      onClick={() => handleDeleteLocation(index)}
-                      aria-label="delete"
-                    >
+                    <IconButton onClick={() => handleDeleteLocation(index)} aria-label="delete">
                       <DeleteIcon />
                     </IconButton>
                   </div>
@@ -216,7 +218,7 @@ const AddOrganizationLocations = () => {
           ))}
         </List>
 
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
           <DialogTitle>
             {editIndex !== null ? (
               <FormattedMessage
@@ -231,6 +233,22 @@ const AddOrganizationLocations = () => {
             )}
           </DialogTitle>
           <DialogContent>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+              <TextField
+                label={<FormattedMessage id="pinCode" defaultMessage="Pin Code/Zip Code" />}
+                variant="outlined"
+                value={pinCode}
+                onChange={(e) => setPinCode(e.target.value)}
+                style={{ flex: '1' }}
+              />
+              <TextField
+                label={<FormattedMessage id="country" defaultMessage="Country" />}
+                variant="outlined"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                style={{ flex: '1' }}
+              />
+            </div>
             <TextField
               label={
                 <FormattedMessage
@@ -318,10 +336,7 @@ const AddOrganizationLocations = () => {
             </Button>
             <Button onClick={handleAddLocation} color="primary">
               {editIndex !== null ? (
-                <FormattedMessage
-                  id="saveChanges"
-                  defaultMessage="Save Changes"
-                />
+                <FormattedMessage id="saveChanges" defaultMessage="Save Changes" />
               ) : (
                 <FormattedMessage id="add" defaultMessage="Add" />
               )}

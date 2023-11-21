@@ -111,7 +111,8 @@ const LeaveTabel = ({
 
       // eslint-disable-next-line
     }
-  }, [data?.daysOfLeaveArray]);
+    // eslint-disable-next-line
+  }, []);
 
   if (isLoading) {
     return (
