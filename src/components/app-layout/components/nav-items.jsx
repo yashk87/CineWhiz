@@ -34,7 +34,6 @@ const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
-  console.log("userole", userRole);
 
   useEffect(() => {
     try {
