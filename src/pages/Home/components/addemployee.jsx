@@ -74,7 +74,6 @@ const AddEmployee = () => {
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
-
       if (decodedToken && decodedToken.user._id) {
         setUserId(decodedToken.user._id);
       } else {
@@ -83,8 +82,7 @@ const AddEmployee = () => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [authToken]);
 
   const [selectedValue, setSelectedValue] = useState("");
   const handleRadioChange = (event) => {
@@ -109,7 +107,6 @@ const AddEmployee = () => {
   };
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
-  console.log(availableProfiles);
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -120,7 +117,6 @@ const AddEmployee = () => {
           },
         }
       );
-
       if (response.data && response.data.roles) {
         if (response.data.roles.length > 0) {
           const filteredProfiles = response.data.roles.filter((role) => {
@@ -147,21 +143,17 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableProfiles();
+    // eslint-disable-next-line
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Hello", profile);
 
     try {
       const isProfileData = await axios.post(
         "http://localhost:4000/route/employee/is-profiledata",
         { profile }
       );
-
-      console.log(isProfileData.data);
-      console.log(isProfileData.data.employeesWithProfiles);
-      console.log(profile);
       if (isProfileData.data && isProfileData.data.employeesWithProfiles) {
         const confirmCreateProfile = window.confirm(
           `${profile} is already exist . Do you want to create one More ?`
@@ -188,7 +180,6 @@ const AddEmployee = () => {
         organizationId: id,
         creatorId: userId,
       };
-      console.log(user);
 
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
