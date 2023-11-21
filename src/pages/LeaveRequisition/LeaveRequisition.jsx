@@ -325,7 +325,7 @@ const LeaveRequisition = () => {
                     (item, index) =>
                       item.isActive &&
                       item.count > 0 && (
-                        <MenuItem id={index} value={item}>
+                        <MenuItem id={index} key={index} value={item}>
                           {item.leaveName}
                         </MenuItem>
                       )
