@@ -48,19 +48,11 @@ const LeaveRequisition = () => {
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   // console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  // console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
 
-  // const [leaveData, setLeaveData] = useState({
-  //   title: "",
-  //   start: new Date(),
-  //   end: new Date(),
-  //   color: "pink",
-  // });
-
-  const handleSubmit = () => {
-    setCalendarOpen(false);
-    setAnchorEl("");
-  };
+  // const handleSubmit = () => {
+  //   setCalendarOpen(false);
+  //   setAnchorEl("");
+  // };
 
   const handleInputChange = () => {
     setCalendarOpen(true);
@@ -86,9 +78,11 @@ const LeaveRequisition = () => {
       const newLeave = {
         title: "Selected Leave",
         start,
-        end,
+        end: end,
         color: "blue",
       };
+
+      // console.log(end, "new");
 
       // setSelectedDateArray((prevDates) => [...prevDates, newLeave]);
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
@@ -104,10 +98,15 @@ const LeaveRequisition = () => {
 
   const genrateLeaveRequest = async () => {
     try {
+      const daysOfLeave = newAppliedLeaveEvents.map(({ title, ...rest }) => {
+        return rest;
+      });
+
+      console.log(daysOfLeave, "day");
       const data = await axios.post(
         `${process.env.REACT_APP_API}/route/leave/create`,
         {
-          daysOfLeave: newAppliedLeaveEvents.map(({ title, ...rest }) => rest),
+          daysOfLeave,
           leaveTypeId: leavesTypes._id,
           description: leavesTypes.leaveName,
         },
@@ -255,11 +254,11 @@ const LeaveRequisition = () => {
                 </div>
               </div>
 
-              <div className="!px-4 !py-2 bg-white">
+              {/* <div className="!px-4 !py-2 bg-white">
                 <Button variant="contained" onClick={handleSubmit}>
                   Submit
                 </Button>
-              </div>
+              </div> */}
             </Popover>
 
             {newAppliedLeaveEvents.length > 0 &&
@@ -284,12 +283,12 @@ const LeaveRequisition = () => {
                               <div className="flex items-center gap-2">
                                 <p className="text-md">
                                   Start date:{" "}
-                                  {format(new Date(item.start), "PP")}
+                                  {format(new Date(item.start), "PPp")}
                                 </p>
                                 <Divider orientation="vertical" flexItem />
                                 <p className="text-md">
                                   Ending date:{" "}
-                                  {format(new Date(item.end), "PP")}
+                                  {format(new Date(item.end), "PPp")}
                                 </p>
                               </div>
 
@@ -324,7 +323,7 @@ const LeaveRequisition = () => {
                   {subtractedLeaves?.map(
                     (item, index) =>
                       item.isActive &&
-                      item.count > 0 && (
+                      item.subtractedCount > 0 && (
                         <MenuItem id={index} value={item}>
                           {item.leaveName}
                         </MenuItem>

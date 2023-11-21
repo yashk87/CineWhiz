@@ -74,9 +74,9 @@ const Application = () => {
                     <Box key={id}>
                       <Typography variant="body2" color="textSecondary">
                         {`Leave from ${format(
-                          new Date(day.startDate),
+                          new Date(day.start),
                           "PP"
-                        )} to ${format(new Date(day.endDate), "PP")}`}
+                        )} to ${format(new Date(day.end), "PP")}`}
                       </Typography>
                     </Box>
                   ))}
