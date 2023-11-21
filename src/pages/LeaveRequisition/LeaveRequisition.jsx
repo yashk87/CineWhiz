@@ -323,8 +323,8 @@ const LeaveRequisition = () => {
                   {subtractedLeaves?.map(
                     (item, index) =>
                       item.isActive &&
-                      item.subtractedCount > 0 && (
-                        <MenuItem id={index} value={item}>
+                      item.count > 0 && (
+                        <MenuItem id={index} key={index} value={item}>
                           {item.leaveName}
                         </MenuItem>
                       )
