@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import Select from "react-select";
-import axios from "axios";
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  DialogActions,
-  List,
-  ListItem,
-  Typography,
-  Container,
-  Card,
-  CardContent,
-  CardActions,
-  IconButton,
-} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { FormattedMessage, IntlProvider } from "react-intl";
+import Select from "react-select";
 
 const AddOrganizationLocations = () => {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const AddOrganizationLocations = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [pinCode, setPinCode] = useState("");
-  // const [country, setCountry] = useState("");
+  const [country, setCountry] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -142,6 +142,14 @@ const AddOrganizationLocations = () => {
     setLocationList(updatedList);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleAddLocation();
+      handleClose();
+    }
+  };
+
   return (
     <IntlProvider locale="en">
       <Container>
@@ -181,12 +189,12 @@ const AddOrganizationLocations = () => {
               >
                 <CardContent>
                   <Typography variant="body1">
+                    {location.pinCode && `${location.pinCode}, `}
+                    {location.country && `${location.country}`}
                     {location.addressLine1 && `${location.addressLine1}, `}
                     {location.addressLine2 && `${location.addressLine2}, `}
                     {location.city && `${location.city}, `}
                     {location.state && `${location.state} - `}
-                    {location.pinCode && `${location.pinCode}, `}
-                    {location.country && `${location.country}`}
                   </Typography>
                 </CardContent>
                 <CardActions
@@ -216,7 +224,7 @@ const AddOrganizationLocations = () => {
           ))}
         </List>
 
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
           <DialogTitle>
             {editIndex !== null ? (
               <FormattedMessage
@@ -231,6 +239,29 @@ const AddOrganizationLocations = () => {
             )}
           </DialogTitle>
           <DialogContent>
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+              <TextField
+                label={
+                  <FormattedMessage
+                    id="pinCode"
+                    defaultMessage="Pin Code/Zip Code"
+                  />
+                }
+                variant="outlined"
+                value={pinCode}
+                onChange={(e) => setPinCode(e.target.value)}
+                style={{ flex: "1" }}
+              />
+              <TextField
+                label={
+                  <FormattedMessage id="country" defaultMessage="Country" />
+                }
+                variant="outlined"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                style={{ flex: "1" }}
+              />
+            </div>
             <TextField
               label={
                 <FormattedMessage

@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import { useQuery } from "react-query";
 
 const AddRoles = () => {
   const { id } = useParams("");
@@ -37,10 +38,12 @@ const AddRoles = () => {
       isApprover: false,
       isActive: false,
     },
-    { placeholder: "Human Resource", 
-      label: "hr", 
-      isApprover: false, 
-      isActive: false },
+    {
+      placeholder: "Human Resource",
+      label: "hr",
+      isApprover: false,
+      isActive: false,
+    },
     {
       placeholder: "Department Head Delegate",
       label: "delegateHr",
@@ -131,6 +134,25 @@ const AddRoles = () => {
     //     console.error("Error sending request:", error);
     //   });
   };
+
+  const fetchProfiles = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/profile/role/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error("Error fetching single shift");
+    }
+  };
+  const { data } = useQuery("profiles", fetchProfiles);
+
+  console.log(data, "data");
 
   return (
     <div className="flex items-center flex-col min-h-screen bg-gray-50">

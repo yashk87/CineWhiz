@@ -3,7 +3,8 @@ import ErrorIcon from "@mui/icons-material/Error";
 import { Avatar, AvatarGroup, Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import React, { useEffect } from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 const LeaveTabel = ({
@@ -14,42 +15,72 @@ const LeaveTabel = ({
   setVactionList,
   setNewAppliedLeaveEvents,
 }) => {
-  console.log(`🚀 ~ vactionList:`, vactionList);
-  console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
+  const [Total, setTotal] = useState();
 
   const updateLeaveCounts = (data) => {
-    // ... (your logic to update counts based on leaveName)
+    // Create a copy of the data to avoid mutating the state directly
     const updatedVacationList = { ...data };
+
     const updatedSubtractedLeaves = [];
 
     if (
-      Array.isArray(updatedVacationList.leaves) &&
+      Array.isArray(updatedVacationList.daysOfLeaveArray) &&
       Array.isArray(updatedVacationList.organisational.typesOfLeave)
     ) {
+      // Iterate through each leave type
       updatedVacationList.organisational.typesOfLeave.forEach(
         (orgLeaveType) => {
-          const matchingLeave = updatedVacationList.leaves.find(
-            (leave) => leave.description === orgLeaveType.leaveName
+          // Find the corresponding leave entry in daysOfLeaveArray
+          const matchingLeave = updatedVacationList.daysOfLeaveArray.find(
+            (leave) => {
+              return leave.title === orgLeaveType.leaveName;
+            }
           );
 
           if (matchingLeave) {
-            const subtractedCount = matchingLeave.totalDaysOfLeave;
+            // Calculate the duration in days
+            const start = dayjs(matchingLeave.start);
+            const end = dayjs(matchingLeave.end);
+            const subtractedCount = end.diff(start, "days");
+
+            // Update the leave count
             orgLeaveType.count -= subtractedCount;
 
             // Add subtracted leave type and count to the state array
             updatedSubtractedLeaves.push({
               leaveName: orgLeaveType.leaveName,
               subtractedCount,
+              color: orgLeaveType.color,
+              isActive: orgLeaveType.isActive,
+            });
+          } else {
+            // If no start and end dates, add the leave directly to the state array
+            updatedSubtractedLeaves.push({
+              leaveName: orgLeaveType.leaveName,
+              subtractedCount: orgLeaveType.count, // You can set it to 0 or any default value
+              color: orgLeaveType.color,
+              isActive: orgLeaveType.isActive,
             });
           }
         }
       );
     }
+
     // Update the state with the subtracted leaves
-    setSubtractedLeaves(updatedVacationList.organisational.typesOfLeave);
-    // Update the vacationList state
-    setVactionList(updatedVacationList);
+    setSubtractedLeaves(updatedSubtractedLeaves);
   };
+
+  useEffect(() => {
+    const total =
+      Array.isArray(subtractedLeaves) &&
+      subtractedLeaves.reduce((accumulator, currentValue) => {
+        return accumulator + parseInt(currentValue.subtractedCount);
+      }, 0);
+
+    setTotal(total);
+  }, [subtractedLeaves]);
+
+  // console.log(subtractedLeaves, "sub");
 
   const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
     const response = await axios.get(
@@ -63,11 +94,12 @@ const LeaveTabel = ({
     updateLeaveCounts(response.data);
     return response.data;
   });
+
   useEffect(() => {
     if (data?.daysOfLeaveArray && data.daysOfLeaveArray.length > 0) {
       const newLeaves = data.daysOfLeaveArray.map((leave) => ({
         ...leave,
-        title: "Already Applied leave",
+        title: `${leave.title}`,
       }));
 
       // Filter out null values
@@ -76,9 +108,11 @@ const LeaveTabel = ({
       console.log("title", filteredNewLeaves);
 
       setNewAppliedLeaveEvents((prev) => [...prev, ...filteredNewLeaves]);
+
+      // eslint-disable-next-line
     }
     // eslint-disable-next-line
-  }, []);
+  }, [data?.daysOfLeaveArray]);
 
   if (isLoading) {
     return (
@@ -111,12 +145,14 @@ const LeaveTabel = ({
           </div>
           <div className="mt-6">
             <Skeleton variant="text" className="w-[15%] h-6 text-lg " />
-            <Skeleton variant="text" className="w-[25%] !h-8 !mb- text-md " />
+            <Skeleton variant="text" className="w-[25%] !h-8  text-md " />
           </div>
         </div>
       </article>
     );
   }
+
+  // console.log(subtractedLeaves, "sub");
 
   if (isError) {
     return <p>Error loading data</p>;
@@ -137,7 +173,7 @@ const LeaveTabel = ({
 
         <div className="w-full px-8">
           {subtractedLeaves?.map((item, index) =>
-            item.count <= 0 ? (
+            item.subtractedCount <= 0 ? (
               <div key={index} className="mt-6 text-red-700">
                 <div className="text-red-700 flex gap-2 items-center">
                   <ErrorIcon />
@@ -157,7 +193,7 @@ const LeaveTabel = ({
                       {item.leaveName}
                     </h1>
                     <h1 className="text-lg mb-4 tracking-wide">
-                      {item.count} leaves left
+                      {item.subtractedCount} leaves left
                     </h1>
                   </div>
                   <Avatar
@@ -182,13 +218,7 @@ const LeaveTabel = ({
                 Total balance
               </h1>
               <h1 className="text-lg mb-4 tracking-wider">
-                {vactionList?.totalLeaveCount -
-                  vactionList?.totalEmployeeLeaveCount <=
-                0
-                  ? "0"
-                  : vactionList?.totalLeaveCount -
-                    vactionList?.totalEmployeeLeaveCount}{" "}
-                leaves left
+                {Total} leaves left
               </h1>
             </div>
             <AvatarGroup max={4}>
