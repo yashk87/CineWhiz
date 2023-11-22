@@ -11,12 +11,14 @@ import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
+import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 
 const Notification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-
+  const [open, setOpen] = useState(false);
   const [workFlow, setWorkFlow] = useState([]);
+  const [id, setid] = useState("");
 
   const GetApproval = async () => {
     const getNotification = await axios.get(
@@ -55,22 +57,11 @@ const Notification = () => {
 
   const RejectRequest = async (id) => {
     console.log(id, "id");
-
-    try {
-      const rejectLeave = await axios.post(
-        `${process.env.REACT_APP_API}/route/leave/reject/${id}`,
-        { message: "Your Request has been rejected" },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-      window.location.reload();
-      console.log(rejectLeave, "acc");
-    } catch (error) {
-      console.log(error, "err");
-    }
+    setid(id);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -86,6 +77,7 @@ const Notification = () => {
           p: 5,
         }}
       >
+        <LeaveRejectmodal id={id} open={open} handleClose={handleClose} />
         {workFlow.length <= 0 ? (
           <>
             <div className="flex items-center gap-4  bg-sky-100 p-4 px-8 rounded-md shadow-lg">
@@ -104,12 +96,6 @@ const Notification = () => {
                 borderRadius: "5px",
               }}
             >
-              {/* <LeaveRejectmodal
-              open={open}
-              handleClose={handleClose}
-              id={items._id}
-            /> */}
-
               <Grid item xs={8} className="gap-4 py-4 h-max space-y-4">
                 <Box className="flex flex-col gap-2">
                   {/* <h1 className="text-2xl font-semibold text-sky-600">

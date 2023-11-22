@@ -63,7 +63,6 @@ const Organisation = ({ item }) => {
           className=" cursor-pointer"
           variant="contained"
           onClick={handleCreateProfile}
-          // onClick={() => navigate(`/organisation/${item._id}/add-employee`)}
         >
           Create Profile
         </Button>

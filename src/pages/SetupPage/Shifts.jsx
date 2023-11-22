@@ -274,7 +274,7 @@ const Shifts = () => {
                                   icon={<AccessTimeFilled />}
                                   variant="outlined"
                                   size="small"
-                                  color="error"
+                                  color="success"
                                   label={convertTo12HourFormat(items.endTime)}
                                 />
                               </td>

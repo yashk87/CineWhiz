@@ -24,6 +24,7 @@ export default function SwipeableTemporaryDrawer() {
       onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
+      {/* <TestNavItems toggleDrawer={toggleDrawer} /> */}
       <NavItems toggleDrawer={toggleDrawer} />
     </Box>
   );
