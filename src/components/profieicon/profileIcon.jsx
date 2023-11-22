@@ -60,8 +60,6 @@ export default function ProfileIcon() {
     setAnchorEl(null);
   };
 
-  console.log(user);
-
   return (
     <>
       <IconButton

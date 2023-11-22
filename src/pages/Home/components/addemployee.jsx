@@ -84,11 +84,11 @@ const AddEmployee = () => {
     }
   }, [authToken]);
 
-  const [selectedValue, setSelectedValue] = useState("");
+  const [gender, setGender] = useState("");
   const handleRadioChange = (event) => {
-    setSelectedValue(event.target.value);
+    setGender(event.target.value);
   };
-  console.log(selectedValue);
+
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -152,7 +152,8 @@ const AddEmployee = () => {
 
     try {
       const isProfileData = await axios.post(
-        "http://localhost:4000/route/employee/is-profiledata",
+        // "http://localhost:4000/route/employee/is-profiledata",
+        `${process.env.REACT_APP_API}/route/employee/is-profiledata`,
         { profile }
       );
       if (isProfileData.data && isProfileData.data.employeesWithProfiles) {
@@ -175,7 +176,7 @@ const AddEmployee = () => {
         emergency_contact,
         address,
         location,
-        selectedValue,
+        gender,
         joining_date,
         profile: profile.length <= 0 ? "Employee" : profile,
         organizationId: id,
@@ -487,7 +488,7 @@ const AddEmployee = () => {
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
-                    value={selectedValue}
+                    value={gender}
                     onChange={handleRadioChange}
                   >
                     <FormControlLabel
