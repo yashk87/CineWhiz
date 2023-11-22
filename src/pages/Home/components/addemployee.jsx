@@ -88,6 +88,7 @@ const AddEmployee = () => {
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
   };
+  console.log(selectedValue);
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -180,7 +181,7 @@ const AddEmployee = () => {
         organizationId: id,
         creatorId: userId,
       };
-
+      console.log(user);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
