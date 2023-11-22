@@ -75,7 +75,7 @@ const NavItems = ({ toggleDrawer }) => {
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={true}
-                className="w-full !shadow-none border-[#0093d6] border"
+                className="w-full !shadow-none border-[#0093d6] "
                 style={{ background: "rgb(14, 165, 233)" }}
               >
                 <AccordionSummary
@@ -194,11 +194,11 @@ const NavItems = ({ toggleDrawer }) => {
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={true}
-                className="w-full !shadow-none border-[#0093d6] border"
+                className="w-full !shadow-none border-[#0093d6] "
                 style={{ background: "rgb(14, 165, 233)" }}
               >
                 <Accordion
-                  className="w-full !shadow-none border-[#0093d6] border"
+                  className="w-full !shadow-none border-[#0093d6] "
                   style={{ background: "rgb(14, 165, 233)" }}
                 >
                   <AccordionSummary
@@ -265,7 +265,7 @@ const NavItems = ({ toggleDrawer }) => {
           <List>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
-                className="w-full !shadow-none border-[#0093d6] border"
+                className="w-full !shadow-none border-[#0093d6] "
                 style={{ background: "rgb(14, 165, 233)" }}
               >
                 <AccordionSummary
@@ -372,11 +372,11 @@ const NavItems = ({ toggleDrawer }) => {
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={true}
-                className="w-full !shadow-none border-[#0093d6] border"
+                className="w-full !shadow-none border-[#0093d6] "
                 style={{ background: "rgb(14, 165, 233)" }}
               >
                 <Accordion
-                  className="w-full !shadow-none border-[#0093d6] border"
+                  className="w-full !shadow-none border-[#0093d6] "
                   style={{ background: "rgb(14, 165, 233)" }}
                 >
                   <AccordionSummary
@@ -482,11 +482,11 @@ const NavItems = ({ toggleDrawer }) => {
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={true}
-                className="w-full !shadow-none border-[#0093d6] border"
+                className="w-full !shadow-none border-[#0093d6] "
                 style={{ background: "rgb(14, 165, 233)" }}
               >
                 <Accordion
-                  className="w-full !shadow-none border-[#0093d6] border"
+                  className="w-full !shadow-none border-[#0093d6] "
                   style={{ background: "rgb(14, 165, 233)" }}
                 >
                   <AccordionSummary

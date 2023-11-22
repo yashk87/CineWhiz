@@ -70,8 +70,8 @@ export default function SwipeableTemporaryDrawer() {
         PaperProps={{ style: { background: "#0ea5e9" } }}
         color="blue"
         anchor="left"
-        // open={open}
-        open={true}
+        open={open}
+        // open={true}
         onClose={toggleDrawer} // Removed unnecessary function call here
         onOpen={toggleDrawer} // Removed unnecessary function call here
       >
