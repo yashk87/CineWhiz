@@ -23,8 +23,8 @@ import Signup from "./pages/SignUp/Signup";
 import MyCalendar from "./pages/Test/test2";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import UserProfile from "./pages/UserProfile/UserProfile";
 const App = () => {
-  console.log("helo");
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
@@ -42,6 +42,7 @@ const App = () => {
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/organisation/:id" element={<SingleOrganization />} />
+      <Route exact path="/userprofile" element={<UserProfile />} />
       <Route
         exact
         path="/organisation/:id/add-employee"
