@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Container,
   IconButton,
@@ -7,25 +7,10 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  TextField,
-  InputLabel,
-  Select,
-  MenuItem,
-  FormControl,
-  Typography,
-  Snackbar
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
-import { io } from 'socket.io-client';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import MuiAlert from '@mui/material/Alert';
-
-const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 const ShiftDisplay = () => {
   const [selectedStartTime, setSelectedStartTime] = useState(null);
@@ -36,11 +21,6 @@ const ShiftDisplay = () => {
   const [error, setError] = useState('');
   const [shiftList, setShiftList] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [editShift, setEditShift] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const socket = io('http://localhost:3000');
-
 
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -118,52 +98,46 @@ const ShiftDisplay = () => {
     const fetchData = async () => {
       const response = await axios.get('http://localhost:4000/route/shifts/create');
       setShiftList(response.data.shifts);
-    };
-
-    fetchData();
-
-    socket.on('updateShiftList', (updatedShiftList) => {
-      setShiftList(updatedShiftList);
     });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
+  }, []);
 
   return (
-    <Container className="relative top-5" style={{ border: '1px solid rgb(177, 177, 177)', width: '40vw' }}>
+    <Container
+      className="relative top-5"
+      style={{ border: "1px solid rgb(177, 177, 177)", width: "30vw" }}
+    >
       {shiftList.map((data) => (
-        <div key={data._id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', justifyContent: 'space-between' }}>
-          <h4 style={{ marginRight: '10px', color: 'rgb(177, 0, 177)' }}>{data.shiftName}</h4>
+        <div
+          key={data._id}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "10px",
+            justifyContent: "space-between",
+          }}
+        >
+          <h4 style={{ marginRight: "10px", color: "rgb(177, 0, 177)" }}>
+            {data.shiftName}
+          </h4>
           <div>
             <IconButton color="primary" aria-label="edit" onClick={() => handleEdit(data)}>
               <EditIcon />
             </IconButton>
-            <IconButton color="error" onClick={() => handleDeleteConfirmation(data._id)} aria-label="delete">
+            <IconButton
+              color="error"
+              onClick={() => handleDeleteConfirmation(data._id)}
+              aria-label="delete"
+            >
               <DeleteIcon />
             </IconButton>
           </div>
         </div>
       ))}
-
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        open={snackbarOpen}
-        autoHideDuration={3000} // Adjust as needed
-        onClose={() => setSnackbarOpen(false)}
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
       >
-        <MuiAlert
-          elevation={6}
-          variant="filled"
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-        >
-          {snackbarMessage}
-        </MuiAlert>
-      </Snackbar>
-
-      <Dialog open={deleteConfirmation !== null} onClose={handleCloseConfirmation}>
         <DialogTitle>Are you sure?</DialogTitle>
         <DialogContent>
           <p>This action cannot be undone.</p>
@@ -172,7 +146,10 @@ const ShiftDisplay = () => {
           <Button onClick={handleCloseConfirmation} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => handleDelete(deleteConfirmation)} color="error">
+          <Button
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
             Delete
           </Button>
         </DialogActions>

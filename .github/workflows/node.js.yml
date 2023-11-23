@@ -1,44 +1,59 @@
-name: Node.js CI
+name: 🚀 Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 12.x ]
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
 
-    - name: Install dependencies
-      run: npm install --force
+      - name: 📦 Install dependencies
+        run: npm install
 
-    - name: Build project
-      run: npm run build --if-present
+      - name: 🏗️ Build
+        run: |
+          touch .env
+          echo "${{secrets.PROD_ENV_FILE}}" > .env
+          cat .env
+          npm run build
 
-    - name: Deploy to AWS EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          cd /path/to/remote/directory
-          scp -r /path/to/local/build/* .
+      - name: 🚀 Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: static-site
+          path: build/
 
-# Add any additional steps or jobs as needed
+  # release-project:
+  #   name: 🚀 Release project
+  #   runs-on: self-hosted
+  #   needs: build
+  #   steps:
+  #     - name: 📥 Download artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: static-site
+  
+  #     - name: 🧪 Test artifact download
+  #       run: |
+  #         ls -R
+  #         cat .env
+          
+
+# Advantages:
+# - ⚙️ Automation: Automates the build and deployment process whenever changes are pushed to the main branch.
+# - 📦 Artifact Management: Uses GitHub Actions to manage and transfer artifacts (the build output) between jobs.
+
+# Disadvantages:
+# - 🏠 Self-Hosted Runner Dependency: The "release-project" job relies on a self-hosted runner, which may require additional setup and maintenance.
+# - 📝 Limited Explanation: It's recommended to provide more detailed comments or explanations within the workflow file for better documentation and understanding.

@@ -1,7 +1,7 @@
 import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import { useContext } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
-import Snackbar from "@mui/material/Snackbar";
 
 export default function AppAlert() {
   const { appAlert, setAppAlert } = useContext(UseContext);
@@ -20,10 +20,6 @@ export default function AppAlert() {
   };
   return (
     <>
-      {/* <Alert severity="error">This is an error alert — check it out!</Alert>
-      <Alert severity="warning">This is a warning alert — check it out!</Alert>
-      <Alert severity="info">This is an info alert — check it out!</Alert>
-      <Alert severity="success">This is a success alert — check it out!</Alert> */}
       <Snackbar
         open={appAlert.alert}
         autoHideDuration={5000}
@@ -32,7 +28,9 @@ export default function AppAlert() {
         <Alert
           onClose={handleClose}
           severity={appAlert.type}
+          componentsProps={{ closeButton: { className: " !text-2xl" } }}
           sx={{ width: "100%" }}
+          className="flex items-center !p-4 !px-8 !shadow-2xl !text-[1.1rem] !font-medium"
         >
           {appAlert.msg}
         </Alert>
