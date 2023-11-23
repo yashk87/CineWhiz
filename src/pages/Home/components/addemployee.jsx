@@ -42,7 +42,6 @@ const AddEmployee = () => {
     phone_number,
     emergency_contact,
     address,
-    location,
     firstNameError,
     lastNameError,
     emailError,
@@ -59,7 +58,6 @@ const AddEmployee = () => {
     setPhoneNumber,
     setEmergencyContact,
     setAddress,
-    setLocation,
     joining_date,
     setJoiningDate,
   } = useProfileForm();
@@ -175,10 +173,9 @@ const AddEmployee = () => {
         phone_number,
         emergency_contact,
         address,
-        location,
         gender,
         joining_date,
-        profile: profile.length <= 0 ? "Employee" : profile,
+        profile,
         organizationId: id,
         creatorId: userId,
       };
@@ -368,7 +365,6 @@ const AddEmployee = () => {
                 id="emergency_contact"
                 value={emergency_contact}
                 onChange={(e) => setEmergencyContact(e.target.value)}
-                required
                 fullWidth
                 margin="normal"
               />
@@ -380,18 +376,6 @@ const AddEmployee = () => {
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                required
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                size="small"
-                type="text"
-                label="Location"
-                name="location"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
                 required
                 fullWidth
                 margin="normal"
