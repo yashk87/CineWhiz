@@ -67,7 +67,7 @@ function AddOrganisation() {
           ...prev,
           logo: resp.data.secure_url,
         }));
-        // setLogo(resp.data.secure_url)
+
       });
   };
 
@@ -148,13 +148,13 @@ function AddOrganisation() {
         handleAlert(true, "error", "Invalid authorization");
       }
 
-      // Show a success alert
+    
       handleAlert(true, "success", "Organization created successfully");
     } catch (error) {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
 
-      // Show an error alert
+
     }
     setInputData({
       name: "",

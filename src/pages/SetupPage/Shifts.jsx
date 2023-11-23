@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Button,
   Container,
@@ -11,7 +12,6 @@ import {
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Axios from "axios";
-import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ShiftDisplay from "./ShiftDisplay";
@@ -46,7 +46,6 @@ const Shifts = () => {
     e.preventDefault();
     const startTime = selectedStartTime;
     const endTime = selectedEndTime;
-    console.log(startTime);
 
     if (!startTime || !endTime || selectedDays.length === 0) {
       setError("Please fill in all the mandatory fields");
@@ -75,8 +74,9 @@ const Shifts = () => {
           setError("");
           setSelectedStartTime("");
           setSelectedEndTime("");
-          setWorkingFrom("");
+          setWorkingFrom(""); // Clear workingFrom
           setShiftName("");
+          setSelectedDays([]); // Clear selectedDays
         } else {
           setError("Failed to create a new shift");
         }
@@ -88,6 +88,8 @@ const Shifts = () => {
       setError("Time difference must be 9 hours or greater");
     }
   };
+
+
 
   return (
     <>
@@ -130,13 +132,14 @@ const Shifts = () => {
             size="small"
           >
             <InputLabel id="industry-type-label">working from</InputLabel>
-            <Select labelId="industry-type-label" id="industry-type">
-              <MenuItem onClick={() => setWorkingFrom("Remote")} value="Remote">
-                Remote
-              </MenuItem>
-              <MenuItem onClick={() => setWorkingFrom("Office")} value="Office">
-                Office
-              </MenuItem>
+            <Select
+              labelId="industry-type-label"
+              id="industry-type"
+              value={workingFrom || ""}
+              onChange={(e) => setWorkingFrom(e.target.value)}
+            >
+              <MenuItem value="Remote">Remote</MenuItem>
+              <MenuItem value="Office">Office</MenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -147,7 +150,7 @@ const Shifts = () => {
             className="w-[80%]"
             label="what is your shift name"
             type="text"
-            value={shiftName}
+            value={shiftName || ""}
             onChange={(e) => setShiftName(e.target.value)}
           />
 
