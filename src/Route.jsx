@@ -13,17 +13,17 @@ import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
+import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import Setup from "./pages/SetUpOrganization/Setup";
-import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations"
 import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import MyCalendar from "./pages/Test/test2";
+import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import UserProfile from "./pages/UserProfile/UserProfile";
 
 const App = () => {
   return (
@@ -33,7 +33,11 @@ const App = () => {
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
-      <Route exact path="/add-organization-locations" element={<OrganizationLocation />} />
+      <Route
+        exact
+        path="/add-organization-locations"
+        element={<OrganizationLocation />}
+      />
       <Route exact path="/add-department" element={<Department />} />
       <Route exact path="/menu" element={<MyCalendar />} />
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
