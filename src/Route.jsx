@@ -24,7 +24,7 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-
+import AddEmployee from "./pages/AddEmployee/addemployee";
 const App = () => {
   return (
     <Routes>
