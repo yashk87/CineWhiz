@@ -1,4 +1,3 @@
-import { Close } from "@mui/icons-material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import DeleteIcon from "@mui/icons-material/Delete";
 import WestIcon from "@mui/icons-material/West";
@@ -9,7 +8,6 @@ import {
   InputLabel,
   MenuItem,
   OutlinedInput,
-  Popover,
   Select,
 } from "@mui/material";
 import Divider from "@mui/material/Divider";
@@ -17,16 +15,15 @@ import axios from "axios";
 import { format } from "date-fns";
 import moment from "moment";
 import React, { useContext, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import AppDatePicker from "../../components/date-picker/date-picker";
 import LeaveTabel from "./components/LeaveTabel";
 
 // Set up the localizer for moment.js
-const localizer = momentLocalizer(moment);
 
 const LeaveRequisition = () => {
   const { cookies } = useContext(UseContext);
@@ -75,11 +72,6 @@ const LeaveRequisition = () => {
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
     }
-  };
-
-  const handleSelectEvent = (event) => {
-    setSelectedLeave(event);
-    setCalendarOpen(true);
   };
 
   const handleSubmit = async () => {
@@ -204,62 +196,17 @@ const LeaveRequisition = () => {
               </FormControl>
             </div>
 
-            <Popover
-              open={isCalendarOpen}
+            <AppDatePicker
+              isCalendarOpen={isCalendarOpen}
+              setCalendarOpen={setCalendarOpen}
               anchorEl={anchorEl}
-              onClose={() => setCalendarOpen(false)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "center",
-                horizontal: "center",
-              }}
-            >
-              <div className=" bg-white shadow-lg z-10 mt-2">
-                <div className="flex justify-between py-2 items-center px-4">
-                  <h1 className="text-lg pl-2">Select leave time</h1>
-                  <IconButton onClick={() => setCalendarOpen(false)}>
-                    <Close />
-                  </IconButton>
-                </div>
-
-                <div className="w-full mb-2">
-                  <Divider variant="fullWidth" orientation="horizontal" />
-                </div>
-
-                <div className="p-4 w-full">
-                  <Calendar
-                    localizer={localizer}
-                    views={["month"]}
-                    events={[...appliedLeaveEvents, ...newAppliedLeaveEvents]}
-                    startAccessor="start"
-                    endAccessor="end"
-                    style={{
-                      height: "300px",
-                      width: "800px",
-                      background: "#fff",
-                    }}
-                    selectable
-                    onSelectSlot={handleSelectSlot}
-                    onSelectEvent={handleSelectEvent}
-                    datePropGetter={selectedLeave}
-                    eventPropGetter={(event) => ({
-                      style: {
-                        backgroundColor: event.color,
-                      },
-                    })}
-                  />
-                </div>
-              </div>
-
-              <div className="!px-4 !py-2 bg-white">
-                <Button variant="contained" onClick={handleSubmit}>
-                  Submit
-                </Button>
-              </div>
-            </Popover>
+              appliedLeaveEvents={appliedLeaveEvents}
+              newAppliedLeaveEvents={newAppliedLeaveEvents}
+              handleSelectSlot={handleSelectSlot}
+              selectedLeave={selectedLeave}
+              handleSubmit={handleSubmit}
+              setSelectedLeave={setSelectedLeave}
+            />
 
             {newAppliedLeaveEvents.length > 0 &&
               Array.isArray(newAppliedLeaveEvents) && (

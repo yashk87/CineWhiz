@@ -7,6 +7,7 @@ import "tailwindcss/tailwind.css"; // Import Tailwind CSS
 
 // Set up the localizer for moment.js
 const localizer = momentLocalizer(moment);
+console.log(`🚀 ~ localizer:`, localizer);
 
 const MyCalendar = () => {
   const [isCalendarOpen, setCalendarOpen] = useState(false);
@@ -30,7 +31,6 @@ const MyCalendar = () => {
   console.log(`🚀 ~ leaveData:`, leaveData);
 
   const [selectedDateArray, setSelectedDateArray] = useState([]);
-  console.log(`🚀 ~ selectedDateArray:`, selectedDateArray);
 
   const handleSelectSlot = ({ start, end }) => {
     const newLeave = {
@@ -52,6 +52,7 @@ const MyCalendar = () => {
   };
 
   const handleSelectEvent = (event) => {
+    console.log(`🚀 ~ event:`, event);
     setSelectedLeave(event);
     setLeaveData(event);
     setCalendarOpen(true);

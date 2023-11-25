@@ -13,18 +13,18 @@ import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
+import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import Setup from "./pages/SetUpOrganization/Setup";
-import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import MyCalendar from "./pages/Test/test2";
+import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import UserProfile from "./pages/UserProfile/UserProfile";
-import AddEmployee from "./pages/AddEmployee/addemployee";
+
 const App = () => {
   return (
     <Routes>
