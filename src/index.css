@@ -1,16 +1,14 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Pacifico&family=Roboto&family=Work+Sans:wght@300&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 body {
   margin: 0;
   height: 100vh;
-  font-family: "Roboto", sans-serif;
-  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+* {
+  font-family: "Calibri" !important;
 }
 :root {
   --primary-color: #0e1630; /* Replace #FF0000 with your desired color value */
@@ -36,7 +34,7 @@ a {
   height: 5px;
 }
 body {
-  background-color: white;
+  background-color: #e7e7e7 !important;
   color: black;
 }
 
@@ -44,9 +42,6 @@ body {
   border-radius: 10px;
   background-color: var(--secondary-color);
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 .react-tel-input .form-control {
   @apply !w-full py-6 !text-base;
@@ -267,4 +262,19 @@ button:active {
 
   transition: box-shadow 0.2s ease-in-out;
   outline: none;
+}
+.rbc-month-view {
+  border-bottom: 1px solid #ddd !important;
+  border-left: 1px solid #ddd !important;
+  border-right: 1px solid #ddd !important;
+  border-top: none !important;
+  padding: 0px 10px !important;
+}
+.rbc-month-header {
+  border-left: 1px solid #ddd !important;
+  border-right: 1px solid #ddd !important;
+  border-top: 1px solid #ddd !important;
+}
+.hell {
+  background-color: #0060ff;
 }

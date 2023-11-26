@@ -1,6 +1,6 @@
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ErrorIcon from "@mui/icons-material/Error";
-import { Avatar, AvatarGroup, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -11,8 +11,6 @@ const LeaveTabel = ({
   subtractedLeaves,
   setSubtractedLeaves,
   authToken,
-  vactionList,
-  setVactionList,
   setAppliedLeaveEvents,
 }) => {
   const [Total, setTotal] = useState();
@@ -116,7 +114,7 @@ const LeaveTabel = ({
 
   if (isLoading) {
     return (
-      <article className="md:w-[40%] w-full h-max py-6  bg-white shadow-lg rounded-lg ">
+      <article className="w-[350px] h-max py-6  bg-white shadow-xl rounded-lg ">
         <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
         </h1>
@@ -160,24 +158,21 @@ const LeaveTabel = ({
 
   return (
     <>
-      <article className="md:w-[40%] w-full h-max py-6  bg-white shadow-lg rounded-lg ">
-        <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
+      <article className="w-[350px] h-max  bg-white shadow-lg rounded-lg ">
+        <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 ">
           <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
         </h1>
 
-        <Divider
-          className="pt-6"
-          variant="fullWidth"
-          orientation="horizontal"
-        />
-
-        <div className="w-full px-8">
+        <div className="w-full">
           {subtractedLeaves?.map((item, index) =>
             item.subtractedCount <= 0 ? (
-              <div key={index} className="mt-6 text-red-700">
+              <div
+                key={index}
+                className={`text-red-700 pl-4 !bg-[${item.color}]`}
+              >
                 <div className="text-red-700 flex gap-2 items-center">
                   <ErrorIcon />
-                  <h1 className="text-md text-gray-400 font-medium">
+                  <h1 className="text-md text-gray-400 font-bold">
                     {item.leaveName}
                   </h1>
                 </div>
@@ -186,58 +181,29 @@ const LeaveTabel = ({
                 <Divider variant="fullWidth" orientation="horizontal" />
               </div>
             ) : (
-              <div className={`mt-6`} key={index}>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h1 className="text-md text-gray-400 font-medium">
+              <div style={{ background: item.color }} key={index}>
+                <div className="flex justify-between items-center py-6 px-6">
+                  <div className="">
+                    <h1 className="text-md text-gray-200 font-bold tracking-wide">
                       {item.leaveName}
                     </h1>
-                    <h1 className="text-lg mb-4 tracking-wide">
-                      {item.subtractedCount} leaves left
-                    </h1>
                   </div>
-                  <Avatar
-                    sx={{
-                      bgcolor: item.color,
-                      width: 24,
-                      height: 24,
-                      fontSize: 16,
-                    }}
-                    alt={`${item.leaveName}`}
-                    src="/broken-image.jpg"
-                  ></Avatar>
+                  <h1 className="text-lg tracking-wide font-bold text-gray-200">
+                    {item.subtractedCount}
+                  </h1>
                 </div>
                 <Divider variant="fullWidth" orientation="horizontal" />
               </div>
             )
           )}
 
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex justify-between items-center py-6 px-6">
             <div>
               <h1 className="text-md text-gray-400 font-medium">
                 Total balance
               </h1>
-              <h1 className="text-lg mb-4 tracking-wider">
-                {Total} leaves left
-              </h1>
             </div>
-            <AvatarGroup max={4}>
-              {subtractedLeaves?.map((item, i) => {
-                return (
-                  <Avatar
-                    key={i}
-                    sx={{
-                      bgcolor: item.color,
-                      width: 24,
-                      height: 24,
-                      fontSize: 16,
-                    }}
-                    alt={`${item.leaveName}`}
-                    src="/broken-image.jpg"
-                  />
-                );
-              })}
-            </AvatarGroup>
+            <h1 className="text-lg tracking-wide text-gray-400">{Total}</h1>
           </div>
         </div>
       </article>

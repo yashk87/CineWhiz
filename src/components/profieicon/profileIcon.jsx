@@ -1,17 +1,16 @@
+import { Person } from "@mui/icons-material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Divider } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import React, { useContext, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import { Divider } from "@mui/material";
-import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
-import { Person } from "@mui/icons-material";
 
 export default function ProfileIcon() {
   const navigate = useNavigate();
@@ -87,7 +86,7 @@ export default function ProfileIcon() {
         {token
           ? [
               <MenuItem
-                key="Info"
+                key="info"
                 className="flex flex-col !pl-6   !pt-2 !w-full  !items-start !justify-start"
               >
                 <h1 className="!font-semibold !text-md  pr-32">Signed in as</h1>
@@ -97,7 +96,6 @@ export default function ProfileIcon() {
                 <div className="w-full !mt-2">
                   <Divider />
                 </div>
-
                 <MenuItem
                   key="profile"
                   onClick={() => handleNavigate("/userprofile")}
@@ -105,6 +103,7 @@ export default function ProfileIcon() {
                 >
                   <Person /> Profile
                 </MenuItem>
+                ,
               </>,
               <MenuItem
                 key="notification"

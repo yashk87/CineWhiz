@@ -1,4 +1,4 @@
-import { Button, Popover } from "@mui/material";
+import { Button, MenuItem, Popover, Select } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -40,15 +40,31 @@ const MyCalendar = () => {
       color: "blue", // Adjust the color as needed
     };
 
-    setEvents((prevEvents) => [...prevEvents, newLeave]); // Preserve existing events and add the new one
-    setLeaveData(newLeave);
+    // Create an object to update leaveData with the newLeave information
+    const newLeaveData = {};
+    let currentDate = moment(start);
+    while (currentDate.isSameOrBefore(end, "day")) {
+      const dateKey = currentDate.format("YYYY-MM-DD");
+      newLeaveData[dateKey] = {
+        color: newLeave.color,
+      };
+      currentDate.add(1, "day");
+    }
 
-    const selectedDates = {
-      startDate: moment(start).toISOString(),
-      endDate: moment(end).toISOString(),
-    };
+    // Update the leaveData state
+    setLeaveData((prevLeaveData) => ({
+      ...prevLeaveData,
+      ...newLeaveData,
+    }));
 
-    setSelectedDateArray((prevDates) => [...prevDates, selectedDates]); // Preserve existing dates and add the new one
+    setEvents((prevEvents) => [...prevEvents, newLeave]);
+    setSelectedDateArray((prevDates) => [
+      ...prevDates,
+      {
+        startDate: moment(start).toISOString(),
+        endDate: moment(end).toISOString(),
+      },
+    ]);
   };
 
   const handleSelectEvent = (event) => {
@@ -68,14 +84,62 @@ const MyCalendar = () => {
     setCalendarOpen(true);
   };
 
-  // const handlePopoverClose = (event) => {
-  //   if (anchorEl && anchorEl.contains(event.target)) {
-  //     // Click inside the popover, do nothing
-  //     return;
-  //   }
+  const CustomToolbar = (toolbar) => {
+    // const goToBack = () => {
+    //   const newDate = moment(toolbar.date).subtract(1, "month").toDate();
+    //   toolbar.onNavigate("prev", newDate);
+    // };
 
-  //   setCalendarOpen(false);
-  // };
+    // const goToNext = () => {
+    //   const newDate = moment(toolbar.date).add(1, "month").toDate();
+    //   toolbar.onNavigate("next", newDate);
+    // };
+
+    const handleMonthChange = (event) => {
+      const newDate = moment(toolbar.date).month(event.target.value).toDate();
+      toolbar.onNavigate("current", newDate);
+    };
+
+    const handleYearChange = (event) => {
+      const newDate = moment(toolbar.date).year(event.target.value).toDate();
+      toolbar.onNavigate("current", newDate);
+    };
+
+    return (
+      <div className="flex justify-center items-center">
+        <Select
+          value={moment(toolbar.date).month()}
+          onChange={handleMonthChange}
+        >
+          {moment.months().map((month, index) => (
+            <MenuItem key={index} value={index}>
+              {month}
+            </MenuItem>
+          ))}
+        </Select>
+        <Select value={moment(toolbar.date).year()} onChange={handleYearChange}>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <MenuItem key={index} value={moment(toolbar.date).year() + index}>
+              {moment(toolbar.date).year() + index}
+            </MenuItem>
+          ))}
+        </Select>
+      </div>
+    );
+  };
+  const slotPropGetter = (date) => {
+    // Example: Set a different background color for specific dates
+    const dateKey = moment(date).format("YYYY-MM-DD");
+    const colorMap = {
+      "2023-11-15": "green", // Change this date to the one you want to have a different color
+    };
+
+    return {
+      style: {
+        backgroundColor: colorMap[dateKey] || "transparent",
+      },
+    };
+  };
 
   return (
     <div className="relative">
@@ -114,6 +178,9 @@ const MyCalendar = () => {
           <form className="z-10 mt-2 flex items-center gap-4 flex-col border shadow-lg bg-slate-100 p-4">
             <Calendar
               localizer={localizer}
+              components={{
+                toolbar: CustomToolbar,
+              }}
               events={events}
               startAccessor="start"
               endAccessor="end"
@@ -127,6 +194,7 @@ const MyCalendar = () => {
                   backgroundColor: event.color,
                 },
               })}
+              slotPropGetter={slotPropGetter}
             />
             <Button size="small" variant="contained" onClick={handleSubmit}>
               Submit
