@@ -49,8 +49,8 @@ const Shifts = () => {
 
   const [selectedStartTime, setSelectedStartTime] = useState(null);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
-  const [workingFrom, setWorkingFrom] = useState(null);
-  const [shiftName, setShiftName] = useState(null);
+  const [workingFrom, setWorkingFrom] = useState("");
+  const [shiftName, setShiftName] = useState("");
   const [selectedDays, setSelectedDays] = useState([]);
   const [error, setError] = useState("");
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
