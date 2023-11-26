@@ -14,12 +14,13 @@ import React, { useState } from "react";
 const Mapped = ({
   item,
   index,
-
   subtractedLeaves,
   newAppliedLeaveEvents,
   setNewAppliedLeaveEvents,
+  setCalendarOpen,
 }) => {
-  const [leavesTypes, setLeavesTypes] = useState(null);
+  console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
+  const [leavesTypes, setLeavesTypes] = useState("");
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -95,7 +96,7 @@ const Mapped = ({
             {subtractedLeaves?.map(
               (item, index) =>
                 item.isActive && (
-                  <MenuItem id={index} key={index} value={item}>
+                  <MenuItem id={index} key={index} value={item._id}>
                     <div className="flex justify-between w-full">
                       <div>{item.leaveName} </div>
                       <Avatar
@@ -116,6 +117,7 @@ const Mapped = ({
         </FormControl>
         <Button
           type="button"
+          onClick={() => setCalendarOpen(true)}
           variant="outlined"
           className="!border-gray-300 group-hover:!border-gray-400"
         >

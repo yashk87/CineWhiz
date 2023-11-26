@@ -1,7 +1,6 @@
 import { CalendarMonth } from "@mui/icons-material";
 import WestIcon from "@mui/icons-material/West";
 import { Badge, Button } from "@mui/material";
-import moment from "moment";
 import React, { useContext, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Link } from "react-router-dom";
@@ -31,34 +30,6 @@ const LeaveRequisition = () => {
   const handleInputChange = () => {
     setCalendarOpen(true);
     setSelectedLeave(null);
-  };
-
-  const handleSelectSlot = ({ start, end }) => {
-    const selectedStartDate = moment(start);
-    const selectedEndDate = moment(end);
-
-    const isOverlap = [...appliedLeaveEvents, ...newAppliedLeaveEvents].some(
-      (event) =>
-        (selectedStartDate.isSameOrAfter(moment(event.start)) &&
-          selectedStartDate.isBefore(moment(event.end))) ||
-        (selectedEndDate.isAfter(moment(event.start)) &&
-          selectedEndDate.isSameOrBefore(moment(event.end))) ||
-        (selectedStartDate.isBefore(moment(event.start)) &&
-          selectedEndDate.isAfter(moment(event.end)))
-    );
-
-    if (isOverlap) {
-      handleAlert(true, "warning", "You have already selected this leave");
-    } else {
-      const newLeave = {
-        title: "Selected Leave",
-        start,
-        end,
-        color: "blue",
-      };
-
-      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -159,8 +130,9 @@ const LeaveRequisition = () => {
               setCalendarOpen={setCalendarOpen}
               anchorEl={anchorEl}
               appliedLeaveEvents={appliedLeaveEvents}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
               newAppliedLeaveEvents={newAppliedLeaveEvents}
-              handleSelectSlot={handleSelectSlot}
               selectedLeave={selectedLeave}
               setSelectedLeave={setSelectedLeave}
             />
@@ -177,6 +149,7 @@ const LeaveRequisition = () => {
                   </h1>
                   {newAppliedLeaveEvents?.map((item, index) => (
                     <Mapped
+                      setCalendarOpen={setCalendarOpen}
                       subtractedLeaves={subtractedLeaves}
                       item={item}
                       index={index}
