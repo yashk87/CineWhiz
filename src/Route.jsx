@@ -8,7 +8,7 @@ import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import Home from "./pages/Home/Home";
-import AddEmployee from "./pages/Home/components/addemployee";
+import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
@@ -24,7 +24,7 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-
+import AddEmployee from "./pages/AddEmployee/addemployee";
 const App = () => {
   return (
     <Routes>
@@ -51,8 +51,8 @@ const App = () => {
       <Route exact path="/userprofile" element={<UserProfile />} />
       <Route
         exact
-        path="/organisation/:id/add-employee"
-        element={<AddEmployee />}
+        path="/organisation/:id/add-profile"
+        element={<AddProfile />}
       />
       <Route exact path="/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/notification" element={<Notification />} />
@@ -64,6 +64,7 @@ const App = () => {
         path="/setup/:id/public-holidays"
         element={<PublicHoliday />}
       />
+      <Route exact path="/add-employee" element={<AddEmployee />} />
     </Routes>
   );
 };

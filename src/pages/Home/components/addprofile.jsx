@@ -23,7 +23,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
-const AddEmployee = () => {
+const AddProfile = () => {
   const locations = useLocation();
   const { orgName } = locations.state;
 
@@ -150,7 +150,6 @@ const AddEmployee = () => {
 
     try {
       const isProfileData = await axios.post(
-        // "http://localhost:4000/route/employee/is-profiledata",
         `${process.env.REACT_APP_API}/route/employee/is-profiledata`,
         { profile }
       );
@@ -513,4 +512,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default AddProfile;

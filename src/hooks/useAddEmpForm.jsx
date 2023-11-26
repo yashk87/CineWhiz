@@ -1,0 +1,43 @@
+import { create } from "zustand";
+
+const useAddEmpForm = create((set) => ({
+  first_name: "",
+  last_name: "",
+  email: "",
+  companyemail: "",
+  address: "",
+  phone_number: "",
+  deptname: "",
+  mgrempid: "",
+  employmentType: "",
+  citizenship: "",
+  date_of_birth: "",
+  joining_date: "",
+  designation: [],
+  worklocation: [],
+  gender: "",
+  firstNameError: "",
+  lastNameError: "",
+  emailError: "",
+
+  setFirstName: (first_name) => set({ first_name }),
+  setLastName: (last_name) => set({ last_name }),
+  setEmail: (email) => set({ email }),
+  setCompanyEmail: (companyemail) => set({ companyemail }),
+  setAddress: (address) => set({ address }),
+  setPhoneNumber: (phone_number) => set({ phone_number }),
+  setDeptName: (deptname) => set({ deptname }),
+  setMgrEmpId: (mgrempid) => set({ mgrempid }),
+  setEmploymentType: (employmentType) => set({ employmentType }),
+  setCitizenShip: (citizenship) => set({ citizenship }),
+  setJoiningDate: (joining_date) => set({ joining_date }),
+  setDateOfBirth: (date_of_birth) => set({ date_of_birth }),
+  setGender: (gender) => set({ gender }),
+  setWorkLocation: (worklocation) => set({ worklocation }),
+  setDesignation: (designation) => set({ designation }),
+  setFirstNameError: (error) => set({ firstNameError: error }),
+  setLastNameError: (error) => set({ lastNameError: error }),
+  setEmailError: (error) => set({ emailError: error }),
+}));
+
+export default useAddEmpForm;
