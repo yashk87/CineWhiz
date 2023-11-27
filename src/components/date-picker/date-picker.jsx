@@ -21,34 +21,22 @@ const AppDatePicker = ({
   const localizer = momentLocalizer(moment);
   const [selectEvent, setselectEvent] = useState(false);
   const [clickedAway, setClickedAway] = useState(false);
-  console.log(`🚀 ~ clickedAway:`, clickedAway);
   const [Delete, setDelete] = useState(false);
-  console.log(`🚀 ~ Delete:`, Delete);
   const [update, setUpdate] = useState(false);
-  console.log(`🚀 ~ update:`, update);
   const { handleAlert } = useContext(TestContext);
   const handleSelectEvent = (event) => {
-    console.log(`🚀 ~ event:`, event);
-    console.log(
-      `🚀 ~ event.title === "Selected Leave":`,
-      event.title === "Selected Leave"
-    );
     setSelectedLeave(event);
     setCalendarOpen(true);
-    setselectEvent(true);
     if (event.title === "Selected Leave") {
-      console.log("hel");
       setDelete(true);
       setUpdate(false);
     } else {
-      console.log("hel2 ");
       setDelete(false);
       setUpdate(true);
     }
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log(`🚀 ~ { start, end }:`, { start, end });
     setDelete(false);
     setUpdate(false);
     const selectedStartDate = moment(start);
@@ -141,17 +129,9 @@ const AppDatePicker = ({
     }
   };
   const handleDelete = (e) => {
-    console.log(`🚀 ~ e:`, selectedLeave);
-
     if (selectedLeave.title === "Selected Leave") {
       setNewAppliedLeaveEvents((prev) =>
         prev.filter((data) => {
-          console.log(
-            data.title === selectedLeave.title &&
-              data.start === selectedLeave.start &&
-              data.end === selectedLeave.end
-          );
-          // Assuming 'da' is a condition you want to check, modify as needed
           // Check if the current leave matches the leave to be removed
           return !(
             data.title === selectedLeave.title &&

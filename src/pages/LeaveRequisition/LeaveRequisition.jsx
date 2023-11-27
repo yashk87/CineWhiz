@@ -149,6 +149,7 @@ const LeaveRequisition = () => {
                   </h1>
                   {newAppliedLeaveEvents?.map((item, index) => (
                     <Mapped
+                      key={index}
                       setCalendarOpen={setCalendarOpen}
                       subtractedLeaves={subtractedLeaves}
                       item={item}
