@@ -20,7 +20,9 @@ function App() {
             <AppAlert />
             <div className={`h-full mt-[60px]`}>
               <SwipeableTemporaryDrawer />
-              <div style={{ height: "100%", width: "100%" }}>
+              <div
+                style={{ height: "100%", width: "100%", background: "#F6F6FA" }}
+              >
                 <Route />
               </div>
             </div>
