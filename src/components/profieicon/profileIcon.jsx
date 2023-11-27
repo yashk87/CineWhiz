@@ -79,7 +79,7 @@ export default function ProfileIcon() {
       </IconButton>
       <Menu
         id="basic-menu"
-        className="!pt-0 !p-0 "
+        className="!pt-0 !p-0 !shadow-lg "
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -93,7 +93,7 @@ export default function ProfileIcon() {
                 key="info"
                 className="flex !w-[230px] flex-col !z-10 !px-0 mx-4 !py-0   !items-start !justify-start"
               >
-                <div className="h-[60px] flex items-center  border-b-[.5px] border-gray-300 justify-center w-full relative bg-blue-500">
+                <div className="h-[80px] flex items-center  border-b-[.5px] border-gray-300 justify-center w-full relative bg-blue-500">
                   <div className="absolute w-max h-max rounded-full top-[50%]">
                     <Avatar
                       variant="circular"
