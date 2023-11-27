@@ -11,6 +11,10 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useQuery } from "react-query";
+import { PersonAddOutlined } from "@mui/icons-material";
+import Setup from "../SetUpOrganization/Setup";
+
+import "../../index.css";
 
 const AddRoles = () => {
   const { id } = useParams("");
@@ -72,6 +76,18 @@ const AddRoles = () => {
     {
       placeholder: "Delegate Super Admin",
       label: "delegateSuperAdmin",
+      isApprover: false,
+      isActive: false,
+    },
+    {
+      placeholder: "Acountant",
+      label: "accountant",
+      isApprover: false,
+      isActive: false,
+    },
+    {
+      placeholder: "Delegate Accoutant",
+      label: "delegate accountant",
       isApprover: false,
       isActive: false,
     },
@@ -180,66 +196,75 @@ const AddRoles = () => {
   };
 
   return (
-    <div className="flex items-center flex-col min-h-screen bg-gray-50">
-      <div className="bg-white mt-10 w-[800px] mb-4 shadow-lg rounded-lg border py-8 px-8 grid items-center">
-        <h1 className="mb-6 text-2xl font-semibold text-blue-500">
-          Add Roles For Organization
-        </h1>
-        {isLoading ? (
-          <div className="space-y-4 flex flex-col flex-wrap">
-            {Array.from({ length: 5 }, (_, id) => (
-              <div
-                key={id}
-                className="border-gray-200 flex justify-between p-2 rounded-md border-[.5px]"
-              >
-                <div className="flex gap-2 w-full">
-                  <Skeleton width={"5%"} height={45} />
-                  <Skeleton width={"30%"} height={45} />
-                </div>
-                <Skeleton width={"20%"} height={45} />
+    <>
+      <section className="bg-gray-50 min-h-screen w-full">
+        <Setup>
+          <div className="SetupSection bg-white w-[80%]  shadow-md rounded-sm border  items-center">
+            <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
+              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                <PersonAddOutlined className="!text-lg text-white" />
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-4 flex flex-col flex-wrap">
-            {roles.map((role, index) => (
-              <div
-                key={index}
-                className="border-gray-200 flex justify-between p-2 rounded-md border-[.5px]"
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={role.isActive}
-                      onChange={() => handleRoleChange(role)}
+              <h1 className="!text-lg tracking-wide">
+                Add Roles for organization
+              </h1>
+            </div>
+            {isLoading ? (
+              <div className="space-y-4 flex flex-col flex-wrap">
+                {Array.from({ length: 5 }, (_, id) => (
+                  <div
+                    key={id}
+                    className="border-gray-200 flex justify-between p-2 rounded-md border-b-[.5px]"
+                  >
+                    <div className="flex gap-2 w-full">
+                      <Skeleton width={"5%"} height={45} />
+                      <Skeleton width={"30%"} height={45} />
+                    </div>
+                    <Skeleton width={"20%"} height={45} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col flex-wrap">
+                {roles.map((role, index) => (
+                  <div
+                    key={index}
+                    className="border-gray-200 flex justify-between py-2 px-6 border-b-[.5px]"
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={role.isActive}
+                          onChange={() => handleRoleChange(role)}
+                        />
+                      }
+                      label={role.placeholder}
                     />
-                  }
-                  label={role.placeholder}
-                />
-                {role.isActive && (
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={role.isApprover || false}
-                        onChange={(event) =>
-                          handleIsApproverChange(event, role)
+                    {role.isActive && (
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={role.isApprover || false}
+                            onChange={(event) =>
+                              handleIsApproverChange(event, role)
+                            }
+                          />
                         }
+                        label="Is Approver"
                       />
-                    }
-                    label="Is Approver"
-                  />
-                )}
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+            <div className="w-max px-4 py-2 mt-2">
+              <Button onClick={sendRequestToBackend} variant="contained">
+                Apply
+              </Button>
+            </div>
           </div>
-        )}
-        <div className="w-max mt-4">
-          <Button onClick={sendRequestToBackend} variant="contained">
-            Apply
-          </Button>
-        </div>
-      </div>
-    </div>
+        </Setup>
+      </section>
+    </>
   );
 };
 

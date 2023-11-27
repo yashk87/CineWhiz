@@ -25,6 +25,7 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 import AddEmployee from "./pages/AddEmployee/addemployee";
+import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 const App = () => {
   return (
     <Routes>
@@ -43,7 +44,6 @@ const App = () => {
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/add-role" element={<AddRole />} />
-      <Route exact path="/set-shifts/:id" element={<Shifts />} />
       <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} />
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
@@ -54,7 +54,11 @@ const App = () => {
         path="/organisation/:id/add-profile"
         element={<AddProfile />}
       />
-      <Route exact path="/add-roles/:id" element={<AddRoles />} />
+
+      <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
+      <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
+      <Route exact path="/setup/set-shifts/:id" element={<Shifts />} />
+
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
       <Route exact path="/setup/:id" element={<Setup />} />

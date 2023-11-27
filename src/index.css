@@ -37,8 +37,10 @@ a {
   width: 5px;
   height: 5px;
 }
+
 body {
   background-color: #e7e7e7 !important;
+
   color: black;
 }
 
@@ -59,6 +61,25 @@ body {
 }
 .container-2 {
   position: relative;
+}
+
+/* Animation  */
+
+.SetupSection {
+  opacity: 0;
+  visibility: hidden;
+  animation: animateSetup 0.5s forwards;
+}
+
+@keyframes animateSetup {
+  0% {
+    transform: translateX(5%);
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .envelope-main {

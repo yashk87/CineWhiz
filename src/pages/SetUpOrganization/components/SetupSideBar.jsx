@@ -4,12 +4,11 @@ import {
   BeachAccessOutlined,
   EventAvailableOutlined,
   PersonAddAlt1Outlined,
-  SettingsOutlined,
   West,
 } from "@mui/icons-material";
 import { Link, useLocation, useParams } from "react-router-dom";
 
-const Setup = ({ children }) => {
+const SetupSideBar = ({ children }) => {
   const location = useLocation();
   const { id } = useParams("");
 
@@ -26,20 +25,18 @@ const Setup = ({ children }) => {
       href: `/setup/leave-types/${id}`,
       active: location.pathname === `/setup/leave-types/${id}`,
     },
-
-    {
-      label: "Create Shift",
-      icon: EventAvailableOutlined,
-      href: `/setup/set-shifts/${id}`,
-      active: location.pathname === `/setup/set-shifts/${id}`,
-    },
     {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
       href: "/",
       active: location.pathname === "",
     },
-
+    {
+      label: "Create Shift",
+      icon: EventAvailableOutlined,
+      href: "/",
+      active: location.pathname === "",
+    },
     {
       label: "Add Location",
       icon: AddLocationAltOutlined,
@@ -57,12 +54,9 @@ const Setup = ({ children }) => {
           </Link>
           Organization Setup page
         </header>
-        <article className="p-4 w-full h-full flex gap-4">
+        <article className="py-4 px-8 w-full h-full flex gap-4">
           <aside className="w-[20%] h-max flex flex-col items-center shadow-md justify-center bg-white">
-            <div className="px-4 py-3 gap-4 border-b-[.5px] flex w-full items-center border-gray-300">
-              <div className="rounded-full h-[30px] w-[30px] flex items-center justify-center">
-                <SettingsOutlined className="!text-md text-sky-400 hover:!rotate-180  cursor-pointer" />
-              </div>
+            <div className="p-4 border-b-[.5px] w-full border-gray-300">
               <h1 className="!text-lg tracking-wide">Setup Settings</h1>
             </div>
 
@@ -86,4 +80,4 @@ const Setup = ({ children }) => {
   );
 };
 
-export default Setup;
+export default SetupSideBar;
