@@ -31,11 +31,22 @@ const OrganizationLocation = () => {
   const { handleAlert } = useContext(TestContext);
   const organizationId = useParams().id;
   let countryData = Country.getAllCountries();
-
+  const continents = [
+    {name:"Asia"},
+    {name:"Africa"},
+    {name:"Europe"},
+    {name:"North America"},
+    {name:"South America"},
+    {name:"Australia"},
+    {name:"Antartica"}
+]
+  
   const [locationList, setLocationList] = useState([]);
   const [addressLine1, setAddressLine1] = useState("");
   const [addressLine2, setAddressLine2] = useState("");
   const [city, setCity] = useState("");
+  const [continent, setContinent] = useState(continents[0] || "");
+  const [shortName, setShortName] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [country, setCountry] = useState(countryData[0]);
   const [stateData, setStateData] = useState(State.getStatesOfCountry(country?.name));
@@ -125,7 +136,7 @@ const OrganizationLocation = () => {
     const selectedCountry = Country.getAllCountries().find(
         (country) => country.name === selectedLocation.country
       )
-      console.log(selectedLocation.state);
+      console.log(selectedCountry);
     setCountry(
       Country.getAllCountries().find(
         (country) => country.name === selectedLocation.country
@@ -139,7 +150,8 @@ const OrganizationLocation = () => {
     // setStateData(State.getStatesOfCountry(country?.name));
     setState(
       State.getStatesOfCountry(selectedCountry).find(
-        (state) => state.name === selectedLocation.state
+        (state) => {
+          return state.name === selectedLocation.state}
       ))
       
       // console.log(selectedCountry);
@@ -327,6 +339,25 @@ const OrganizationLocation = () => {
             )}
           </DialogTitle>
           <DialogContent>
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px", marginBottom: "8px" }}>
+              <div>
+                <p>Continent:</p>
+                <Selector
+                  key={1}
+                  data={continents}
+                  selected={continent}
+                  setSelected={setContinent}
+                />
+              </div>
+              <TextField
+                label={<FormattedMessage id="shortname" defaultMessage="ShortName" />}
+                variant="outlined"
+                value={shortName}
+                onChange={(e) => setShortName(e.target.value)}
+                fullWidth
+                style={{ marginTop: "8px" }}
+              />
+            </div>
             <div style={{ display: "flex", gap: "8px", marginTop: "8px", marginBottom: "8px" }}>
               <div>
                 <p>Country:</p>
