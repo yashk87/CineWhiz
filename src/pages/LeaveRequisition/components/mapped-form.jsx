@@ -72,7 +72,7 @@ const Mapped = ({
 
         <div className="inline-grid m-auto items-center gap-2 group-hover:text-gray-500 text-gray-300 font-bold">
           <p className="text-md truncate ">
-            {`Selected leave from ${format(
+            {`Selected dates from ${format(
               new Date(item.start),
               "do 'of' MMMM"
             )} to  ${format(new Date(item.end), "do ' of' MMMM")}`}
