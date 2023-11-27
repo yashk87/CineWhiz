@@ -36,54 +36,89 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       leaveName: "Vacation Leave",
       isActive: true,
       color: "#C90498",
-      count: 4,
+      count: 1,
     },
     {
       leaveName: "Special Leave",
       isActive: true,
       color: "#CEB10A",
-      count: 4,
+      count: 1,
     },
     {
       leaveName: "Holiday Leave",
       isActive: true,
       color: "#1D6EB7",
-      count: 4,
+      count: 1,
     },
   ]);
-  const { data: newLeaveTypes = [] } = useQuery("leaveTypes", async () => {
+  console.log(`🚀 ~ leaveTypes:`, leaveTypes);
+  const {
+    data: newLeaveTypes = [
+      {
+        leaveName: "Sick Leave",
+        isActive: true,
+        color: "#00ffcc",
+        count: 2,
+      },
+      {
+        leaveName: "Vacation Leave",
+        isActive: true,
+        color: "#C90498",
+        count: 4,
+      },
+      {
+        leaveName: "Special Leave",
+        isActive: true,
+        color: "#CEB10A",
+        count: 4,
+      },
+      {
+        leaveName: "Holiday Leave",
+        isActive: true,
+        color: "#1D6EB7",
+        count: 4,
+      },
+    ],
+  } = useQuery("leaveTypes", async () => {
     const config = {
-      headers: { "Content-Type": "application/json", Authorization: authToken },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken,
+      },
     };
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/leave-types`,
       config
     );
+    console.log(`🚀 ~ response:`, response);
 
     // const data = await response.json();
-    return response.data.data || [];
+    return response.data.data.leaveTypes;
   });
 
   // Initialize newLeaveType with the first leave type from the fetched data
-  // useEffect(() => {
-  //   console.log(`🚀 ~ newLeaveTypes:`, newLeaveTypes);
-  //   if (newLeaveTypes.length > 0) {
-  //     setLeaveTypes(newLeaveTypes[0].typesOfLeave);
-  //   }
-  // }, [newLeaveTypes]);
   useEffect(() => {
-    setLeaveTypes((prevLeaveTypes) => {
-      const updatedLeaveTypes = prevLeaveTypes?.map((leaveType) => ({
-        ...leaveType,
-        color: randomColor({
-          seed: leaveType.leaveName,
-          luminosity: "dark",
-        }),
-      }));
-      return updatedLeaveTypes;
-    });
-    console.log(`🚀 ~ leaveTypes:`, leaveTypes);
-  }, [leaveTypes.length]);
+    console.log(`🚀 ~ newLeaveTypes:`, newLeaveTypes);
+    if (newLeaveTypes && newLeaveTypes.length > 0) {
+      setLeaveTypes(newLeaveTypes);
+    }
+  }, [newLeaveTypes.length]);
+
+  useEffect(() => {
+    if (leaveTypes) {
+      setLeaveTypes((prevLeaveTypes) => {
+        const updatedLeaveTypes = prevLeaveTypes?.map((leaveType) => ({
+          ...leaveType,
+          color: randomColor({
+            seed: leaveType.leaveName,
+            luminosity: "dark",
+          }),
+        }));
+        return updatedLeaveTypes;
+      });
+      console.log(`🚀 ~ leaveTypes:`, leaveTypes);
+    }
+  }, [leaveTypes.length]); // Remove .length here
 
   const [newLeaveType, setNewLeaveType] = useState("");
   const [isinputOpen, setIsinputOpen] = useState(false);
@@ -164,61 +199,64 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           </div>
 
           <ul className=" flex flex-col justify-between ">
-            {leaveTypes.map((leaveType, index) => (
-              <li
-                className="flex gap-4 justify-between  py-2 px-6 border-gray-200 border-b-[.5px]"
-                key={index}
-              >
-                <FormControlLabel
-                  size="small"
-                  control={
-                    <Checkbox
-                      checked={leaveType.isActive}
-                      onChange={() => handleLeaveTypeChange(index)}
-                    />
-                  }
-                  label={leaveType.leaveName}
-                />
-                <div className="flex gap-2">
-                  {leaveType.isActive && (
-                    <TextField
-                      type="number"
-                      size="small"
-                      label="Number of Leaves"
-                      value={leaveType.count}
-                      onChange={(e) =>
-                        handleLeaveCountChange(index, e.target.value)
-                      }
-                    />
-                  )}
-                  {leaveType.isActive && (
-                    <div
-                      className="rounded-full overflow-hidden relative"
-                      style={{
-                        height: "40px", // adjust the size as needed
-                        width: "40px",
-                      }}
-                    >
-                      <input
-                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                        style={{
-                          height: "60px", // adjust the size as needed
-                          width: "60px",
-                          padding: "0",
-                          border: "none",
-                        }}
-                        type="color"
-                        id="favcolor"
-                        value={leaveType.color}
+            {leaveTypes &&
+              leaveTypes.map((leaveType, index) => (
+                <li
+                  className="flex gap-4 justify-between  py-2 px-6 border-gray-200 border-b-[.5px]"
+                  key={index}
+                >
+                  <FormControlLabel
+                    size="small"
+                    control={
+                      <Checkbox
+                        checked={leaveType.isActive}
+                        onChange={() => handleLeaveTypeChange(index)}
+                      />
+                    }
+                    label={leaveType.leaveName}
+                  />
+                  <div className="flex gap-2">
+                    {leaveType.isActive && (
+                      <TextField
+                        type="number"
+                        required
+                        size="small"
+                        label="Number of Leaves"
+                        value={leaveType.count}
                         onChange={(e) =>
-                          handleLeaveColorChange(index, e.target.value)
+                          handleLeaveCountChange(index, e.target.value)
                         }
                       />
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
+                    )}
+                    {leaveType.isActive && (
+                      <div
+                        className="rounded-full overflow-hidden relative"
+                        style={{
+                          height: "40px", // adjust the size as needed
+                          width: "40px",
+                        }}
+                      >
+                        <input
+                          required
+                          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                          style={{
+                            height: "60px", // adjust the size as needed
+                            width: "60px",
+                            padding: "0",
+                            border: "none",
+                          }}
+                          type="color"
+                          id="favcolor"
+                          value={leaveType.color}
+                          onChange={(e) =>
+                            handleLeaveColorChange(index, e.target.value)
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
           </ul>
 
           <div className="flex gap-4 px-4 items-center">
