@@ -4,6 +4,7 @@ const useAddEmpForm = create((set) => ({
   first_name: "",
   last_name: "",
   email: "",
+  password: "",
   companyemail: "",
   address: "",
   phone_number: "",
@@ -19,10 +20,12 @@ const useAddEmpForm = create((set) => ({
   firstNameError: "",
   lastNameError: "",
   emailError: "",
+  passwordError: "",
 
   setFirstName: (first_name) => set({ first_name }),
   setLastName: (last_name) => set({ last_name }),
   setEmail: (email) => set({ email }),
+  setPassword: (password) => set({ password }),
   setCompanyEmail: (companyemail) => set({ companyemail }),
   setAddress: (address) => set({ address }),
   setPhoneNumber: (phone_number) => set({ phone_number }),
@@ -38,6 +41,7 @@ const useAddEmpForm = create((set) => ({
   setFirstNameError: (error) => set({ firstNameError: error }),
   setLastNameError: (error) => set({ lastNameError: error }),
   setEmailError: (error) => set({ emailError: error }),
+  setPasswordError: (error) => set({ passwordError: error }),
 }));
 
 export default useAddEmpForm;
