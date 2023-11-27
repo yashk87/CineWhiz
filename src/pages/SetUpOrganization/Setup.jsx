@@ -15,20 +15,20 @@ const Setup = ({ children }) => {
 
   const data = [
     {
-      label: "Create Roles",
+      label: "Add Roles",
       icon: PersonAddAlt1Outlined,
       href: `/setup/add-roles/${id}`,
       active: location.pathname === `/setup/add-roles/${id}`,
     },
     {
-      label: "Create Leave Types",
+      label: "Leave Types",
       icon: BeachAccessOutlined,
       href: `/setup/leave-types/${id}`,
       active: location.pathname === `/setup/leave-types/${id}`,
     },
 
     {
-      label: "Create Shift",
+      label: "Shift Allowance",
       icon: EventAvailableOutlined,
       href: `/setup/set-shifts/${id}`,
       active: location.pathname === `/setup/set-shifts/${id}`,
@@ -50,15 +50,15 @@ const Setup = ({ children }) => {
 
   return (
     <>
-      <section ction className="  bg-gray-50 min-h-screen w-full">
-        <header className="text-xl w-full pt-6 bg-white shadow-md  font-semibold p-4">
+      <section ction className=" bg-gray-50 min-h-screen w-full">
+        <header className="text-xl w-full pt-6 bg-white shadow-md   p-4">
           <Link to={"/"}>
             <West className="mx-4 !text-xl" />
           </Link>
           Organization Setup page
         </header>
         <article className="p-4 w-full h-full flex gap-4">
-          <aside className="w-[20%] h-max flex flex-col items-center shadow-md justify-center bg-white">
+          <aside className="md:w-[30%] lg:!w-[20%]  h-max flex flex-col items-center shadow-lg justify-center bg-white">
             <div className="px-4 py-3 gap-4 border-b-[.5px] flex w-full items-center border-gray-300">
               <div className="rounded-full h-[30px] w-[30px] flex items-center justify-center">
                 <SettingsOutlined className="!text-md text-sky-400 hover:!rotate-180  cursor-pointer" />
@@ -72,7 +72,7 @@ const Setup = ({ children }) => {
                 key={id}
                 className={`group ${
                   item.active && "bg-sky-100 !text-blue-500"
-                }  hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
+                }  hover:bg-sky-100 transition-all   flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
               >
                 <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />
                 <h1 className="group-hover:!text-blue-500 ">{item.label}</h1>

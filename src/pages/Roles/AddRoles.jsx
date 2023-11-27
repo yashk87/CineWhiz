@@ -199,21 +199,19 @@ const AddRoles = () => {
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <div className="SetupSection bg-white w-[80%]  shadow-md rounded-sm border  items-center">
+          <div className="SetupSection bg-white lg:!w-[80%] md:!w-[70%]   shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
               <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
                 <PersonAddOutlined className="!text-lg text-white" />
               </div>
-              <h1 className="!text-lg tracking-wide">
-                Add Roles for organization
-              </h1>
+              <h1 className="!text-lg italic">Add Roles for organization</h1>
             </div>
             {isLoading ? (
               <div className="space-y-4 flex flex-col flex-wrap">
                 {Array.from({ length: 5 }, (_, id) => (
                   <div
                     key={id}
-                    className="border-gray-200 flex justify-between p-2 rounded-md border-b-[.5px]"
+                    className=" flex justify-between p-2 rounded-md "
                   >
                     <div className="flex gap-2 w-full">
                       <Skeleton width={"5%"} height={45} />
@@ -228,7 +226,7 @@ const AddRoles = () => {
                 {roles.map((role, index) => (
                   <div
                     key={index}
-                    className="border-gray-200 flex justify-between py-2 px-6 border-b-[.5px]"
+                    className="border-gray-200 flex justify-between py-2 px-6 "
                   >
                     <FormControlLabel
                       control={
@@ -257,9 +255,12 @@ const AddRoles = () => {
               </div>
             )}
             <div className="w-max px-4 py-2 mt-2">
-              <Button onClick={sendRequestToBackend} variant="contained">
-                Apply
-              </Button>
+              <button
+                onClick={sendRequestToBackend}
+                className=" flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"
+              >
+                Apply Changes
+              </button>
             </div>
           </div>
         </Setup>
