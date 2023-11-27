@@ -18,6 +18,10 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import { Checkbox, ListItemText } from "@mui/material";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
+import axios from "axios";
+import { TestContext } from "../../State/Function/Main";
+import { useContext } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -31,6 +35,9 @@ const MenuProps = {
 const designationData = ["Manager", "Engineer", "Analyst", "Developer"];
 const locationData = ["Mumbai", "Delhi", "Pune"];
 const AddEmployee = () => {
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   const {
     first_name,
     setFirstName,
@@ -38,6 +45,8 @@ const AddEmployee = () => {
     setLastName,
     email,
     setEmail,
+    password,
+    setPassword,
     companyemail,
     setCompanyEmail,
     address,
@@ -65,9 +74,11 @@ const AddEmployee = () => {
     firstNameError,
     lastNameError,
     emailError,
+    passwordError,
     setFirstNameError,
     setLastNameError,
     setEmailError,
+    setPasswordError,
   } = useAddEmpForm();
   const handleEmploymentTypeChange = (event) => {
     setEmploymentType(event.target.value);
@@ -91,13 +102,16 @@ const AddEmployee = () => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return emailRegex.test(email);
   };
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const user = {
       first_name,
       last_name,
       email,
+      password,
       companyemail,
       address,
       phone_number,
@@ -112,6 +126,29 @@ const AddEmployee = () => {
       gender,
     };
     console.log("user", user);
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/add-employee`,
+        user,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      if (response.data.success) {
+        handleAlert(true, "error", "Invalid authorization");
+      } else {
+        handleAlert(true, "success", response.data.message);
+      }
+    } catch (error) {
+      handleAlert(
+        true,
+        "error",
+        error.response ? error.response.data.message : error.message
+      );
+    }
   };
 
   return (
@@ -213,6 +250,34 @@ const AddEmployee = () => {
                 fullWidth
                 margin="normal"
                 required
+              />
+              <TextField
+                size="small"
+                type="password"
+                label="Password"
+                name="password"
+                id="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (!e.target.value.match(passwordRegex)) {
+                    setPasswordError(
+                      "Password must contain at least one number , special character.and and min length is 8"
+                    );
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
+                required
+                fullWidth
+                margin="normal"
+                error={!!passwordError}
+                helperText={passwordError}
+                InputProps={{
+                  inputProps: {
+                    pattern: passwordRegex.source,
+                  },
+                }}
               />
               <TextField
                 size="small"
