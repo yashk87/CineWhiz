@@ -111,7 +111,7 @@ const SignIn = () => {
         </form>
         <div className="md:w-1/2 md:flex hidden p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-around">
           <img
-            src="/argan_logo.png"
+            src="Argan_new_logo.png"
             alt="My Img"
             className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
           />

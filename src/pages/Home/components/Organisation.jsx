@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Organisation = ({ item }) => {
   const navigate = useNavigate();
   const handleCreateProfile = () => {
-    navigate(`/organisation/${item._id}/add-employee`, {
+    navigate(`/organisation/${item._id}/add-profile`, {
       state: { orgName: item.name },
     });
   };
@@ -14,12 +14,6 @@ const Organisation = ({ item }) => {
       className=" hover:shadow-lg !transition-all  h-max    !w-[320px]"
       sx={{ overflow: "visible" }}
     >
-      {/* <CardMedia
-        component="img"
-        className="h-[140px] rounded-t-md"
-        image={"https://mui.com/static/images/cards/contemplative-reptile.jpg"}
-        alt="green iguana"
-      /> */}
       <Link
         to={`/organisation/${item._id}`}
         className=" cursor-pointerhover:scale-95 scroll-smooth transition-all"
@@ -37,23 +31,11 @@ const Organisation = ({ item }) => {
           <Typography variant="body2" color="text.secondary">
             Description : {item.description}
           </Typography>
-          {/* <Typography variant="body2" color="text.secondary">
-          Email : {item.email}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Contact Number : {item.contact_number}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Website : {item.web_url}
-        </Typography> */}
-          {/* <Typography variant="body2" color="text.secondary">
-              Foundation date : {item.foundation_date}
-            </Typography> */}
         </CardContent>
       </Link>
 
       <div className="space-x-4 p-2 pb-6">
-        <Link to={`/setup/${item._id}`}>
+        <Link to={`/setup/add-roles/${item._id}`}>
           <Button size="small" className=" cursor-pointer" variant="contained">
             Go to setuppage
           </Button>

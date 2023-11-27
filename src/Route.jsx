@@ -8,24 +8,26 @@ import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import Home from "./pages/Home/Home";
-import AddEmployee from "./pages/Home/components/addemployee";
+import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
+import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import Setup from "./pages/SetUpOrganization/Setup";
-import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations"
 import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import MyCalendar from "./pages/Test/test2";
+import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import UserProfile from "./pages/UserProfile/UserProfile";
 import Designation from "./pages/Designation/Designation";
 
+import AddEmployee from "./pages/AddEmployee/addemployee";
+import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 const App = () => {
   return (
     <Routes>
@@ -34,7 +36,7 @@ const App = () => {
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
-      <Route exact path="/add-organization-locations" element={<OrganizationLocation />} />
+      <Route exact path="/setup/add-organization-locations/:id" element={<OrganizationLocation />} />
       <Route exact path="/add-department" element={<Department />} />
       <Route exact path="/menu" element={<MyCalendar />} />
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
@@ -49,10 +51,14 @@ const App = () => {
       <Route exact path="/userprofile" element={<UserProfile />} />
       <Route
         exact
-        path="/organisation/:id/add-employee"
-        element={<AddEmployee />}
+        path="/organisation/:id/add-profile"
+        element={<AddProfile />}
       />
-      <Route exact path="/add-roles/:id" element={<AddRoles />} />
+
+      <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
+      <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
+      <Route exact path="/setup/set-shifts/:id" element={<Shifts />} />
+
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
       <Route exact path="/setup/:id" element={<Setup />} />
@@ -62,6 +68,7 @@ const App = () => {
         path="/setup/:id/public-holidays"
         element={<PublicHoliday />}
       />
+      <Route exact path="/add-employee" element={<AddEmployee />} />
     </Routes>
   );
 };

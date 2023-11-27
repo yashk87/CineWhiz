@@ -23,7 +23,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
-const AddEmployee = () => {
+const AddProfile = () => {
   const locations = useLocation();
   const { orgName } = locations.state;
 
@@ -42,7 +42,6 @@ const AddEmployee = () => {
     phone_number,
     emergency_contact,
     address,
-    location,
     firstNameError,
     lastNameError,
     emailError,
@@ -59,7 +58,6 @@ const AddEmployee = () => {
     setPhoneNumber,
     setEmergencyContact,
     setAddress,
-    setLocation,
     joining_date,
     setJoiningDate,
   } = useProfileForm();
@@ -118,6 +116,7 @@ const AddEmployee = () => {
           },
         }
       );
+      console.log("available profile", response.data.roles);
       if (response.data && response.data.roles) {
         if (response.data.roles.length > 0) {
           const filteredProfiles = response.data.roles.filter((role) => {
@@ -151,21 +150,6 @@ const AddEmployee = () => {
     e.preventDefault();
 
     try {
-      const isProfileData = await axios.post(
-        // "http://localhost:4000/route/employee/is-profiledata",
-        `${process.env.REACT_APP_API}/route/employee/is-profiledata`,
-        { profile }
-      );
-      if (isProfileData.data && isProfileData.data.employeesWithProfiles) {
-        const confirmCreateProfile = window.confirm(
-          `${profile} is already exist . Do you want to create one More ?`
-        );
-
-        if (!confirmCreateProfile) {
-          return;
-        }
-      }
-
       const user = {
         first_name,
         last_name,
@@ -175,10 +159,9 @@ const AddEmployee = () => {
         phone_number,
         emergency_contact,
         address,
-        location,
         gender,
         joining_date,
-        profile: profile.length <= 0 ? "Employee" : profile,
+        profile,
         organizationId: id,
         creatorId: userId,
       };
@@ -206,6 +189,15 @@ const AddEmployee = () => {
       );
     }
   };
+  // if (response.data && response.data.profile) {
+  //   const confirmCreateProfile = window.confirm(
+  //     `${profile} is already exist . Do you want to create one More ?`
+  //   );
+
+  //   if (!confirmCreateProfile) {
+  //     return;
+  //   }
+  // }
 
   const staticTitle = "This form for";
   return (
@@ -368,7 +360,6 @@ const AddEmployee = () => {
                 id="emergency_contact"
                 value={emergency_contact}
                 onChange={(e) => setEmergencyContact(e.target.value)}
-                required
                 fullWidth
                 margin="normal"
               />
@@ -380,18 +371,6 @@ const AddEmployee = () => {
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                required
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                size="small"
-                type="text"
-                label="Location"
-                name="location"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
                 required
                 fullWidth
                 margin="normal"
@@ -529,4 +508,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default AddProfile;

@@ -5,14 +5,18 @@ import CategoryIcon from "@mui/icons-material/Category";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EventNoteIcon from "@mui/icons-material/EventNote";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import ReportIcon from "@mui/icons-material/Report";
 import SettingsIcon from "@mui/icons-material/Settings";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import WorkIcon from "@mui/icons-material/Work";
+import MoneyIcon from "@mui/icons-material/Money";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import DescriptionIcon from "@mui/icons-material/Description";
 import {
   Accordion,
   AccordionDetails,
@@ -69,8 +73,10 @@ const NavItems = ({ toggleDrawer }) => {
         userRole.includes("Department Head") ||
         userRole.includes("Delagate Department Head") ||
         userRole.includes("HR") ||
-        userRole.includes("Delegate Hr") ||
-        userRole.includes("Super-Admin") ? (
+        userRole.includes("Super-Admin") ||
+        userRole.includes("Accoutant") ||
+        userRole.includes("Delegate Accoutant") ||
+        userRole.includes("Delegate Super Admin") ? (
           <List>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
@@ -98,6 +104,28 @@ const NavItems = ({ toggleDrawer }) => {
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
                         <ListItemIcon className="p-2 !min-w-[25px]">
+                          <DashboardIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Dashboard"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="#"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
                           <AccessTimeIcon className="text-white" />
                         </ListItemIcon>
                         <ListItemText
@@ -106,7 +134,7 @@ const NavItems = ({ toggleDrawer }) => {
                           }}
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
-                          primary={"Your Attendance"}
+                          primary={" Attendance"}
                         />
                       </ListItemButton>
                     </Link>
@@ -119,7 +147,7 @@ const NavItems = ({ toggleDrawer }) => {
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
                         <ListItemIcon className="p-2 !min-w-[25px]">
-                          <EventNoteIcon className="text-white" />
+                          <MoneyIcon className="text-white" />
                         </ListItemIcon>
                         <ListItemText
                           primaryTypographyProps={{
@@ -127,7 +155,28 @@ const NavItems = ({ toggleDrawer }) => {
                           }}
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
-                          primary={"Apply For Leave"}
+                          primary={"Allowance"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="#"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <WorkIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Shift Management"}
                         />
                       </ListItemButton>
                     </Link>
@@ -153,6 +202,27 @@ const NavItems = ({ toggleDrawer }) => {
                       </ListItemButton>
                     </Link>
                   </ListItem>
+                </AccordionDetails>
+              </Accordion>
+            </ListItem>
+
+            <ListItem onClick={(e) => e.stopPropagation()}>
+              <Accordion
+                expanded={true}
+                className="w-full !shadow-none border-[#0093d6] "
+                style={{ background: "rgb(14, 165, 233)" }}
+              >
+                <Accordion
+                  className="w-full !shadow-none border-[#0093d6] "
+                  style={{ background: "rgb(14, 165, 233)" }}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon className="text-white" />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography className="text-white">Payroll</Typography>
+                  </AccordionSummary>
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
@@ -161,7 +231,7 @@ const NavItems = ({ toggleDrawer }) => {
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
                         <ListItemIcon className="p-2 !min-w-[25px]">
-                          <ReportIcon className="text-white" />
+                          <ReceiptIcon className="text-white" />
                         </ListItemIcon>
                         <ListItemText
                           primaryTypographyProps={{
@@ -169,28 +239,57 @@ const NavItems = ({ toggleDrawer }) => {
                           }}
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
-                          primary={"Apply For Complaint"}
+                          primary={"Payslip"}
                         />
                       </ListItemButton>
                     </Link>
                   </ListItem>
-                </AccordionDetails>
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="#"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <AccountBalanceIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Income Tax"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="#"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <DescriptionIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Form-16"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                </Accordion>
               </Accordion>
             </ListItem>
-          </List>
-        ) : null)}
 
-      {userRole &&
-        (userRole.includes("Employee") ||
-        userRole.includes("Manager") ||
-        userRole.includes("Department Admin") ||
-        userRole.includes("Delagate Department Admin") ||
-        userRole.includes("Department Head") ||
-        userRole.includes("Delagate Department Head") ||
-        userRole.includes("HR") ||
-        userRole.includes("Delegate Hr") ||
-        userRole.includes("Super-Admin") ? (
-          <List>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={true}
@@ -260,7 +359,6 @@ const NavItems = ({ toggleDrawer }) => {
         (userRole.includes("Department Admin") ||
         userRole.includes("Delagate Department Admin") ||
         userRole.includes("HR") ||
-        userRole.includes("Delegate Hr") ||
         userRole.includes("Super-Admin") ? (
           <List>
             <ListItem onClick={(e) => e.stopPropagation()}>
@@ -621,6 +719,8 @@ const NavItems = ({ toggleDrawer }) => {
       {userRole &&
         (userRole.includes("HR") ||
         userRole.includes("Delegate Hr") ||
+        userRole.includes("Accoutant") ||
+        userRole.includes("Delegate Accoutant") ||
         userRole.includes("Super-Admin") ? (
           <List sx={{ padding: "0px" }}>
             <ListItem onClick={(e) => e.stopPropagation()}>
@@ -646,7 +746,11 @@ const NavItems = ({ toggleDrawer }) => {
         ) : null)}
 
       {userRole &&
-        (userRole.includes("Manager") ? (
+        (userRole.includes("Manager") ||
+        userRole.includes("Department Head") ||
+        userRole.includes("Delagate Department Head") ||
+        userRole.includes("Super-Admin") ||
+        userRole.includes("Delegate Super Admin") ? (
           <>
             <List sx={{ padding: "0px" }}>
               <ListItem onClick={(e) => e.stopPropagation()}>
