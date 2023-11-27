@@ -50,15 +50,28 @@ const AddRoles = () => {
       isApprover: false,
       isActive: false,
     },
+
     {
-      placeholder: "Department Head Delegate",
-      label: "delegateHr",
+      placeholder: "Manager",
+      label: "manager",
       isApprover: false,
       isActive: false,
     },
     {
-      placeholder: "Manager",
-      label: "manager",
+      placeholder: "Accoutant",
+      label: "accoutant",
+      isApprover: false,
+      isActive: false,
+    },
+    {
+      placeholder: "Delegate Accoutant",
+      label: "delegateAccoutant",
+      isApprover: false,
+      isActive: false,
+    },
+    {
+      placeholder: "Delegate Super Admin",
+      label: "delegateSuperAdmin",
       isApprover: false,
       isActive: false,
     },

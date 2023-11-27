@@ -100,14 +100,14 @@ const TestNavItems = ({ toggleDrawer }) => {
             <ListItem onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={role === "Self Help" ? true : undefined}
-                className="w-full !shadow-none border-[#0093d6] border-none"
+                className="w-full !shadow-none border-[#0093d6] border-none !m-0"
                 style={{ background: "rgb(14, 165, 233)" }}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMore className="text-white" />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  className="flex gap-2"
+                  className="flex gap-2 !m-0"
                 >
                   <ListItemIcon className="p-2 !min-w-[25px]">
                     {icon}
