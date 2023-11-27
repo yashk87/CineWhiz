@@ -166,7 +166,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           <ul className=" flex flex-col justify-between ">
             {leaveTypes.map((leaveType, index) => (
               <li
-                className="flex gap-4 justify-between  py-2 px-6 border-gray-200 border-b-[.5px]"
+                className="flex gap-4 justify-between  py-2 px-6 "
                 key={index}
               >
                 <FormControlLabel

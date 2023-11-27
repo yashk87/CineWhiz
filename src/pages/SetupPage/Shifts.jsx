@@ -35,11 +35,14 @@ import { useContext } from "react";
 import { TestContext } from "../../State/Function/Main";
 import randomColor from "randomcolor";
 import WarningIcon from "@mui/icons-material/Warning";
-import { AccessTimeFilled, Info, MoreTime } from "@mui/icons-material";
+import {
+  AccessTimeFilled,
+  EventAvailableOutlined,
+  Info,
+  MoreTime,
+} from "@mui/icons-material";
 import dayjs from "dayjs";
 import Setup from "../SetUpOrganization/Setup";
-
-const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const Shifts = () => {
   const { id } = useParams("");
@@ -48,11 +51,6 @@ const Shifts = () => {
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
-  const [selectedStartTime, setSelectedStartTime] = useState(null);
-  const [selectedEndTime, setSelectedEndTime] = useState(null);
-  const [workingFrom, setWorkingFrom] = useState("");
-  const [shiftName, setShiftName] = useState("");
-  const [selectedDays, setSelectedDays] = useState([]);
   const [error, setError] = useState("");
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
@@ -119,249 +117,192 @@ const Shifts = () => {
     handleCloseConfirmation();
   };
 
-  const handleStartTimeChange = (time) => {
-    setSelectedStartTime(time);
-  };
-
-  const handleEndTimeChange = (time) => {
-    setSelectedEndTime(time);
-  };
-
-  const handleDaySelection = (event, newSelectedDays) => {
-    setSelectedDays(newSelectedDays);
-  };
-
   const convertTo12HourFormat = (timeString) => {
     const [hours, minutes] = timeString.split(":");
     const newDate = dayjs().hour(parseInt(hours)).minute(parseInt(minutes));
     return newDate.format("h:mm A");
   };
-  const isSelected = (day) => {
-    return selectedDays.includes(day);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const startTime = selectedStartTime;
-    const endTime = selectedEndTime;
-    // console.log(startTime);
-
-    if (!startTime || !endTime || selectedDays.length === 0) {
-      setError("Please fill in all the mandatory fields");
-      return;
-    }
-
-    const timeDiffInMilliseconds = endTime - startTime;
-    const timeDiffInMinutes = timeDiffInMilliseconds / (1000 * 60);
-
-    if (timeDiffInMinutes >= 540) {
-      try {
-        const data = {
-          startTime,
-          endTime,
-          selectedDays,
-          workingFrom,
-          shiftName,
-        };
-
-        const response = await Axios.post(
-          "http://localhost:4000/route/shifts/create",
-          data
-        );
-
-        if (response.status === 201) {
-          setError("");
-          setSelectedStartTime("");
-          setSelectedEndTime("");
-          setWorkingFrom(""); // Clear workingFrom
-          setShiftName("");
-          setSelectedDays([]); // Clear selectedDays
-        } else {
-          setError("Failed to create a new shift");
-        }
-      } catch (error) {
-        console.error(error);
-        setError("An error occurred while creating a new shift");
-      }
-    } else {
-      setError("Time difference must be 9 hours or greater");
-    }
-  };
-
-
 
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
         <Setup>
-          <div className="flex justify-between w-full  py-8  h-max items-center">
-            <div>
-              <h1 className="text-xl font-semibold">Shift Section</h1>
-              <p className="text-md">Setup shifts for the organization</p>
+          <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
+            <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
+              <div className="flex items-center  gap-3 ">
+                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                  <EventAvailableOutlined className="!text-lg text-white" />
+                </div>
+                <h1 className="!text-lg tracking-wide">
+                  Create shifts for organization
+                </h1>
+              </div>
+              <Button
+                className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                onClick={handleOpen}
+                variant="contained"
+              >
+                <MoreTime className="!text-md" />
+                Create Shift
+              </Button>
             </div>
-            <Button
-              className="!font-semibold flex items-center gap-2"
-              onClick={handleOpen}
-              variant="contained"
-            >
-              <MoreTime className="!text-md" />
-              Create Shift
-            </Button>
-          </div>
 
-          <article>
-            <div className="flex flex-col">
-              <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-                  {isLoading ? (
-                    <div className="space-y-2">
-                      <Skeleton
-                        variant="rounded"
-                        className="!w-full !h-[5vh]"
-                      />
-                      <Skeleton
-                        variant="rounded"
-                        className="!w-full !h-[5vh]"
-                      />
-                    </div>
-                  ) : data?.shifts.length > 0 ? (
-                    <div className="overflow-hidden !rounded-md border-[.5px] border-gray-200">
-                      <table className="min-w-full bg-white  text-left text-sm font-light">
-                        <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                          <tr className=" shadow-lg">
-                            <th scope="col" className="px-6 py-3 ">
-                              SR NO
-                            </th>
-                            <th scope="col" className="px-6 py-3 ">
-                              Shift Name
-                            </th>
-                            <th scope="col" className="px-6 py-3 ">
-                              Working From
-                            </th>
-                            <th scope="col" className="px-6 py-3 ">
-                              Shift start time
-                            </th>
-                            <th scope="col" className="px-6 py-3 ">
-                              Shift ends time
-                            </th>
-                            <th scope="col" className="px-6 py-3 ">
-                              Week days
-                            </th>
-                            <th scope="col" className="px-6 py-3 ">
-                              Actions
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data?.shifts &&
-                            data?.shifts?.map((items, index) => (
-                              <tr
-                                id={index}
-                                key={index}
-                                className={`${
-                                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                                } border-b dark:border-neutral-500`}
-                              >
-                                <td className="whitespace-nowrap px-6 py-2 font-medium">
-                                  {index + 1}
-                                </td>
-                                <td className="whitespace-nowrap px-6 py-2">
-                                  {items.shiftName}
-                                </td>
-                                <td className="whitespace-nowrap px-6 py-2">
-                                  {items.workingFrom}
-                                </td>
-                                <td className="whitespace-nowrap font-semibold px-6 py-2">
-                                  <Chip
-                                    icon={<AccessTimeFilled />}
-                                    size="small"
-                                    variant="outlined"
-                                    color="success"
-                                    label={convertTo12HourFormat(
-                                      items.startTime
-                                    )}
-                                  />
-                                </td>
-                                <td className="whitespace-nowrap font-semibold px-6 py-2">
-                                  <Chip
-                                    icon={<AccessTimeFilled />}
-                                    variant="outlined"
-                                    size="small"
-                                    color="success"
-                                    label={convertTo12HourFormat(items.endTime)}
-                                  />
-                                </td>
+            <article className="h-max">
+              <div className="flex h-full flex-col">
+                <div className=" h-full">
+                  <div className="min-w-full">
+                    {isLoading ? (
+                      <div className="space-y-2">
+                        <Skeleton
+                          variant="rounded"
+                          className="!w-full !h-[5vh]"
+                        />
+                        <Skeleton
+                          variant="rounded"
+                          className="!w-full !h-[5vh]"
+                        />
+                      </div>
+                    ) : data?.shifts.length > 0 ? (
+                      <div className="overflow-hidden  !p-0  border-[.5px] border-gray-200">
+                        <table className="min-w-full bg-white  text-left text-sm font-light">
+                          <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
+                            <tr className="!font-medium shadow-lg">
+                              <th scope="col" className="px-6 py-3 ">
+                                SR NO
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
+                                Shift Name
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
+                                Working From
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
+                                Shift start time
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
+                                Shift ends time
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
+                                Week days
+                              </th>
+                              <th scope="col" className="px-6 py-3 ">
+                                Actions
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data?.shifts &&
+                              data?.shifts?.map((items, index) => (
+                                <tr
+                                  id={index}
+                                  key={index}
+                                  className={`${
+                                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                                  } border-b dark:border-neutral-500`}
+                                >
+                                  <td className="whitespace-nowrap px-6 py-2 font-medium">
+                                    {index + 1}
+                                  </td>
+                                  <td className="whitespace-nowrap px-6 py-2">
+                                    {items.shiftName}
+                                  </td>
+                                  <td className="whitespace-nowrap px-6 py-2">
+                                    {items.workingFrom}
+                                  </td>
+                                  <td className="whitespace-nowrap font-semibold px-6 py-2">
+                                    <Chip
+                                      icon={<AccessTimeFilled />}
+                                      size="small"
+                                      variant="outlined"
+                                      color="success"
+                                      label={convertTo12HourFormat(
+                                        items.startTime
+                                      )}
+                                    />
+                                  </td>
+                                  <td className="whitespace-nowrap font-semibold px-6 py-2">
+                                    <Chip
+                                      icon={<AccessTimeFilled />}
+                                      variant="outlined"
+                                      size="small"
+                                      color="success"
+                                      label={convertTo12HourFormat(
+                                        items.endTime
+                                      )}
+                                    />
+                                  </td>
 
-                                <td className="whitespace-nowrap text-left px-6 py-2">
-                                  <AvatarGroup max={6}>
-                                    {items?.selectedDays.map((item) => (
-                                      <Avatar
-                                        src="dsadsa"
-                                        key={item}
-                                        className="!text-xs "
-                                        sx={{
-                                          width: 35,
-                                          height: 35,
-                                          backgroundColor: randomColor({
-                                            seed: item,
-                                            luminosity: "dark",
-                                          }),
-                                        }}
-                                      >
-                                        {item.slice(0, 3)}
-                                      </Avatar>
-                                    ))}
-                                  </AvatarGroup>
-                                </td>
-                                {/* <td className=" px-6  flex gap-6 flex-wrap  py-2">
+                                  <td className="whitespace-nowrap text-left px-6 py-2">
+                                    <AvatarGroup max={6}>
+                                      {items?.selectedDays.map((item) => (
+                                        <Avatar
+                                          src="dsadsa"
+                                          key={item}
+                                          className="!text-xs "
+                                          sx={{
+                                            width: 35,
+                                            height: 35,
+                                            backgroundColor: randomColor({
+                                              seed: item,
+                                              luminosity: "dark",
+                                            }),
+                                          }}
+                                        >
+                                          {item.slice(0, 3)}
+                                        </Avatar>
+                                      ))}
+                                    </AvatarGroup>
+                                  </td>
+                                  {/* <td className=" px-6  flex gap-6 flex-wrap  py-2">
                               {items?.selectedDays.map((item) => (
                                 <Badge badgeContent={item} color="primary" />
                               ))}
                             </td> */}
-                                <td className="whitespace-nowrap px-6 py-2">
-                                  <IconButton
-                                    onClick={() =>
-                                      handleDeleteConfirmation(items._id)
-                                    }
-                                  >
-                                    <DeleteIcon
-                                      className="!text-xl"
-                                      color="error"
-                                    />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={() =>
-                                      handleEditModalOpen(items._id)
-                                    }
-                                  >
-                                    <BorderColorIcon
-                                      className="!text-xl"
-                                      color="success"
-                                    />
-                                  </IconButton>
-                                </td>
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
-                      <article className="flex items-center mb-1 text-red-500 gap-4">
-                        <Info className="!text-3xl" />
-                        <h1 className="text-2xl font-semibold">
-                          Shift Not found
-                        </h1>
-                      </article>
-                      <p>
-                        There are no shifts for the organization. Please create
-                        a shift to view the preview.
-                      </p>
-                    </section>
-                  )}
+                                  <td className="whitespace-nowrap px-6 py-2">
+                                    <IconButton
+                                      onClick={() =>
+                                        handleDeleteConfirmation(items._id)
+                                      }
+                                    >
+                                      <DeleteIcon
+                                        className="!text-xl"
+                                        color="error"
+                                      />
+                                    </IconButton>
+                                    <IconButton
+                                      onClick={() =>
+                                        handleEditModalOpen(items._id)
+                                      }
+                                    >
+                                      <BorderColorIcon
+                                        className="!text-xl"
+                                        color="success"
+                                      />
+                                    </IconButton>
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <section className="bg-white shadow-md py-6 px-8 rounded-md w-full">
+                        <article className="flex items-center mb-1 text-red-500 gap-2">
+                          <Info className="!text-2xl" />
+                          <h1 className="text-xl font-semibold">
+                            Shift Not found
+                          </h1>
+                        </article>
+                        <p>
+                          There are no shifts for the organization. Please
+                          create a shift to view the preview.
+                        </p>
+                      </section>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            </article>
           </article>
         </Setup>
       </section>
