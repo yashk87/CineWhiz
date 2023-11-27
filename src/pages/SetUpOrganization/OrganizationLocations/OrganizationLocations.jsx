@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -21,43 +21,62 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import Selector from "./selector";
 import { Country, State } from "country-state-city";
 import axios from 'axios';
-import { useContext } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
+import { useParams } from "react-router-dom";
 
 const OrganizationLocation = () => {
   const { cookies } = useContext(UseContext);
-  const authToken = cookies("aeigs")
-  const { handleAlert } = useContext(TestContext)
-
+  const authToken = cookies["aeigs"];
+  const { handleAlert } = useContext(TestContext);
+  const organizationId = useParams().id;
+  let countryData = Country.getAllCountries();
+  const continents = [
+    {name:"Asia"},
+    {name:"Africa"},
+    {name:"Europe"},
+    {name:"North America"},
+    {name:"South America"},
+    {name:"Australia"},
+    {name:"Antartica"}
+]
   
-  // const initialLocationValue = {
-  //   country: "",
-  //   state: "",
-  //   city: "",
-  //   pinCode: "",
-  //   addressLine1: "",
-  //   addressLine2: ""
-  // };
-  // const [location, setLocation] = useState(initialLocationValue);
-
-  const [open, setOpen] = useState(false);
   const [locationList, setLocationList] = useState([]);
   const [addressLine1, setAddressLine1] = useState("");
   const [addressLine2, setAddressLine2] = useState("");
   const [city, setCity] = useState("");
+  const [continent, setContinent] = useState(continents[0] || "");
+  const [shortName, setShortName] = useState("");
   const [pinCode, setPinCode] = useState("");
-  const [country, setCountry] = useState(Country.getAllCountries()[0]);
-  const [stateData, setStateData] = useState([]);
-  const [state, setState] = useState("");
+  const [country, setCountry] = useState(countryData[0]);
+  const [stateData, setStateData] = useState(State.getStatesOfCountry(country?.name));
+  const [state, setState] = useState(stateData[0]?.name || "");
   const [editIndex, setEditIndex] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchLocationList = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
+          headers: {
+            Authorization: authToken,
+          },
+        });
+        setLocationList(response.data);
+      } catch (error) {
+        console.error(error.response.data.message);
+      }
+    };
+
+    fetchLocationList();
+  }, [authToken]);
 
   useEffect(() => {
     setStateData(State.getStatesOfCountry(country?.isoCode));
   }, [country]);
 
   useEffect(() => {
-    stateData && setState(stateData[0]?.name);
+    stateData && setState(stateData[0]);
   }, [stateData]);
 
   const handleOpen = () => {
@@ -75,7 +94,7 @@ const OrganizationLocation = () => {
     setCountry(Country.getAllCountries()[0]);
   };
 
-  const handleAddLocation = async(e) => {
+  const handleAddLocation = async () => {
     const newLocation = {
       country: country.name,
       state: state.name,
@@ -83,37 +102,29 @@ const OrganizationLocation = () => {
       pinCode,
       addressLine1,
       addressLine2,
+      organizationId,
     };
-    
-    e.preventDefault();
-    try{
-      await axios.post("http://localhost:4000/route/location/addOrganizationLocations",
-      newLocation,
-      {
+    try {
+      await axios.post("http://localhost:4000/route/location/addOrganizationLocations", newLocation, {
         headers: {
           Authorization: authToken,
         },
-      }
-    );
-      handleAlert(true, "success", `Location added successfully`);
+      });
+
+      const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+      setLocationList(response.data);
+
+      handleAlert(true, "success", "Location added successfully");
       handleClose();
-      // window.location.reload();
     } catch (error) {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
     }
   };
-
-    // if (editIndex !== null) {
-    //   const updatedList = [...locationList];
-    //   updatedList[editIndex] = newLocation;
-    //   setLocationList(updatedList);
-    // } else {
-    //   setLocationList([...locationList, newLocation]);
-    // }
-
-    // handleClose();
-  // };
 
   const handleEditLocation = (index) => {
     setEditIndex(index);
@@ -121,20 +132,112 @@ const OrganizationLocation = () => {
     setAddressLine1(selectedLocation.addressLine1);
     setAddressLine2(selectedLocation.addressLine2);
     setCity(selectedLocation.city);
-    setState(selectedLocation.state);
     setPinCode(selectedLocation.pinCode);
+    const selectedCountry = Country.getAllCountries().find(
+        (country) => country.name === selectedLocation.country
+      )
+      console.log(selectedCountry);
     setCountry(
       Country.getAllCountries().find(
         (country) => country.name === selectedLocation.country
       ) || null
     );
+    // console.log(Country.getAllCountries().find(
+    //   (country) => country.name === selectedLocation.country
+    // ).getStatesOfCountry);
+    // let selectedStates = State.getStatesOfCountry(selectedLocation.country?.name);
+    // console.log(State.getStatesOfCountry(selectedLocation.country));
+    // setStateData(State.getStatesOfCountry(country?.name));
+    setState(
+      State.getStatesOfCountry(selectedCountry).find(
+        (state) => {
+          return state.name === selectedLocation.state}
+      ))
+      
+      // console.log(selectedCountry);
+      // console.log(state);
     setOpen(true);
-  };
+  // };
 
-  const handleDeleteLocation = (index) => {
-    const updatedList = [...locationList];
-    updatedList.splice(index, 1);
-    setLocationList(updatedList);
+  // const handleEditLocation = async ( index ) => {
+  //     setEditIndex(index);
+  //   const newLocation = {
+  //     country:locationList[index].country,
+  //     state:locationList[index].state,
+  //     city:locationList[index].city,
+  //     pinCode:locationList[index].pinCode,
+  //     addressLine1:locationList[index].addressLine1,
+  //     addressLine2:locationList[index].addressLine2,
+  //     organizationId:locationList[index].organizationId,
+  //   };
+  //   setOpen(true)
+    // try {
+    //   await axios.put(`http://localhost:4000/route/location/updateOrganizationLocations/${locationList[index]._id}`, newLocation, {
+    //     headers: {
+    //       Authorization: authToken,  
+    //     },
+    //   });
+
+    //   const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
+    //     headers: {
+    //       Authorization: authToken,
+    //     },
+    //   });
+    //   setLocationList(response.data);
+
+    //   handleAlert(true, "success", "Location added successfully");
+    //   handleClose();
+    // } catch (error) {
+    //   console.error(error.response.data.message);
+    //   handleAlert(true, "error", error.response.data.message);
+    // }
+
+  }
+  const handleUpdateLocation = async ( index ) => {
+    setEditIndex(index);
+    
+    const newLocation = {
+      country: country.name,
+      state: state.name,
+      city,
+      pinCode,
+      addressLine1,
+      addressLine2,
+      organizationId,
+    };
+    try{
+      
+      await axios.put(`http://localhost:4000/route/location/updateOrganizationLocation/${locationList[index]._id}`, newLocation, {
+        headers: {
+          Authorization: authToken,  
+        },
+    })} catch (error) {
+    console.error(error.response.data.message);
+    handleAlert(true, "error", error.response.data.message);
+  }
+};
+
+
+  const handleDeleteLocation = async (index) => {
+    try {
+      await axios.delete(`http://localhost:4000/route/location/deleteOrganizationLocation/${locationList[index]._id}`, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+
+      const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
+        headers: {
+          Authorization: authToken,
+        },
+      });
+      setLocationList(response.data);
+
+      handleAlert(true, "success", "Location deleted successfully");
+    } catch (error) {
+      console.error(error.response.data.message);
+      handleAlert(true, "error", error.response.data.message);
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -170,56 +273,56 @@ const OrganizationLocation = () => {
         >
           <FormattedMessage id="addLocation" defaultMessage="Add Location" />
         </Button>
-        {locationList.length === 0 ?(
+        {locationList.length === 0 ? (
           <Typography variant="body1">No Locations Added</Typography>
-        ):(
-        <List>
-          {locationList.map((location, index) => (
-            <ListItem key={index} style={{ marginBottom: "8px" }}>
-              <Card
-                variant="outlined"
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <CardContent>
-                  <Typography variant="body1">
-                    {location.country && `${location.country}, `}
-                    {location.state && `${location.state}, `}
-                    {location.city && `${location.city}, `}
-                    {location.pinCode && `${location.pinCode}, `}
-                    {location.addressLine1 && `${location.addressLine1}, `}
-                    {location.addressLine2 && `${location.addressLine2}.`}
-                  </Typography>
-                </CardContent>
-                <CardActions
+        ) : (
+          <List>
+            {locationList.map((location, index) => (
+              <ListItem key={index} style={{ marginBottom: "8px" }}>
+                <Card
+                  variant="outlined"
                   style={{
+                    width: "100%",
                     display: "flex",
-                    flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <div>
-                    <IconButton
-                      onClick={() => handleEditLocation(index)}
-                      aria-label="edit"
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={() => handleDeleteLocation(index)}
-                      aria-label="delete"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </div>
-                </CardActions>
-              </Card>
-            </ListItem>
-          ))}
-        </List>
+                  <CardContent>
+                    <Typography variant="body1">
+                      {location.country && `${location.country}, `}
+                      {location.state && `${location.state}, `}
+                      {location.city && `${location.city}, `}
+                      {location.pinCode && `${location.pinCode}, `}
+                      {location.addressLine1 && `${location.addressLine1}, `}
+                      {location.addressLine2 && `${location.addressLine2}.`}
+                    </Typography>
+                  </CardContent>
+                  <CardActions
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <IconButton
+                        onClick={() => handleEditLocation(index)}
+                        aria-label="edit"
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDeleteLocation(index)}
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                  </CardActions>
+                </Card>
+              </ListItem>
+            ))}
+          </List>
         )}
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
           <DialogTitle>
@@ -236,6 +339,25 @@ const OrganizationLocation = () => {
             )}
           </DialogTitle>
           <DialogContent>
+            <div style={{ display: "flex", gap: "8px", marginTop: "8px", marginBottom: "8px" }}>
+              <div>
+                <p>Continent:</p>
+                <Selector
+                  key={1}
+                  data={continents}
+                  selected={continent}
+                  setSelected={setContinent}
+                />
+              </div>
+              <TextField
+                label={<FormattedMessage id="shortname" defaultMessage="ShortName" />}
+                variant="outlined"
+                value={shortName}
+                onChange={(e) => setShortName(e.target.value)}
+                fullWidth
+                style={{ marginTop: "8px" }}
+              />
+            </div>
             <div style={{ display: "flex", gap: "8px", marginTop: "8px", marginBottom: "8px" }}>
               <div>
                 <p>Country:</p>
@@ -305,7 +427,7 @@ const OrganizationLocation = () => {
             <Button onClick={handleClose} color="secondary">
               <FormattedMessage id="cancel" defaultMessage="Cancel" />
             </Button>
-            <Button onClick={handleAddLocation} color="primary">
+            <Button onClick={handleUpdateLocation} color="primary">
               {editIndex !== null ? (
                 <FormattedMessage id="saveChanges" defaultMessage="Save Changes" />
               ) : (
