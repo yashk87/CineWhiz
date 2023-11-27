@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  InputLabel,
-  Modal,
-  OutlinedInput,
-  Stack,
-} from "@mui/material";
+import { Button, InputLabel, OutlinedInput, Stack } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 
 import "../../../index.css";
@@ -13,7 +6,6 @@ import "../../../index.css";
 import SendIcon from "@mui/icons-material/Send";
 import {
   Checkbox,
-  Divider,
   FormControl,
   FormControlLabel,
   IconButton,
@@ -21,14 +13,13 @@ import {
   TextField,
 } from "@mui/material";
 
+import { BeachAccessOutlined } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
-import Close from "@mui/icons-material/Close";
 import axios from "axios";
 import randomColor from "randomcolor";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { BeachAccessOutlined, PersonAddOutlined } from "@mui/icons-material";
 import Setup from "../Setup";
 
 const LeaveTypes = ({ open, handleClose, id }) => {
@@ -36,14 +27,28 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   const authToken = cookies["aeigs"];
   const [leaveTypes, setLeaveTypes] = useState([
     {
-      leaveName: "Vacation Leave",
-      isActive: false,
-      count: 0,
+      leaveName: "Sick Leave",
+      isActive: true,
+      color: "#00ffcc",
+      count: 2,
     },
     {
-      leaveName: "Sick Leave",
-      isActive: false,
-      count: 0,
+      leaveName: "Vacation Leave",
+      isActive: true,
+      color: "#C90498",
+      count: 4,
+    },
+    {
+      leaveName: "Special Leave",
+      isActive: true,
+      color: "#CEB10A",
+      count: 4,
+    },
+    {
+      leaveName: "Holiday Leave",
+      isActive: true,
+      color: "#1D6EB7",
+      count: 4,
     },
   ]);
   const { data: newLeaveTypes = [] } = useQuery("leaveTypes", async () => {
@@ -60,11 +65,12 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   });
 
   // Initialize newLeaveType with the first leave type from the fetched data
-  useEffect(() => {
-    if (newLeaveTypes.length > 0) {
-      setLeaveTypes(newLeaveTypes[0].typesOfLeave);
-    }
-  }, [newLeaveTypes]);
+  // useEffect(() => {
+  //   console.log(`🚀 ~ newLeaveTypes:`, newLeaveTypes);
+  //   if (newLeaveTypes.length > 0) {
+  //     setLeaveTypes(newLeaveTypes[0].typesOfLeave);
+  //   }
+  // }, [newLeaveTypes]);
   useEffect(() => {
     setLeaveTypes((prevLeaveTypes) => {
       const updatedLeaveTypes = prevLeaveTypes?.map((leaveType) => ({
@@ -76,6 +82,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       }));
       return updatedLeaveTypes;
     });
+    console.log(`🚀 ~ leaveTypes:`, leaveTypes);
   }, [leaveTypes.length]);
 
   const [newLeaveType, setNewLeaveType] = useState("");
@@ -110,7 +117,11 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     }
     setLeaveTypes(updatedLeaveTypes);
   };
-
+  const handleLeaveColorChange = (index, color) => {
+    const updatedLeaveTypes = [...leaveTypes];
+    updatedLeaveTypes[index].color = color;
+    setLeaveTypes(updatedLeaveTypes);
+  };
   const handleLeaveCountChange = (index, count) => {
     const updatedLeaveTypes = [...leaveTypes];
     updatedLeaveTypes[index].count = parseInt(count);
@@ -180,29 +191,31 @@ const LeaveTypes = ({ open, handleClose, id }) => {
                       }
                     />
                   )}
-                  <div
-                    className="rounded-full overflow-hidden relative"
-                    style={{
-                      height: "40px", // adjust the size as needed
-                      width: "40px",
-                    }}
-                  >
-                    <input
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  {leaveType.isActive && (
+                    <div
+                      className="rounded-full overflow-hidden relative"
                       style={{
-                        height: "60px", // adjust the size as needed
-                        width: "60px",
-                        padding: "0",
-                        border: "none",
+                        height: "40px", // adjust the size as needed
+                        width: "40px",
                       }}
-                      type="color"
-                      id="favcolor"
-                      value={leaveType.color}
-                      onChange={(e) =>
-                        handleLeaveCountChange(index, e.target.value)
-                      }
-                    />
-                  </div>
+                    >
+                      <input
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          height: "60px", // adjust the size as needed
+                          width: "60px",
+                          padding: "0",
+                          border: "none",
+                        }}
+                        type="color"
+                        id="favcolor"
+                        value={leaveType.color}
+                        onChange={(e) =>
+                          handleLeaveColorChange(index, e.target.value)
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               </li>
             ))}

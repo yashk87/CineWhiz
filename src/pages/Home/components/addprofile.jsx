@@ -150,20 +150,6 @@ const AddProfile = () => {
     e.preventDefault();
 
     try {
-      const isProfileData = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/is-profiledata`,
-        { profile }
-      );
-      if (isProfileData.data && isProfileData.data.employeesWithProfiles) {
-        const confirmCreateProfile = window.confirm(
-          `${profile} is already exist . Do you want to create one More ?`
-        );
-
-        if (!confirmCreateProfile) {
-          return;
-        }
-      }
-
       const user = {
         first_name,
         last_name,
@@ -203,6 +189,15 @@ const AddProfile = () => {
       );
     }
   };
+  // if (response.data && response.data.profile) {
+  //   const confirmCreateProfile = window.confirm(
+  //     `${profile} is already exist . Do you want to create one More ?`
+  //   );
+
+  //   if (!confirmCreateProfile) {
+  //     return;
+  //   }
+  // }
 
   const staticTitle = "This form for";
   return (
