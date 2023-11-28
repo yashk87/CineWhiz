@@ -83,7 +83,7 @@ export default function ProfileIcon() {
         }}
       >
         {token ? (
-          <>
+          <div>
             <MenuItem
               key="info"
               className="flex !w-[230px] flex-col !z-10 !px-0 mx-4 !py-0   !items-start !justify-start"
@@ -138,7 +138,7 @@ export default function ProfileIcon() {
                 <ExitToAppIcon className="!text-[19px]" /> Log out
               </div>
             </MenuItem>
-          </>
+          </div>
         ) : (
           <>
             <Link key="sign-up-link" to="/sign-up">
