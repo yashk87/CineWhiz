@@ -13,7 +13,7 @@ const Department = () => {
     departmentName: "",
     departmentDescription: "",
     departmentLocation: "",
-    costCenter: "",
+    costCenterPrefix: "",
     costCenterDescription: "",
     departmentHeadName: "",
     departmentHeadDelegateName: "",
@@ -161,9 +161,9 @@ const Department = () => {
               required
               size="small"
               fullWidth
-              name="costCenter"
+              name="costCenterPrefix"
               inputProps={{
-                value: formValues.costCenter,
+                value: formValues.costCenterPrefix,
               }}
               label="Cost Center (Prefix)"
               type="text"
