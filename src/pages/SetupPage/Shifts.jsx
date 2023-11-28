@@ -4,26 +4,14 @@ import {
   AvatarGroup,
   Button,
   Chip,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   Skeleton,
-  TextField,
-  Typography,
 } from "@mui/material";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Axios from "axios";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ShiftDisplay from "./ShiftDisplay";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShiftModal from "../../components/Modal/shift/ShiftModal";
@@ -79,6 +67,7 @@ const Shifts = () => {
 
   const handleEditModalOpen = (shiftId) => {
     setEditModalOpen(true);
+    console.log(shiftId);
     queryClient.invalidateQueries(["shift", ShiftId]);
     setShiftId(shiftId); // Set the shiftId for editing
   };
@@ -162,8 +151,8 @@ const Shifts = () => {
                           className="!w-full !h-[5vh]"
                         />
                       </div>
-                    ) : data?.shifts.length > 0 ? (
-                      <div className="overflow-hidden  !p-0  border-[.5px] border-gray-200">
+                    ) : data?.shifts?.length > 0 ? (
+                      <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
                         <table className="min-w-full bg-white  text-left text-sm font-light">
                           <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                             <tr className="!font-medium shadow-lg">

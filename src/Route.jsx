@@ -27,6 +27,8 @@ import Department from "./pages/addDepartment/addDepartment";
 import Designation from "./pages/Designation/Designation";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
+import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
+import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Inputfield from "./pages/SetupPage/inputfield";
 const App = () => {
   return (
@@ -63,6 +65,16 @@ const App = () => {
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
       <Route exact path="/setup/set-shifts/:id" element={<Shifts />} />
+      <Route
+        exact
+        path="/setup/employement-types/:id"
+        element={<EmployementTypes />}
+      />
+      <Route
+        exact
+        path="/setup/salary-input-selection/:id"
+        element={<SalaryInput />}
+      />
 
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
