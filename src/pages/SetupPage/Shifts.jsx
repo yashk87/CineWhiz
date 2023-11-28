@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -10,7 +11,6 @@ import {
   IconButton,
   Skeleton,
 } from "@mui/material";
-import React, { useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -378,13 +378,14 @@ const Shifts = () => {
             size="small"
           >
             <InputLabel id="industry-type-label">working from</InputLabel>
-            <Select labelId="industry-type-label" id="industry-type">
-              <MenuItem onClick={() => setWorkingFrom("Remote")} value="Remote">
-                Remote
-              </MenuItem>
-              <MenuItem onClick={() => setWorkingFrom("Office")} value="Office">
-                Office
-              </MenuItem>
+            <Select
+              labelId="industry-type-label"
+              id="industry-type"
+              value={workingFrom || ""}
+              onChange={(e) => setWorkingFrom(e.target.value)}
+            >
+              <MenuItem value="Remote">Remote</MenuItem>
+              <MenuItem value="Office">Office</MenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -395,7 +396,7 @@ const Shifts = () => {
             className="w-[80%]"
             label="what is your shift name"
             type="text"
-            value={shiftName}
+            value={shiftName || ""}
             onChange={(e) => setShiftName(e.target.value)}
           />
 

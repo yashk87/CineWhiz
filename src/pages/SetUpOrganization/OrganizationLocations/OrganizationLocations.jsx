@@ -53,6 +53,7 @@ const OrganizationLocation = () => {
     State.getStatesOfCountry(country?.name)
   );
   const [state, setState] = useState(stateData[0]?.name || "");
+  console.log(`🚀 ~ state:`, state);
   const [editIndex, setEditIndex] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -77,15 +78,26 @@ const OrganizationLocation = () => {
   }, [authToken]);
 
   useEffect(() => {
-    console.log("open", open);
+    console.log("open runed");
+    setStateData(State.getStatesOfCountry(country?.isoCode));
     if (!open) {
       console.log(`🚀 ~ country:`, country);
+    } else {
+      console.log(`🚀 ~ country?.isoCode:`, country?.isoCode);
+      console.log(
+        `🚀 ~ State.getStatesOfCountry(country?.isoCode):`,
+        State.getStatesOfCountry(country?.isoCode)
+      );
       setStateData(State.getStatesOfCountry(country?.isoCode));
     }
+  }, [country]);
+  useEffect(() => {
+    setStateData(State.getStatesOfCountry(country?.isoCode));
   }, [open]);
 
   const handleOpen = () => {
     setOpen(true);
+    setStateData(State.getStatesOfCountry(country?.isoCode));
   };
 
   const handleClose = () => {
@@ -147,58 +159,14 @@ const OrganizationLocation = () => {
     setAddressLine2(selectedLocation.addressLine2);
     setCity(selectedLocation.city);
     setPinCode(selectedLocation.pinCode);
-    const selectedCountry = Country.getAllCountries().find(
-      (country) => country.name === selectedLocation.country
-    );
-    console.log(selectedCountry);
     setCountry(
       Country.getAllCountries().find(
         (country) => country.name === selectedLocation.country
       ) || null
     );
-    setState(
-      State.getStatesOfCountry(selectedCountry.isoCode).find(
-        (state) => state.name === selectedLocation.state
-      )
-    );
-
-    // console.log(selectedCountry);
-    // console.log(state);
+    setStateData(State.getStatesOfCountry(selectedLocation.country));
+    setState(selectedLocation.state || ""); // Assuming selectedLocation.state is the state name
     setOpen(true);
-    // };
-
-    // const handleEditLocation = async ( index ) => {
-    //     setEditIndex(index);
-    //   const newLocation = {
-    //     country:locationList[index].country,
-    //     state:locationList[index].state,
-    //     city:locationList[index].city,
-    //     pinCode:locationList[index].pinCode,
-    //     addressLine1:locationList[index].addressLine1,
-    //     addressLine2:locationList[index].addressLine2,
-    //     organizationId:locationList[index].organizationId,
-    //   };
-    //   setOpen(true)
-    // try {
-    //   await axios.put(`http://localhost:4000/route/location/updateOrganizationLocations/${locationList[index]._id}`, newLocation, {
-    //     headers: {
-    //       Authorization: authToken,
-    //     },
-    //   });
-
-    //   const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
-    //     headers: {
-    //       Authorization: authToken,
-    //     },
-    //   });
-    //   setLocationList(response.data);
-
-    //   handleAlert(true, "success", "Location added successfully");
-    //   handleClose();
-    // } catch (error) {
-    //   console.error(error.response.data.message);
-    //   handleAlert(true, "error", error.response.data.message);
-    // }
   };
   const handleUpdateLocation = async (index) => {
     setEditIndex(index);
@@ -211,8 +179,7 @@ const OrganizationLocation = () => {
       addressLine1,
       addressLine2,
     };
-    console.log(`🚀 ~ index:`, index);
-    console.log(`🚀 ~ locationList:`, locationList[index - 1]);
+
     try {
       await axios.put(
         `http://localhost:4000/route/location/updateOrganizationLocation/${locationList[index]._id}`,
@@ -224,7 +191,6 @@ const OrganizationLocation = () => {
         }
       );
     } catch (error) {
-      console.log(`🚀 ~ error:`, error);
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
     }
