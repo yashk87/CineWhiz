@@ -69,6 +69,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   useEffect(() => {
     if (data && data.shifts) {
       const shiftData = data.shifts;
+      console.log(shiftData);
       setWorkingFrom(shiftData.workingFrom || "");
       setShiftName(shiftData.shiftName || "");
       setSelectedDays(shiftData.selectedDays || "");

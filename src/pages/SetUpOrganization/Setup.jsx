@@ -3,7 +3,9 @@ import {
   AddLocationAltOutlined,
   BeachAccessOutlined,
   EventAvailableOutlined,
+  ManageAccountsOutlined,
   PersonAddAlt1Outlined,
+  PriceChangeOutlined,
   SettingsOutlined,
   West,
 } from "@mui/icons-material";
@@ -45,6 +47,18 @@ const Setup = ({ children }) => {
       icon: AddLocationAltOutlined,
       href: "/",
       active: location.pathname === "",
+    },
+    {
+      label: "Employement type",
+      icon: ManageAccountsOutlined,
+      href: `/setup/employement-types/${id}`,
+      active: location.pathname === `/setup/employement-types/${id}`,
+    },
+    {
+      label: "Salary Input Field selection",
+      icon: PriceChangeOutlined,
+      href: `/setup/salary-input-selection/${id}`,
+      active: location.pathname === `/setup/salary-input-selection/${id}`,
     },
   ];
 
