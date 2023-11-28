@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -20,7 +21,6 @@ import {
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Axios from "axios";
-import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ShiftDisplay from "./ShiftDisplay";
@@ -389,13 +389,14 @@ const Shifts = () => {
             size="small"
           >
             <InputLabel id="industry-type-label">working from</InputLabel>
-            <Select labelId="industry-type-label" id="industry-type">
-              <MenuItem onClick={() => setWorkingFrom("Remote")} value="Remote">
-                Remote
-              </MenuItem>
-              <MenuItem onClick={() => setWorkingFrom("Office")} value="Office">
-                Office
-              </MenuItem>
+            <Select
+              labelId="industry-type-label"
+              id="industry-type"
+              value={workingFrom || ""}
+              onChange={(e) => setWorkingFrom(e.target.value)}
+            >
+              <MenuItem value="Remote">Remote</MenuItem>
+              <MenuItem value="Office">Office</MenuItem>
             </Select>
           </FormControl>
           <TextField
@@ -406,7 +407,7 @@ const Shifts = () => {
             className="w-[80%]"
             label="what is your shift name"
             type="text"
-            value={shiftName}
+            value={shiftName || ""}
             onChange={(e) => setShiftName(e.target.value)}
           />
 
