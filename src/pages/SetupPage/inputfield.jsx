@@ -3,8 +3,7 @@ import { useParams } from "react-router";
 import { UseContext } from "../../State/UseState/UseContext";
 import { TestContext } from "../../State/Function/Main";
 import axios from "axios";
-import { useQuery } from "react-query";
-import { Checkbox, FormControlLabel, Skeleton, Switch } from "@mui/material";
+import { Checkbox, FormControlLabel } from "@mui/material";
 import Setup from "../SetUpOrganization/Setup";
 import InputIcon from "@mui/icons-material/Input";
 
@@ -14,104 +13,28 @@ const Inputfield = () => {
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
 
-  const initialInputField = [
-    {
-      inputType: "text",
-      label: "Shifts allocation",
-      placeholder: "Enter Shifts allocation",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Department cost center no",
-      placeholder: "Enter Department cost center no",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Middle Name",
-      placeholder: "Enter Middle Name",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Martial status",
-      placeholder: "Enter Martial status",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Primary nationality",
-      placeholder: "Enter Primary nationality",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Education",
-      placeholder: "Enter Education",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Permanent Address",
-      placeholder: "Enter Permanent Address",
-      isActive: false,
-    },
-
-    {
-      inputType: "text",
-      label: "Relative Information",
-      placeholder: "Enter Relative Information",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Manager Name",
-      placeholder: "Enter Manager Name",
-      isActive: false,
-    },
-    {
-      inputType: "text",
-      label: "Emergency contact",
-      placeholder: "Enter Emergency contact",
-      isActive: false,
-    },
-  ];
-
-  const [inputDetail, setinputDetail] = useState(initialInputField);
-
-  const fetchInputField = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/inputfield/${id}`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      console.log(response.data);
-      console.log(response.data.inputField.inputDetail);
-      return response.data;
-    } catch (error) {
-      throw new Error("Error fetching Input Field");
-    }
-  };
-  const { data, isLoading } = useQuery("inputField", fetchInputField);
+  const [inputDetail, setinputDetail] = useState([]);
 
   useEffect(() => {
-    if (data) {
-      const transformedInputField = data.inputField.inputDetail.map(
-        (field) => ({
-          placeholder: field.placeholder,
-          label: field.label,
-          isActive: field.isActive,
-        })
-      );
-      setinputDetail(transformedInputField);
-    }
-  }, [data]);
+    const fetchInputFieldData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/inputfield/${id}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        setinputDetail(response.data.inputField.inputDetail);
+      } catch (error) {
+        console.error("Error fetching input fields:", error);
+      }
+    };
+
+    fetchInputFieldData();
+  }, []);
 
   const handleInputFieldChange = (field) => {
     const updatedInputField = inputDetail.map((inputField) => {
@@ -123,6 +46,34 @@ const Inputfield = () => {
     });
 
     setinputDetail(updatedInputField);
+  };
+
+  const sendRequestToBackend = async () => {
+    try {
+      const updatedInputDetails = inputDetail.map((field) => ({
+        inputDetailId: field._id, // Assuming you have a unique ID for each input detail
+        isActive: field.isActive,
+        label: field.label,
+      }));
+
+      console.log("updateInputDetail", updatedInputDetails);
+
+      // Send a PUT request to update the input fields
+      const response = await axios.put(
+        `${process.env.REACT_APP_API}/route/inputfield/update/${id}`,
+        { inputDetails: updatedInputDetails },
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log("response", response);
+      handleAlert(true, "success", response.data.message);
+    } catch (error) {
+      // Handle errors
+      handleAlert("Failed to apply changes", "error");
+    }
   };
 
   return (
@@ -138,26 +89,11 @@ const Inputfield = () => {
                 Add Input Field for organization
               </h1>
             </div>
-            {isLoading ? (
-              <div className="space-y-4 flex flex-col flex-wrap">
-                {Array.from({ length: 5 }, (_, id) => (
-                  <div
-                    key={id}
-                    className=" flex justify-between p-2 rounded-md "
-                  >
-                    <div className="flex gap-2 w-full">
-                      <Skeleton width={"5%"} height={45} />
-                      <Skeleton width={"30%"} height={45} />
-                    </div>
-                    <Skeleton width={"20%"} height={45} />
-                  </div>
-                ))}
-              </div>
-            ) : (
+            {
               <div className="flex flex-col flex-wrap">
-                {inputDetail.map((field, index) => (
+                {inputDetail.map((field, _id) => (
                   <div
-                    key={index}
+                    key={_id}
                     className="border-gray-200 flex justify-between py-2 px-6 "
                   >
                     <FormControlLabel
@@ -172,10 +108,10 @@ const Inputfield = () => {
                   </div>
                 ))}
               </div>
-            )}
+            }
             <div className="w-max px-4 py-2 mt-2">
               <button
-                // onClick={sendRequestToBackend}
+                onClick={sendRequestToBackend}
                 className=" flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600"
               >
                 Apply Changes

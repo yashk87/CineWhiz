@@ -61,6 +61,11 @@ const App = () => {
         path="/organisation/:id/add-profile"
         element={<AddProfile />}
       />
+      <Route
+        exact
+        path="/organisation/:id/add-employee"
+        element={<AddEmployee />}
+      />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
@@ -85,7 +90,6 @@ const App = () => {
         path="/setup/:id/public-holidays"
         element={<PublicHoliday />}
       />
-      <Route exact path="/add-employee" element={<AddEmployee />} />
     </Routes>
   );
 };
