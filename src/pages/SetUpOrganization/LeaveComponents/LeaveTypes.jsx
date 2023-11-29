@@ -43,7 +43,10 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   });
 
   const [newLeaveType, setNewLeaveType] = useState("");
-
+  const handleDeleteType = (leaveTypeId) => {
+    setLeaveTypeToDelete(leaveTypeId);
+    setConfirmOpen(true);
+  };
   const { handleAlert } = useContext(TestContext);
   const handleCreateLeave = () => {};
 
@@ -141,10 +144,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           <Button onClick={() => setConfirmOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={() => handleDeleteType(leaveType._id)}
-            color="primary"
-          >
+          <Button onClick={() => handleDeleteType()} color="primary">
             Delete
           </Button>
         </DialogActions>
