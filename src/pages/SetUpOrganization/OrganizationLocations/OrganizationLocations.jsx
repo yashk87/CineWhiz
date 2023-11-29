@@ -43,6 +43,7 @@ const OrganizationLocation = () => {
 
   const [locationList, setLocationList] = useState([]);
   const [addressLine1, setAddressLine1] = useState("");
+  const [editing, setEditing] = useState(false);
   const [addressLine2, setAddressLine2] = useState("");
   const [city, setCity] = useState("");
   const [continent, setContinent] = useState(continents[0] || "");
@@ -52,7 +53,7 @@ const OrganizationLocation = () => {
   const [stateData, setStateData] = useState(
     State.getStatesOfCountry(country?.name)
   );
-  const [state, setState] = useState(stateData[0]?.name || "");
+  const [state, setState] = useState(State.getStatesOfCountry(country?.isoCode)[0] || "");
   const [editIndex, setEditIndex] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -77,23 +78,24 @@ const OrganizationLocation = () => {
   }, [authToken]);
 
   useEffect(() => {
-    console.log("open", open);
-    if (!open) {
-      console.log(`🚀 ~ country:`, country);
+    if (open) {
       setStateData(State.getStatesOfCountry(country?.isoCode));
     }
-  }, [open]);
+  }, [open, country]);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    setEditing(false);
     setOpen(false);
     setEditIndex(null);
     setAddressLine1("");
     setAddressLine2("");
     setCity("");
+    setShortName("");
+    setContinent(continents[0].name);
     setState("");
     setPinCode("");
     setCountry(Country.getAllCountries()[0]);
@@ -104,6 +106,8 @@ const OrganizationLocation = () => {
       country: country.name,
       state: state.name,
       city,
+      shortName,
+      continent:continent.name,
       pinCode,
       addressLine1,
       addressLine2,
@@ -136,96 +140,77 @@ const OrganizationLocation = () => {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
     }
+    // adding = false;
   };
-  useEffect(() => {
-    stateData && setState(stateData[0]);
-  }, [stateData]);
   const handleEditLocation = async (index) => {
+    setEditing(true);
     setEditIndex(index);
     const selectedLocation = locationList[index];
     setAddressLine1(selectedLocation.addressLine1);
     setAddressLine2(selectedLocation.addressLine2);
     setCity(selectedLocation.city);
+    setShortName(selectedLocation.shortName);
+    setContinent(continents.find(
+      (continent) => continent.name === selectedLocation.continent
+    ));
     setPinCode(selectedLocation.pinCode);
     const selectedCountry = Country.getAllCountries().find(
       (country) => country.name === selectedLocation.country
     );
-    console.log(selectedCountry);
     setCountry(
       Country.getAllCountries().find(
         (country) => country.name === selectedLocation.country
       ) || null
     );
+    setStateData(Country.getAllCountries(country?.isoCode))
     setState(
       State.getStatesOfCountry(selectedCountry.isoCode).find(
         (state) => state.name === selectedLocation.state
       )
     );
 
-    // console.log(selectedCountry);
-    // console.log(state);
     setOpen(true);
-    // };
-
-    // const handleEditLocation = async ( index ) => {
-    //     setEditIndex(index);
-    //   const newLocation = {
-    //     country:locationList[index].country,
-    //     state:locationList[index].state,
-    //     city:locationList[index].city,
-    //     pinCode:locationList[index].pinCode,
-    //     addressLine1:locationList[index].addressLine1,
-    //     addressLine2:locationList[index].addressLine2,
-    //     organizationId:locationList[index].organizationId,
-    //   };
-    //   setOpen(true)
-    // try {
-    //   await axios.put(`http://localhost:4000/route/location/updateOrganizationLocations/${locationList[index]._id}`, newLocation, {
-    //     headers: {
-    //       Authorization: authToken,
-    //     },
-    //   });
-
-    //   const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
-    //     headers: {
-    //       Authorization: authToken,
-    //     },
-    //   });
-    //   setLocationList(response.data);
-
-    //   handleAlert(true, "success", "Location added successfully");
-    //   handleClose();
-    // } catch (error) {
-    //   console.error(error.response.data.message);
-    //   handleAlert(true, "error", error.response.data.message);
-    // }
   };
+
   const handleUpdateLocation = async (index) => {
     setEditIndex(index);
 
     const newLocation = {
       country: country.name,
       state: state.name,
+      continent: continent.name,
+      shortName,
       city,
       pinCode,
       addressLine1,
       addressLine2,
+      organizationId
     };
-    console.log(`🚀 ~ index:`, index);
-    console.log(`🚀 ~ locationList:`, locationList[index - 1]);
     try {
       await axios.put(
-        `http://localhost:4000/route/location/updateOrganizationLocation/${locationList[index]._id}`,
+        `http://localhost:4000/route/location/updateOrganizationLocations/${locationList[index]._id}`,
         newLocation,
         {
           headers: {
             Authorization: authToken,
           },
         }
+        );
+
+      const response = await axios.get(
+        "http://localhost:4000/route/location/getOrganizationLocations",
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
       );
+      setLocationList(response.data);
+      handleAlert(true, "success", "Location udpated successfully");
+      handleClose()
+
     } catch (error) {
-      console.log(`🚀 ~ error:`, error);
-      console.error(error.response.data.message);
+      console.error("error is: ",error.response.data.error);
       handleAlert(true, "error", error.response.data.message);
     }
   };
@@ -233,7 +218,7 @@ const OrganizationLocation = () => {
   const handleDeleteLocation = async (index) => {
     try {
       await axios.delete(
-        `http://localhost:4000/route/location/deleteOrganizationLocation/${locationList[index]._id}`,
+        `http://localhost:4000/route/location/deleteOrganizationLocations/${locationList[index]._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -261,6 +246,9 @@ const OrganizationLocation = () => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
+      if(editing)
+      handleUpdateLocation();
+    else
       handleAddLocation();
       handleClose();
     }
@@ -307,6 +295,8 @@ const OrganizationLocation = () => {
                 >
                   <CardContent>
                     <Typography variant="body1">
+                      {location.continent && `${location.continent}, `}
+                      {location.shortName && `${location.shortName}, `}
                       {location.country && `${location.country}, `}
                       {location.state && `${location.state}, `}
                       {location.city && `${location.city}, `}
@@ -368,7 +358,7 @@ const OrganizationLocation = () => {
               <div>
                 <p>Continent:</p>
                 <Selector
-                  key={1}
+                  key={continent.name}
                   data={continents}
                   selected={continent}
                   setSelected={setContinent}
@@ -376,7 +366,7 @@ const OrganizationLocation = () => {
               </div>
               <TextField
                 label={
-                  <FormattedMessage id="shortname" defaultMessage="ShortName" />
+                  <FormattedMessage id="shortname" defaultMessage="Short Name(Location)" />
                 }
                 variant="outlined"
                 value={shortName}
@@ -396,7 +386,7 @@ const OrganizationLocation = () => {
               <div>
                 <p>Country:</p>
                 <Selector
-                  key={1}
+                  key={country?.phonecode}
                   data={Country.getAllCountries()}
                   selected={country}
                   setSelected={setCountry}
@@ -406,7 +396,7 @@ const OrganizationLocation = () => {
                 <div>
                   <div>State:</div>
                   <Selector
-                    key={2}
+                    key={country?.phonecode}
                     data={stateData}
                     selected={state}
                     setSelected={setState}
@@ -467,7 +457,13 @@ const OrganizationLocation = () => {
               <FormattedMessage id="cancel" defaultMessage="Cancel" />
             </Button>
             <Button
-              onClick={() => handleUpdateLocation(editIndex)}
+              onClick={() => {
+                if(editIndex !== null){
+                  handleUpdateLocation(editIndex)
+                }else{
+                  handleAddLocation()
+                }
+              }}
               color="primary"
             >
               {editIndex !== null ? (
@@ -476,7 +472,7 @@ const OrganizationLocation = () => {
                   defaultMessage="Save Changes"
                 />
               ) : (
-                <FormattedMessage id="add" defaultMessage="Add" />
+                <FormattedMessage id="addLocation" defaultMessage="Add Location" />
               )}
             </Button>
           </DialogActions>
