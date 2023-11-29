@@ -25,9 +25,11 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 import Designation from "./pages/Designation/Designation";
-
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
+import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
+import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
+import Inputfield from "./pages/SetupPage/inputfield";
 const App = () => {
   return (
     <Routes>
@@ -36,12 +38,17 @@ const App = () => {
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
       <Route exact path="/add-organisation" element={<AddOrganisation />} />
-      <Route exact path="/setup/add-organization-locations/:id" element={<OrganizationLocation />} />
+      <Route
+        exact
+        path="/setup/add-organization-locations/:id"
+        element={<OrganizationLocation />}
+      />
       <Route exact path="/add-department" element={<Department />} />
       <Route exact path="/menu" element={<MyCalendar />} />
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/add-role" element={<AddRole />} />
+      <Route exact path="/add-inputfield/:id" element={<Inputfield />} />
       <Route exact path="/set-shifts/:id" element={<Shifts />} />
       <Route exact path="/set-designation" element={<Designation />} />
       <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} />
@@ -58,6 +65,16 @@ const App = () => {
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
       <Route exact path="/setup/set-shifts/:id" element={<Shifts />} />
+      <Route
+        exact
+        path="/setup/employement-types/:id"
+        element={<EmployementTypes />}
+      />
+      <Route
+        exact
+        path="/setup/salary-input-selection/:id"
+        element={<SalaryInput />}
+      />
 
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
