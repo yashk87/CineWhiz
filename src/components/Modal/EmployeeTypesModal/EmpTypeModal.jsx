@@ -33,7 +33,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  console.log(empTypeId, "emp");
 
   const { data, isLoading } = useQuery(
     ["empType", empTypeId],
@@ -102,6 +101,8 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       },
     }
   );
+
+  console.log(empTypeId);
 
   useEffect(() => {
     if (data?.empType) {

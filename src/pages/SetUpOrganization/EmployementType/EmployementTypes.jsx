@@ -36,8 +36,17 @@ const EmployementTypes = () => {
   const [open, setOpen] = React.useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empTypeId, setempTypeId] = useState(null);
-  const handleOpen = () => {
+
+  const [scroll, setScroll] = React.useState("paper");
+
+  // const handleClickOpen = (scrollType) => () => {
+  //   setOpen(true);
+  //   setScroll(scrollType);
+  // };
+
+  const handleOpen = (scrollType) => {
     setOpen(true);
+    setScroll(scrollType);
     setempTypeId(null);
   };
 
@@ -115,7 +124,7 @@ const EmployementTypes = () => {
               </div>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
-                onClick={handleOpen}
+                onClick={() => handleOpen("paper")}
                 variant="contained"
               >
                 Create Employment Types
@@ -123,7 +132,7 @@ const EmployementTypes = () => {
             </div>
 
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
-              <table className="min-w-full bg-white  text-left !text-md font-light">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold ">
                     <th scope="col" className="!text-left pl-8 py-3 ">
@@ -178,12 +187,12 @@ const EmployementTypes = () => {
         onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete the shift?
+          <Warning color="error" /> Are you sure to delete the Employment Types?
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the shift after deleting shift the shift
-            will not retrived.
+            This action will delete the Employment Type after deleting
+            Employment Type it will not retrived.
           </p>
         </DialogContent>
         <DialogActions>

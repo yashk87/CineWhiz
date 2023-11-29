@@ -1,16 +1,43 @@
-import React from "react";
+import React, { useContext } from "react";
 import Setup from "../Setup";
-import { PriceChangeOutlined } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import {
+  BorderColor,
+  Delete,
+  PriceChangeOutlined,
+  Visibility,
+  VisibilityOutlined,
+  Warning,
+} from "@mui/icons-material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Popover,
+  Tooltip,
+} from "@mui/material";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import axios from "axios";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { TestContext } from "../../../State/Function/Main";
 
 const SalaryInput = () => {
   const [open, setOpen] = React.useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empTypeId, setempTypeId] = useState(null);
   const { id } = useParams;
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const queryClient = useQueryClient();
+  const { handleAlert } = useContext(TestContext);
+
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+
   const handleOpen = () => {
     setOpen(true);
     setempTypeId(null);
@@ -21,6 +48,72 @@ const SalaryInput = () => {
     setempTypeId(null);
     setEditModalOpen(false);
   };
+
+  // Handle PopOver
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopClick = (event, template) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTemplate(template);
+  };
+
+  const handlePopClose = () => {
+    setAnchorEl(null);
+    // setSelectedTemplate(null);
+  };
+
+  const openPop = Boolean(anchorEl) && selectedTemplate !== null;
+  const Popid = openPop ? "simple-popover" : undefined;
+
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  // Delete Query
+  const handleDeleteConfirmation = (id) => {
+    setDeleteConfirmation(id);
+  };
+
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+  const handleDelete = (id) => {
+    deleteMutation.mutate(id);
+    handleCloseConfirmation();
+  };
+
+  const deleteMutation = useMutation(
+    (id) =>
+      axios.delete(`${process.env.REACT_APP_API}/route/salary-template/${id}`, {
+        headers: {
+          Authorization: authToken,
+        },
+      }),
+    {
+      onSuccess: () => {
+        // Invalidate and refetch the data after successful deletion
+        queryClient.invalidateQueries("salaryTemplates");
+        handleAlert(
+          true,
+          "success",
+          "Salary Template Types deleted succesfully"
+        );
+      },
+    }
+  );
+
+  // Get Query
+  const { data: salaryTemplate, isLoading } = useQuery(
+    "salaryTemplates",
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/salary-template`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      return response.data;
+    }
+  );
 
   return (
     <>
@@ -44,11 +137,149 @@ const SalaryInput = () => {
                 Create salary template
               </Button>
             </div>
+
+            <div className="overflow-auto   border-[.5px] border-gray-200">
+              <table className="min-w-full bg-white px-4  text-left !text-sm font-light">
+                <thead className="border-b-[1px] border-gray-600  !font-medium ">
+                  <tr className="!font-semibold ">
+                    <th scope="col" className="!text-left px-6 py-3 ">
+                      SR NO
+                    </th>
+                    <th className="py-3 ">Template Name</th>
+                    <th className="px-6 py-3 ">Template Description</th>
+                    <th className="px-6 py-3 ">Employment Type</th>
+                    <th className="px-6 py-3 ">Salary Structure</th>
+                    <th className="px-6 py-3 ">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {salaryTemplate?.salaryTemplates?.map((item, id) => (
+                    <tr
+                      className={`
+                      ${id % 2 === 0 && "bg-[white]"} 
+                      !font-medium border-b`}
+                      key={id}
+                    >
+                      <td className="py-3 px-6">{id + 1}</td>
+                      <td className="px-6">{item.name}</td>
+                      <td className="px-6">{item.desc}</td>
+                      <td className="px-6">{item?.empType?.title}</td>
+                      <td className="px-6">
+                        <Tooltip title="Click to get Salary structure">
+                          <IconButton
+                            aria-describedby={Popid}
+                            onClick={(event) => handlePopClick(event, item)}
+                          >
+                            <VisibilityOutlined
+                              className="!text-md"
+                              color="primary"
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-2">
+                        <IconButton
+                          onClick={() => handleDeleteConfirmation(item._id)}
+                        >
+                          <Delete className="!text-xl" color="error" />
+                        </IconButton>
+                        <IconButton
+                        // onClick={() => handleEditModalOpen(emptype._id)}
+                        >
+                          <BorderColor className="!text-xl" color="success" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </article>
         </Setup>
       </section>
 
+      <Popover
+        id={Popid}
+        open={openPop}
+        className="!p-4"
+        anchorEl={anchorEl}
+        PaperProps={{
+          className: "!p-4 rounded-md",
+        }}
+        onClose={handlePopClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+      >
+        <div className="overflow-auto">
+          <h1 className="pb-4 text-lg">Salary Structure</h1>
+          <table className="min-w-full bg-white  text-left !text-sm font-light">
+            <thead className="border-b bg-gray-100 border-[.5px] border-gray-300  font-medium dark:border-neutral-500">
+              <tr>
+                <th scope="col" className="!text-left px-3 py-3 ">
+                  Salary Component
+                </th>
+                <th scope="col" className="p-3 ">
+                  Manually input
+                </th>
+                <th scope="col" className="px-3 ">
+                  Calculation
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedTemplate?.salaryStructure.map((row, id) => (
+                <tr
+                  key={id}
+                  className="px-2 !border border-gray-300 !py-4 !space-x-4 gap-4 w-full"
+                >
+                  <td className="w-[40%] py-4 pl-2">{row.salaryComponent}</td>
+                  <td className="w-[40%] !mx-4">
+                    {row.manuallyInput ? "yes" : "no"}
+                  </td>
+                  <td className="w-[40%] px-3">{row.calculation}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Popover>
+
       <SalaryInputFieldsModal id={id} open={open} handleClose={handleClose} />
+
+      <Dialog
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
+      >
+        <DialogTitle color={"error"}>
+          <Warning color="error" /> Are you sure to delete the Salary Template?
+        </DialogTitle>
+        <DialogContent>
+          <p>
+            This action will delete the Salary Template after deleting Salary
+            Template it will not retrived.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleCloseConfirmation}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => handleDelete(deleteConfirmation)}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

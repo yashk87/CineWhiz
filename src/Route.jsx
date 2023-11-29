@@ -16,7 +16,6 @@ import AddRoles from "./pages/Roles/AddRoles";
 import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import Setup from "./pages/SetUpOrganization/Setup";
-import ShiftsDisp from "./pages/SetupPage/ShiftDisplay";
 import Shifts from "./pages/SetupPage/Shifts";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
@@ -50,7 +49,6 @@ const App = () => {
       <Route exact path="/add-role" element={<AddRole />} />
       <Route exact path="/set-shifts/:id" element={<Shifts />} />
       <Route exact path="/set-designation" element={<Designation />} />
-      <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} />
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/organisation/:id" element={<SingleOrganization />} />

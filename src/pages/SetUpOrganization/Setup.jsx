@@ -30,7 +30,7 @@ const Setup = ({ children }) => {
     },
 
     {
-      label: "Shift Allowance",
+      label: "Shift Types",
       icon: EventAvailableOutlined,
       href: `/setup/set-shifts/${id}`,
       active: location.pathname === `/setup/set-shifts/${id}`,
