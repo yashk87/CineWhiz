@@ -62,7 +62,11 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               </div>
               <h1 className="!text-lg tracking-wide">Create Leave Types</h1>
             </div>
-            <Button variant="contained" onChange={handleCreateLeave}>
+            <Button
+              className="!bg-[#0ea5e9]"
+              variant="contained"
+              onChange={handleCreateLeave}
+            >
               <Add />
               Apply For Leave
             </Button>

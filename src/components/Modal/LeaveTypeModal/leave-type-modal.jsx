@@ -27,6 +27,7 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
       leaveName: leaveType?.leaveName || "",
       color: leaveType?.color || "",
       isActive: leaveType?.isActive || false,
+      count: leaveType?.count || 0,
     },
   });
 
@@ -97,6 +98,14 @@ const LeaveTypeModal = ({ handleClose, open, id, leaveType }) => {
                 name="leaveName"
                 control={control}
                 render={({ field }) => <TextField {...field} />}
+              />
+            </FormControl>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">count</FormLabel>
+              <Controller
+                name="count"
+                control={control}
+                render={({ field }) => <TextField type="number" {...field} />}
               />
             </FormControl>
             <FormControl component="fieldset">

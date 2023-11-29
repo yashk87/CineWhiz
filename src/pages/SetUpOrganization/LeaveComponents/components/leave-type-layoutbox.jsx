@@ -103,6 +103,13 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
               }}
             ></div>
           )}
+          <Typography
+            variant="body2"
+            className="underline !text-lg"
+            color="textSecondary"
+          >
+            yearly leave count: {leaveType.count}
+          </Typography>
           <div>
             <Button
               onClick={() => handleEditType(leaveType._id)}
