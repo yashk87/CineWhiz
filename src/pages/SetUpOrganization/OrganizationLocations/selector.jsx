@@ -8,7 +8,7 @@ function Selector({ data, selected, setSelected }) {
   const filteredPeople =
     query === ""
       ? data
-      : data.filter((person) =>
+      : data.filter((person, index) =>
           person.name
             .toLowerCase()
             .replace(/\s+/g, "")
@@ -16,7 +16,7 @@ function Selector({ data, selected, setSelected }) {
         );
 
   return (
-    <div className="w-64">
+    <div key={data.name} className="w-64">
       <Combobox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
           <div className="relative cursor-default overflow-hidden rounded-lg bg-white text-left border-black hover:outline-black focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
