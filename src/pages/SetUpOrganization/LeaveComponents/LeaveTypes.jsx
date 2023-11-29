@@ -1,18 +1,11 @@
 import { Add, BeachAccessOutlined } from "@mui/icons-material";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useParams } from "react-router";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
+import CreteLeaveTypeModal from "../../../components/Modal/LeaveTypeModal/create-leve-type-modal";
 import Setup from "../Setup";
 import LeaveTypeEditBox from "./components/leave-type-layoutbox";
 import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
@@ -22,33 +15,44 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   const authToken = cookies["aeigs"];
   const [leaveTypes, setLeaveTypes] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const queryClient = useQueryClient();
   const [leaveTypeToDelete, setLeaveTypeToDelete] = useState(null);
 
-  console.log(`🚀 ~ leaveTypes:`, leaveTypes);
-  const params = useParams();
   const { invalidateQueries } = useQueryClient();
-  const { data = [], isLoading } = useQuery("leaveTypes", async () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authToken,
+  const { data, isLoading } = useQuery(
+    "leaveTypes",
+    async () => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authToken,
+        },
+      };
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave-types-details/get`,
+        config
+      );
+      return response.data.data;
+    },
+    {
+      onSuccess: (newData) => {
+        // Update the query cache with the new data
+        queryClient.setQueryData("leaveTypes", newData);
       },
-    };
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave-types-details/get`,
-      config
-    );
-    setLeaveTypes(response.data.data);
-    return response.data.data.leaveTypes;
-  });
+    }
+  );
 
-  const [newLeaveType, setNewLeaveType] = useState("");
   const handleDeleteType = (leaveTypeId) => {
     setLeaveTypeToDelete(leaveTypeId);
     setConfirmOpen(true);
+    invalidateQueries("leaveTypes");
   };
   const { handleAlert } = useContext(TestContext);
-  const handleCreateLeave = () => {};
+  const handleCreateLeave = () => {
+    console.log("he");
+
+    setConfirmOpen(true);
+  };
 
   return (
     <section className="bg-gray-50 min-h-screen w-full">
@@ -65,94 +69,59 @@ const LeaveTypes = ({ open, handleClose, id }) => {
             <Button
               className="!bg-[#0ea5e9]"
               variant="contained"
-              onChange={handleCreateLeave}
+              onClick={handleCreateLeave}
             >
               <Add />
-              Apply For Leave
+              Create Leave Types
             </Button>
           </div>
 
-          <ul className=" flex flex-col justify-between ">
-            {isLoading ? <SkeletonForLeaveTypes /> : ""}
-            {leaveTypes &&
-              leaveTypes.map((leaveType, index) => (
-                <LeaveTypeEditBox
-                  key={index}
-                  leaveType={leaveType}
-                  index={index}
-                />
-              ))}
-          </ul>
-
-          {/* <div className="flex gap-4 px-4 items-center">
-            <div className="w-max p-2 my-2  cursor-pointer rounded-full border ring-sky-300 shadow-md">
-              <AddIcon onClick={handleInput} className="!text-2xl" />
-            </div>
-            {isinputOpen && (
-              <Stack width="100%" className="px-2">
-                <FormControl
-                  size="small"
-                  sx={{ m: 1, width: "100%" }}
-                  variant="outlined"
-                >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Add leave type
-                  </InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          edge="end"
-                          sx={{
-                            display:
-                              newLeaveType === undefined || newLeaveType === ""
-                                ? "none"
-                                : "block",
-                          }}
-                          onClick={addLeaveType}
-                        >
-                          <SendIcon color="primary" />
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    onChange={(e) => setNewLeaveType(e.target.value)}
-                    value={newLeaveType}
-                    label="Add leave type"
-                  />
-                </FormControl>
-              </Stack>
-            )}
-          </div> */}
-          {/* <div className="flex px-4 py-4 ">
-            <Button
-              onClick={createLeave}
-              size="small"
-              variant="contained"
-              color="primary"
-            >
-              Apply
-            </Button>
-          </div> */}
+          <table className="min-w-full bg-white text-left text-sm font-light">
+            <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+              <tr className="!font-medium shadow-lg">
+                <th scope="col" className="px-6 py-3 ">
+                  SR NO
+                </th>
+                <th scope="col" className="px-6 py-3 ">
+                  Leave Name
+                </th>
+                <th scope="col" className="px-6 py-3 ">
+                  Status
+                </th>
+                <th scope="col" className="px-6 py-3 ">
+                  Color
+                </th>
+                <th scope="col" className="px-6 py-3 ">
+                  Count
+                </th>
+                <th scope="col" className="px-6 py-3 ">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <SkeletonForLeaveTypes />
+              ) : (
+                <>
+                  {data &&
+                    data.map((leaveType, index) => (
+                      <LeaveTypeEditBox
+                        key={index}
+                        leaveType={leaveType}
+                        index={index}
+                      />
+                    ))}
+                </>
+              )}
+            </tbody>
+          </table>
         </div>
       </Setup>
-      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this leave type?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={() => handleDeleteType()} color="primary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <CreteLeaveTypeModal
+        open={confirmOpen}
+        handleClose={() => setConfirmOpen(false)}
+      />
     </section>
   );
 };

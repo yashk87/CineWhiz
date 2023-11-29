@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Typography,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
@@ -23,17 +23,19 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const handleEditType = (id) => {
+
+  const handleEditType = () => {
     setOpen(true);
   };
+
   const handleDeleteTypeConfirmation = () => {
     setConfirmOpen(true);
   };
-  const handleDeleteType = async (id) => {
+
+  const handleDeleteType = async () => {
     try {
-      // Make the DELETE request using axios
       const response = await axios.delete(
-        `${process.env.REACT_APP_API}/route/leave-types-details/${id}`,
+        `${process.env.REACT_APP_API}/route/leave-types-details/${leaveType._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -41,23 +43,10 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
         }
       );
 
-      // Handle success
-      console.log(`Leave type with ID ${id} deleted successfully`);
-      console.log(`🚀 ~ response:`, response);
-
-      // Show success alert
       handleAlert(true, "success", response.data.message);
-
-      // Invalidate the query to refetch the data
       queryClient.invalidateQueries("leaveTypes");
-
-      // Close the modal
-      handleClose();
     } catch (error) {
-      // Handle error
       console.error("Failed to delete leave type:", error);
-
-      // Show error alert
       handleAlert(
         true,
         "error",
@@ -66,65 +55,49 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
       );
     }
   };
+
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
-    <>
-      <li
-        className="flex gap-4 flex-col  py-2 px-6 border-gray-200 border-b-[.5px]"
-        key={index}
-      >
-        <div className="flex justify-between gap-0">
-          <Typography
-            variant="body2"
-            className="!text-bold !text-lg"
-            color="textSecondary"
-          >
-            {leaveType.leaveName}
-          </Typography>
-          {leaveType.isActive && (
-            <Chip
-              // disabled
-              variant="contained"
-              color="info"
-              label={leaveType.isActive ? "Active" : "In-Active"}
-            />
-          )}
-        </div>
-        <div className="flex justify-between gap-0">
-          {leaveType.isActive && (
-            <div
-              className={`rounded-full overflow-hidden relative`}
-              style={{
-                height: "40px",
-                width: "40px",
-                background: leaveType.color,
-              }}
-            ></div>
-          )}
-          <Typography
-            variant="body2"
-            className="underline !text-lg"
-            color="textSecondary"
-          >
-            yearly leave count: {leaveType.count}
-          </Typography>
-          <div>
-            <Button
-              onClick={() => handleEditType(leaveType._id)}
-              color="success"
-            >
-              <Edit />
-            </Button>
-            <Button onClick={handleDeleteTypeConfirmation} color="warning">
-              <Delete />
-            </Button>
-          </div>
-        </div>
-      </li>
+    <tr
+      id={index}
+      className={`${
+        index % 2 === 0 ? "bg-gray-50" : "bg-white"
+      } border-b dark:border-neutral-500`}
+    >
+      <td className="whitespace-nowrap px-6 py-2 font-medium">{index + 1}</td>
+      <td className="whitespace-nowrap px-6 py-2">{leaveType.leaveName}</td>
+      <td className="whitespace-nowrap px-6 py-2">
+        <Chip
+          variant="outlined"
+          size="small"
+          color={leaveType.isActive ? "info" : "warning"}
+          label={leaveType.isActive ? "active" : "In-Active"}
+        />
+      </td>
+      <td className="whitespace-nowrap px-6 py-2">
+        <div
+          className={`rounded-full overflow-hidden relative`}
+          style={{
+            height: "30px",
+            width: "30px",
+            background: leaveType.color,
+          }}
+        ></div>
+      </td>
+      <td className="whitespace-nowrap px-6 py-2">{leaveType.count}</td>
+      <td className="whitespace-nowrap px-6 py-2">
+        <IconButton onClick={handleDeleteTypeConfirmation}>
+          <Delete className="!text-xl" color="error" />
+        </IconButton>
+        <IconButton onClick={handleEditType}>
+          <Edit className="!text-xl" color="success" />
+        </IconButton>
+      </td>
+
       <LeaveTypeModal
-        Modal
         open={open}
         handleClose={handleClose}
         id={leaveType._id}
@@ -141,15 +114,12 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
           <Button onClick={() => setConfirmOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={() => handleDeleteType(leaveType._id)}
-            color="primary"
-          >
+          <Button onClick={handleDeleteType} color="primary">
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </tr>
   );
 };
 

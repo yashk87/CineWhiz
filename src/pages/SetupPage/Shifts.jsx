@@ -1,4 +1,12 @@
-import React, { useState } from "react";
+import {
+  AccessTimeFilled,
+  EventAvailableOutlined,
+  Info,
+  MoreTime,
+} from "@mui/icons-material";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from "@mui/icons-material/Delete";
+import WarningIcon from "@mui/icons-material/Warning";
 import {
   Avatar,
   AvatarGroup,
@@ -11,25 +19,16 @@ import {
   IconButton,
   Skeleton,
 } from "@mui/material";
-import "react-datepicker/dist/react-datepicker.css";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ShiftModal from "../../components/Modal/shift/ShiftModal";
-import { useParams } from "react-router";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
-import { useContext } from "react";
-import { TestContext } from "../../State/Function/Main";
-import randomColor from "randomcolor";
-import WarningIcon from "@mui/icons-material/Warning";
-import {
-  AccessTimeFilled,
-  EventAvailableOutlined,
-  Info,
-  MoreTime,
-} from "@mui/icons-material";
 import dayjs from "dayjs";
+import randomColor from "randomcolor";
+import React, { useContext, useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import Setup from "../SetUpOrganization/Setup";
 
 const Shifts = () => {
