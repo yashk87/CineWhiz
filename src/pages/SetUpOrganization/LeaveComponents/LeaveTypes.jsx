@@ -1,85 +1,33 @@
-import { Button, InputLabel, OutlinedInput, Stack } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-
-import "../../../index.css";
-
-import SendIcon from "@mui/icons-material/Send";
+import { Add, BeachAccessOutlined } from "@mui/icons-material";
 import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
-
-import { BeachAccessOutlined } from "@mui/icons-material";
-import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import randomColor from "randomcolor";
-import { useQuery } from "react-query";
+import React, { useContext, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Setup from "../Setup";
+import LeaveTypeEditBox from "./components/leave-type-layoutbox";
+import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
 
 const LeaveTypes = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const [leaveTypes, setLeaveTypes] = useState([
-    {
-      leaveName: "Sick Leave",
-      isActive: true,
-      color: "#00ffcc",
-      count: 2,
-    },
-    {
-      leaveName: "Vacation Leave",
-      isActive: true,
-      color: "#C90498",
-      count: 1,
-    },
-    {
-      leaveName: "Special Leave",
-      isActive: true,
-      color: "#CEB10A",
-      count: 1,
-    },
-    {
-      leaveName: "Holiday Leave",
-      isActive: true,
-      color: "#1D6EB7",
-      count: 1,
-    },
-  ]);
+  const [leaveTypes, setLeaveTypes] = useState([]);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [leaveTypeToDelete, setLeaveTypeToDelete] = useState(null);
+
   console.log(`🚀 ~ leaveTypes:`, leaveTypes);
-  const {
-    data: newLeaveTypes = [
-      {
-        leaveName: "Sick Leave",
-        isActive: true,
-        color: "#00ffcc",
-        count: 2,
-      },
-      {
-        leaveName: "Vacation Leave",
-        isActive: true,
-        color: "#C90498",
-        count: 4,
-      },
-      {
-        leaveName: "Special Leave",
-        isActive: true,
-        color: "#CEB10A",
-        count: 4,
-      },
-      {
-        leaveName: "Holiday Leave",
-        isActive: true,
-        color: "#1D6EB7",
-        count: 4,
-      },
-    ],
-  } = useQuery("leaveTypes", async () => {
+  const params = useParams();
+  const { invalidateQueries } = useQueryClient();
+  const { data = [], isLoading } = useQuery("leaveTypes", async () => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -87,179 +35,49 @@ const LeaveTypes = ({ open, handleClose, id }) => {
       },
     };
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave-types`,
+      `${process.env.REACT_APP_API}/route/leave-types-details/get`,
       config
     );
-    console.log(`🚀 ~ response:`, response);
-
-    // const data = await response.json();
+    setLeaveTypes(response.data.data);
     return response.data.data.leaveTypes;
   });
 
-  // Initialize newLeaveType with the first leave type from the fetched data
-  useEffect(() => {
-    console.log(`🚀 ~ newLeaveTypes:`, newLeaveTypes);
-    if (newLeaveTypes && newLeaveTypes.length > 0) {
-      setLeaveTypes(newLeaveTypes);
-    }
-  }, [newLeaveTypes.length]);
-
-  useEffect(() => {
-    if (leaveTypes) {
-      setLeaveTypes((prevLeaveTypes) => {
-        const updatedLeaveTypes = prevLeaveTypes?.map((leaveType) => ({
-          ...leaveType,
-          color: randomColor({
-            seed: leaveType.leaveName,
-            luminosity: "dark",
-          }),
-        }));
-        return updatedLeaveTypes;
-      });
-      console.log(`🚀 ~ leaveTypes:`, leaveTypes);
-    }
-  }, [leaveTypes.length]); // Remove .length here
-
   const [newLeaveType, setNewLeaveType] = useState("");
-  const [isinputOpen, setIsinputOpen] = useState(false);
 
   const { handleAlert } = useContext(TestContext);
-
-  const handleInput = () => {
-    if (!isinputOpen) {
-      setIsinputOpen(true);
-    } else {
-      setIsinputOpen(false);
-    }
-  };
-
-  const addLeaveType = () => {
-    if (newLeaveType.trim() !== "") {
-      setLeaveTypes([
-        ...leaveTypes,
-        { leaveName: newLeaveType, isActive: true },
-      ]);
-      setNewLeaveType("");
-    }
-    setIsinputOpen(false);
-  };
-
-  const handleLeaveTypeChange = (index) => {
-    const updatedLeaveTypes = [...leaveTypes];
-    updatedLeaveTypes[index].isActive = !updatedLeaveTypes[index].isActive;
-    if (!updatedLeaveTypes[index].isActive) {
-      updatedLeaveTypes[index].count = 0; // Reset leave count when not active
-    }
-    setLeaveTypes(updatedLeaveTypes);
-  };
-  const handleLeaveColorChange = (index, color) => {
-    const updatedLeaveTypes = [...leaveTypes];
-    updatedLeaveTypes[index].color = color;
-    setLeaveTypes(updatedLeaveTypes);
-  };
-  const handleLeaveCountChange = (index, count) => {
-    const updatedLeaveTypes = [...leaveTypes];
-    updatedLeaveTypes[index].count = parseInt(count);
-    setLeaveTypes(updatedLeaveTypes);
-  };
-
-  const createLeave = async () => {
-    try {
-      const createLeave = await axios.post(
-        `${process.env.REACT_APP_API}/route/leave-types/create/${id}`,
-        { leaveTypes: leaveTypes },
-        {
-          headers: {
-            Authorization: authToken,
-          },
-        }
-      );
-
-      handleClose();
-      handleAlert(true, "success", createLeave.data.message);
-    } catch (error) {
-      console.log(error, "err");
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message || "Failed to sign in. Please try again."
-      );
-    }
-  };
+  const handleCreateLeave = () => {};
 
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
         <div className="SetupSection w-[80%] h-full bg-white   shadow-xl  rounded-sm">
-          <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300">
-            <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
-              <BeachAccessOutlined className="!text-lg text-white" />
+          <div className="p-4  border-b-[.5px] flex items-center  gap-3 w-full border-gray-300 justify-between">
+            <div className="flex gap-3">
+              {" "}
+              <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                <BeachAccessOutlined className="!text-lg text-white" />
+              </div>
+              <h1 className="!text-lg tracking-wide">Create Leave Types</h1>
             </div>
-            <h1 className="!text-lg tracking-wide">Create Leave Types</h1>
+            <Button variant="contained" onChange={handleCreateLeave}>
+              <Add />
+              Apply For Leave
+            </Button>
           </div>
 
           <ul className=" flex flex-col justify-between ">
+            {isLoading ? <SkeletonForLeaveTypes /> : ""}
             {leaveTypes &&
               leaveTypes.map((leaveType, index) => (
-                <li
-                  className="flex gap-4 justify-between  py-2 px-6 border-gray-200 border-b-[.5px]"
+                <LeaveTypeEditBox
                   key={index}
-                >
-                  <FormControlLabel
-                    size="small"
-                    control={
-                      <Checkbox
-                        checked={leaveType.isActive}
-                        onChange={() => handleLeaveTypeChange(index)}
-                      />
-                    }
-                    label={leaveType.leaveName}
-                  />
-                  <div className="flex gap-2">
-                    {leaveType.isActive && (
-                      <TextField
-                        type="number"
-                        required
-                        size="small"
-                        label="Number of Leaves"
-                        value={leaveType.count}
-                        onChange={(e) =>
-                          handleLeaveCountChange(index, e.target.value)
-                        }
-                      />
-                    )}
-                    {leaveType.isActive && (
-                      <div
-                        className="rounded-full overflow-hidden relative"
-                        style={{
-                          height: "40px", // adjust the size as needed
-                          width: "40px",
-                        }}
-                      >
-                        <input
-                          required
-                          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                          style={{
-                            height: "60px", // adjust the size as needed
-                            width: "60px",
-                            padding: "0",
-                            border: "none",
-                          }}
-                          type="color"
-                          id="favcolor"
-                          value={leaveType.color}
-                          onChange={(e) =>
-                            handleLeaveColorChange(index, e.target.value)
-                          }
-                        />
-                      </div>
-                    )}
-                  </div>
-                </li>
+                  leaveType={leaveType}
+                  index={index}
+                />
               ))}
           </ul>
 
-          <div className="flex gap-4 px-4 items-center">
+          {/* <div className="flex gap-4 px-4 items-center">
             <div className="w-max p-2 my-2  cursor-pointer rounded-full border ring-sky-300 shadow-md">
               <AddIcon onClick={handleInput} className="!text-2xl" />
             </div>
@@ -299,8 +117,8 @@ const LeaveTypes = ({ open, handleClose, id }) => {
                 </FormControl>
               </Stack>
             )}
-          </div>
-          <div className="flex px-4 py-4 ">
+          </div> */}
+          {/* <div className="flex px-4 py-4 ">
             <Button
               onClick={createLeave}
               size="small"
@@ -309,9 +127,28 @@ const LeaveTypes = ({ open, handleClose, id }) => {
             >
               Apply
             </Button>
-          </div>
+          </div> */}
         </div>
       </Setup>
+      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this leave type?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleDeleteType(leaveType._id)}
+            color="primary"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 };
