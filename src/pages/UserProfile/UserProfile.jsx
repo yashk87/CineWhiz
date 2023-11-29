@@ -5,10 +5,10 @@ import { useEffect } from "react";
 import { UseContext } from "../../State/UseState/UseContext";
 import { useContext } from "react";
 import { LocationOn, Person } from "@mui/icons-material";
-import { Chip, Divider } from "@mui/material";
+import { Divider } from "@mui/material";
 
 const UserProfile = () => {
-  const { cookies, removeCookie } = useContext(UseContext);
+  const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const [user, setUser] = useState();
   useEffect(() => {
