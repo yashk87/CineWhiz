@@ -74,7 +74,7 @@ const Designation = () => {
     setEnterDesignationId(false);
     setTrackedId(id)
 
-    axios.get(`http://localhost:4000/route/designation/create/${id}`)
+    axios.get(`http://localhost:4000/route/designation/get-designation`)
       .then((response) => {
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
@@ -226,7 +226,7 @@ const Designation = () => {
   };
 
   const fetchDesignations = () => {
-    axios.get("http://localhost:4000/route/designation/create")
+    axios.get("http://localhost:4000/route/designation/get-designation")
       .then((response) => {
         setDesignation(response.data.designations);
       })
