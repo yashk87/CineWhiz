@@ -6,13 +6,15 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-const LeaveTable = ({
+const SummaryTable = ({
   subtractedLeaves,
   setSubtractedLeaves,
   authToken,
   setAppliedLeaveEvents,
 }) => {
   const [total, setTotal] = useState();
+  const [TotalLeaveSummary, setTotalLeaveSummary] = useState([]);
+  console.log(`🚀 ~ TotalLeaveSummary:`, TotalLeaveSummary);
 
   const updateLeaveCounts = (data) => {
     const updatedSubtractedLeaves = [];
@@ -41,13 +43,13 @@ const LeaveTable = ({
   };
 
   const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
-    console.log(`🚀 ~ data?.leaveTypes:`, data?.leaveTypes);
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryForCurrentMonth`,
       {
         headers: { Authorization: authToken },
       }
     );
+
     updateLeaveCounts(response.data);
     return response.data;
   });
@@ -56,8 +58,36 @@ const LeaveTable = ({
     data?.leaveTypes?.map((value) => {
       totalC += value.count;
     });
-    console.log(`🚀 ~ totalC:`, totalC);
     setTotal(totalC);
+    // Create an array to store the details of each leave type
+    const leaveTypeDetailsArray = [];
+    let totalCount = 0;
+    // Iterate through leaveData to collect details of each leave type
+    data &&
+      data?.currentMonthLeaves?.forEach((item) => {
+        const leaveTypeId = item.leaveTypeDetailsId._id;
+        const existingLeaveType = leaveTypeDetailsArray.find(
+          (leaveType) => leaveType._id === leaveTypeId
+        );
+
+        if (!existingLeaveType) {
+          leaveTypeDetailsArray.push({
+            _id: item.leaveTypeDetailsId._id,
+            leaveName: item.leaveTypeDetailsId.leaveName,
+            isActive: item.leaveTypeDetailsId.isActive,
+            color: item.leaveTypeDetailsId.color,
+            count: 0, // Initialize count to 0
+          });
+        }
+
+        const index = leaveTypeDetailsArray.findIndex(
+          (leaveType) => leaveType._id === leaveTypeId
+        );
+        leaveTypeDetailsArray[index].count++;
+        totalCount++;
+      });
+    setTotal(totalCount);
+    setTotalLeaveSummary(leaveTypeDetailsArray);
   }, [data]);
 
   if (isLoading) {
@@ -93,19 +123,19 @@ const LeaveTable = ({
 
   return (
     <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
-      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 ">
-        <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
+      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 text-gray-400">
+        <AccountBalanceIcon className="text-gray-400" /> Summary for current
+        month
       </h1>
       <div className="w-full">
-        {data?.leaveTypes?.map((item, index) => {
-          console.log(`🚀 ~ item:`, item);
+        {TotalLeaveSummary?.map((item, index) => {
           return (
-            <div key={index} style={{ background: item.color }}>
+            <div key={index} className="border-b border">
               <div className="flex justify-between items-center py-6 px-6">
-                <h1 className="text-md text-gray-200 font-bold tracking-wide">
+                <h1 className="text-md text-gray-400 font-bold tracking-wide">
                   {item.leaveName}
                 </h1>
-                <h1 className="text-lg tracking-wide font-bold text-gray-200">
+                <h1 className="text-lg tracking-wide font-bold text-gray-400">
                   {item.count}
                 </h1>
               </div>
@@ -113,7 +143,7 @@ const LeaveTable = ({
           );
         })}
         <div className="flex justify-between items-center py-6 px-6">
-          <h1 className="text-md text-gray-200 font-bold tracking-wide">
+          <h1 className="text-md text-gray-400 font-bold tracking-wide">
             Total Leave Balance
           </h1>
           <h1 className="text-lg tracking-wide text-gray-400">{total}</h1>
@@ -123,4 +153,4 @@ const LeaveTable = ({
   );
 };
 
-export default LeaveTable;
+export default SummaryTable;

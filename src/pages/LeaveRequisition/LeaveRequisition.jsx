@@ -8,8 +8,9 @@ import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AppDatePicker from "../../components/date-picker/date-picker";
-import LeaveTabel from "./components/LeaveTabel";
+import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
+import SummaryTable from "./components/summaryTable";
 
 // Set up the localizer for moment.js
 
@@ -91,15 +92,26 @@ const LeaveRequisition = () => {
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
-          <LeaveTabel
-            subtractedLeaves={subtractedLeaves}
-            setSubtractedLeaves={setSubtractedLeaves}
-            authToken={authToken}
-            vactionList={vactionList}
-            setVactionList={setVactionList}
-            setAppliedLeaveEvents={setAppliedLeaveEvents}
-            newAppliedLeaveEvents={appliedLeaveEvents}
-          />
+          <div className="flex flex-col gap-4">
+            <LeaveTable
+              subtractedLeaves={subtractedLeaves}
+              setSubtractedLeaves={setSubtractedLeaves}
+              authToken={authToken}
+              vactionList={vactionList}
+              setVactionList={setVactionList}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              newAppliedLeaveEvents={appliedLeaveEvents}
+            />{" "}
+            <SummaryTable
+              subtractedLeaves={subtractedLeaves}
+              setSubtractedLeaves={setSubtractedLeaves}
+              authToken={authToken}
+              vactionList={vactionList}
+              setVactionList={setVactionList}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              newAppliedLeaveEvents={appliedLeaveEvents}
+            />
+          </div>
 
           <article className="md:w-[100%] space-y-2">
             <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg ">
