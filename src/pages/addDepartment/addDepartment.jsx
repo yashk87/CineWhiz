@@ -62,6 +62,7 @@ const Department = () => {
     setFormValues({
       ...formValues,
       [name]: value,
+      departmentLocation:locationID
     });
   };
   
@@ -77,6 +78,7 @@ const Department = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(formValues);
       await axios.post(
         "http://localhost:4000/route/department/create",
         formValues,
@@ -94,6 +96,7 @@ const Department = () => {
       handleAlert(true, "error", error.response.data.error);
     }
   };
+
 
   return (
     <div
@@ -156,16 +159,16 @@ const Department = () => {
               fullWidth
               disablePortal
               id="departmentLocation"
+              name="departmentLocation"
               options={locations}
               onChange={(e, value) => {
+                handleGetLocation(value._id);
                 const location = value ? value.shortName : "";
 
 
                 handleChange({
-                  target: { name: "departmentLocation", value: location },
+                  target: { name: "departmentLocation", value: locationID },
                 });
-                setLocationId((prev) =>[...prev,value._id])
-                console.log(locationID);
               }}
               isOptionEqualToValue={(option, value) =>
                 option.shortName === value.shortName

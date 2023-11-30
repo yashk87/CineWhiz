@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useState } from "react";
 
 const Mapped = ({
@@ -18,7 +18,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
+  console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
   const [leavesTypes, setLeavesTypes] = useState("");
   const badgeStyle = {
     "& .MuiBadge-badge": {
@@ -32,6 +32,8 @@ const Mapped = ({
     console.log(`🚀 ~ event:`, event.target);
     console.log(`🚀 ~ event:`, subtractedLeaves);
     setLeavesTypes(event.target.value);
+    newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
+    setNewAppliedLeaveEvents(newAppliedLeaveEvents);
   };
   const removeItem = (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
@@ -53,7 +55,9 @@ const Mapped = ({
             },
           }}
           badgeContent={
-            <span>{differenceInDays(item.end, item.start)} day</span>
+            <span>
+              {differenceInDays(parseISO(item.end), parseISO(item.start))} day
+            </span>
           }
           sx={badgeStyle}
           color="primary"
