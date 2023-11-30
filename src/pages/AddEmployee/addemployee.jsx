@@ -770,6 +770,37 @@ const AddEmployee = () => {
                   />
                 ))}
               </div>
+              <div className="w-full">
+                <FormControl>
+                  <FormLabel id="demo-row-radio-buttons-group-label">
+                    Gender
+                  </FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={gender}
+                    onChange={handleRadioChange}
+                  >
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio />}
+                      label="Female"
+                    />
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio />}
+                      label="Male"
+                    />
+                    <FormControlLabel
+                      value="transgender"
+                      control={<Radio />}
+                      label="Transgender"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+
               <div className="flex justify-center">
                 <Button
                   className="px-4 py-2 text-base bg-blue-500 text-white rounded-lg"
