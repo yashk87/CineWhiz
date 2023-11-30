@@ -4,7 +4,6 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
-import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
@@ -16,7 +15,6 @@ import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
-import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
@@ -29,6 +27,10 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import EmailSetting from "./pages/SetupPage/EmailSetting";
+import AddEmployee from "./pages/AddEmployee/addemployee";
+import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
+import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
 const App = () => {
   return (
     <Routes>
@@ -43,17 +45,20 @@ const App = () => {
         element={<OrganizationLocation />}
       />
       <Route exact path="/add-department" element={<Department />} />
+      <Route exact path="/del-department" element={<DeleteDepartment />} />
       <Route exact path="/menu" element={<MyCalendar />} />
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />
       <Route exact path="/add-role" element={<AddRole />} />
       <Route exact path="/add-inputfield/:id" element={<Inputfield />} />
       <Route exact path="/set-shifts/:id" element={<Shifts />} />
+      {/* <Route exact path="/set-shiftsdisp" element={<ShiftsDisp />} /> */}
       <Route exact path="/set-designation" element={<Designation />} />
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/userprofile" element={<UserProfile />} />
+
       <Route
         exact
         path="/organisation/:id/add-profile"
@@ -78,6 +83,7 @@ const App = () => {
         path="/setup/salary-input-selection/:id"
         element={<SalaryInput />}
       />
+      <Route exact path="/setup/email-setting" element={<EmailSetting />} />
 
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />
