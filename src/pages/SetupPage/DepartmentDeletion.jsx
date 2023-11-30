@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
-  Container,
   Button,
-  MenuItem,
-  Select,
+  Container,
   FormControl,
   InputLabel,
+  MenuItem,
+  Select,
   Typography,
 } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 import { UseContext } from "../../State/UseState/UseContext";
-import * as XLSX from 'xlsx';
 
 const DepartmentDeletion = () => {
   const [departments, setDepartments] = useState([]);
-  const [deptLocationId, setDeptLocationId] = useState("")
+  const [deptLocationId, setDeptLocationId] = useState("");
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [filteredDepartments, setFilteredDepartments] = useState([]);
@@ -24,7 +24,9 @@ const DepartmentDeletion = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/route/department/get');
+        const response = await axios.get(
+          "http://localhost:4000/route/department/get"
+        );
         setDepartments(response.data.department);
       } catch (error) {
         console.error("Error fetching department data:", error);
@@ -36,9 +38,12 @@ const DepartmentDeletion = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
-          headers: { Authorization: authToken },
-        });
+        const response = await axios.get(
+          "http://localhost:4000/route/location/getOrganizationLocations",
+          {
+            headers: { Authorization: authToken },
+          }
+        );
         setLocations(response.data);
         console.log(locations);
       } catch (error) {
@@ -52,15 +57,24 @@ const DepartmentDeletion = () => {
     setSelectedLocation(event.target.value);
 
     try {
-      const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
-        headers: { Authorization: authToken },
-      });
+      const response = await axios.get(
+        "http://localhost:4000/route/location/getOrganizationLocations",
+        {
+          headers: { Authorization: authToken },
+        }
+      );
 
-      const location = response.data.find(obj => obj.shortName === event.target.value);
+      const location = response.data.find(
+        (obj) => obj.shortName === event.target.value
+      );
 
       const departmentsWithSelectedLocation = departments.filter((data) => {
-        const hasLocation = data.organizationLocationId.some(locationId => locationId === location._id);
-        console.log(`Checking ${data.departmentName} - Has Location: ${hasLocation}`);
+        const hasLocation = data.organizationLocationId.some(
+          (locationId) => locationId === location._id
+        );
+        console.log(
+          `Checking ${data.departmentName} - Has Location: ${hasLocation}`
+        );
         return hasLocation;
       });
       console.log("Filtered Departments:", departmentsWithSelectedLocation);
@@ -71,17 +85,20 @@ const DepartmentDeletion = () => {
   };
   const handleDelete = async () => {
     try {
-
       if (!selectedLocation) {
         console.error("Please select a department to delete.");
         return;
       }
-      await axios.delete(`http://localhost:4000/route/department/delete/${deptLocationId}`, {
-        headers: { Authorization: authToken },
-      });
+      await axios.delete(
+        `http://localhost:4000/route/department/delete/${deptLocationId}`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
 
-
-      const response = await axios.get('http://localhost:4000/route/department/get');
+      const response = await axios.get(
+        "http://localhost:4000/route/department/get"
+      );
       setDepartments(response.data.department);
       setSelectedLocation("");
       setFilteredDepartments([]);
@@ -91,30 +108,46 @@ const DepartmentDeletion = () => {
   };
 
   const getDepartmentId = (e) => {
-      setDeptLocationId(e.target.value)
-
-  }
+    setDeptLocationId(e.target.value);
+  };
 
   const generateExcel = () => {
     try {
       const wb = XLSX.utils.book_new();
       const data = [
-        ['John Smith', 20],
-        ['Bob Johnson', 22],
+        ["John Smith", 20],
+        ["Bob Johnson", 22],
       ];
       const ws = XLSX.utils.aoa_to_sheet(data);
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      XLSX.writeFile(wb, 'DepartmentTemplate.xlsx');
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      XLSX.writeFile(wb, "DepartmentTemplate.xlsx");
     } catch (error) {
       console.error("Error generating Excel:", error);
     }
   };
 
   return (
-    <Container style={{ width: "500px", position: "relative", top: "5rem", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", paddingTop: "1rem" }}>
+    <Container
+      style={{
+        width: "500px",
+        position: "relative",
+        top: "5rem",
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+        paddingTop: "1rem",
+      }}
+    >
       <Typography style={{ fontSize: "1.5rem" }}>Delete Department</Typography>
 
-      <FormControl required style={{ width: "100%", height: "10px", marginBottom: 30, marginTop: 20 }} size="small">
+      <FormControl
+        required
+        style={{
+          width: "100%",
+          height: "10px",
+          marginBottom: 30,
+          marginTop: 20,
+        }}
+        size="small"
+      >
         <InputLabel id="location-label">Select Location</InputLabel>
         <Select
           labelId="location-label"
@@ -131,20 +164,48 @@ const DepartmentDeletion = () => {
         </Select>
       </FormControl>
 
-      <FormControl required style={{ width: "100%", height: "10px", marginBottom: 50, marginTop: 20 }} size="small">
+      <FormControl
+        required
+        style={{
+          width: "100%",
+          height: "10px",
+          marginBottom: 50,
+          marginTop: 20,
+        }}
+        size="small"
+      >
         <InputLabel id="department-label">Select Department</InputLabel>
-        <Select labelId="department-label" id="department" name="department" onChange={getDepartmentId}>
-          {filteredDepartments.length === 0 && (<h1 className='p-2'>dept's not found!!</h1>)}
+        <Select
+          labelId="department-label"
+          id="department"
+          name="department"
+          onChange={getDepartmentId}
+        >
+          {filteredDepartments.length === 0 && (
+            <h1 className="p-2">dept's not found!!</h1>
+          )}
           {filteredDepartments.map((data, index) => (
-            <MenuItem key={index} value={data._id} >
+            <MenuItem key={index} value={data._id}>
               {data.departmentName}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      <div className='flex gap-4 w-full'>
-        <Button variant='contained' style={{ marginBottom: "2rem" }} onClick={handleDelete}>Delete</Button>
-        <Button variant='contained' style={{ marginBottom: "2rem" }} onClick={generateExcel}>Generate Excel</Button>
+      <div className="flex gap-4 w-full">
+        <Button
+          variant="contained"
+          style={{ marginBottom: "2rem" }}
+          onClick={handleDelete}
+        >
+          Delete
+        </Button>
+        <Button
+          variant="contained"
+          style={{ marginBottom: "2rem" }}
+          onClick={generateExcel}
+        >
+          Generate Excel
+        </Button>
       </div>
     </Container>
   );

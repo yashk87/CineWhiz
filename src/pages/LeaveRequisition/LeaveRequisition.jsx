@@ -1,8 +1,10 @@
 import { CalendarMonth } from "@mui/icons-material";
 import WestIcon from "@mui/icons-material/West";
 import { Badge, Button } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
@@ -26,6 +28,7 @@ const LeaveRequisition = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
+  const queryClient = useQueryClient();
 
   const handleInputChange = () => {
     setCalendarOpen(true);
@@ -33,50 +36,48 @@ const LeaveRequisition = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.prevetDefault();
+    e.preventDefault();
 
     setCalendarOpen(false);
 
     setCalendarOpen(false);
     setAnchorEl("");
 
-    // try {
-    //   const data = await axios.post(
-    //     `${process.env.REACT_APP_API}/route/leave/create`,
-    //     {
-    //       daysOfLeave: newAppliedLeaveEvents.map(
-    //         ({ title, ...rest }) => rest
-    //       ),
-    //       leaveTypeId: leavesTypes._id,
-    //       description: leavesTypes.leaveName,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: authToken,
-    //       },
-    //     }
-    //   );
-
-    //   if (!data.data.success) {
-    //     handleAlert(true, "warning", "You have already selected this leave");
-    //   }
-
-    //   if (data.data.success) {
-    //     handleAlert(
-    //       true,
-    //       "success",
-    //       data.data.message || "Leave generated successfully."
-    //     );
-    //     setLeavesTypes("");
-    //     setNewAppliedLeaveEvents([]);
-    //   }
-    // } catch (error) {
-    //   handleAlert(
-    //     true,
-    //     "error",
-    //     error?.response?.data?.message || "Server Error, please try later."
-    //   );
-    // }
+    try {
+      await newAppliedLeaveEvents.forEach(async (value) => {
+        console.log("value", value);
+        try {
+          const data = await axios.post(
+            `${process.env.REACT_APP_API}/route/leave/create`,
+            value,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+          handleAlert(
+            true,
+            "success",
+            data.data.message || "Leave generated successfully."
+          );
+        } catch (error) {
+          console.error(`🚀 ~ error:`, error);
+          handleAlert(
+            true,
+            "warning",
+            "You have already selected this leave" || error.message
+          );
+        }
+      });
+      // setNewAppliedLeaveEvents([]);
+    } catch (error) {
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Server Error, please try later."
+      );
+    }
   };
 
   return (
