@@ -165,7 +165,7 @@ const Department = () => {
               inputProps={{
                 value: formValues.costCenter,
               }}
-              label="Cost Center (Prefix)"
+              label="Cost Center Name"
               type="text"
               placeholder="Enter Cost Center"
               onChange={handleChange}
