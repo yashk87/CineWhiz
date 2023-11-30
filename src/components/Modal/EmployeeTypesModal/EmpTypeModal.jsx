@@ -33,7 +33,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-
   const { data, isLoading } = useQuery(
     ["empType", empTypeId],
     async () => {
