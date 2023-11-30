@@ -26,6 +26,8 @@
     "date-fns": "^2.30.0",
     "date-holidays": "^3.23.1",
     "dayjs": "^1.11.10",
+    "excel-template": "^0.0.7",
+    "file-saver": "^2.0.5",
     "firebase": "^10.5.2",
     "jwt-decode": "^4.0.0",
     "lottie-web": "^5.12.2",
@@ -59,6 +61,7 @@
     "tw-elements-react": "^1.0.0-alpha2",
     "validator": "^13.11.0",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "zustand": "^4.4.4"
   },
   "scripts": {

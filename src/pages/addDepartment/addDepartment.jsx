@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Button, TextField, Autocomplete } from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
@@ -18,7 +18,30 @@ const Department = () => {
     departmentHeadName: "",
     departmentHeadDelegateName: "",
   };
+
+  const Employees = [
+    { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
+    { label: "Raj Sathe", email: "rsathe@gmail.com" },
+    { label: "Jay Jadhav", email: "jayjadhav1@gmail.com" },
+    { label: "Vaibhav Pawar", email: "vaibhavp@gmail.com" },
+    { label: "Ram Desai", email: "ramdesai1@gmail.com" },
+    { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
+    { label: "Viraj Raman", email: "vraman@gmail.com" },
+    { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
+  ];
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:4000/route/location/getOrganizationLocations", {
+        headers: {
+          Authorization: authToken,
+        },
+      })
+      .then((response) => setLocations(response.data))
+      .catch((error) => console.error("Error fetching locations:", error));
+  }, [authToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,44 +71,12 @@ const Department = () => {
       handleAlert(true, "error", error.response.data.message);
     }
   };
-  // Dummy list for combobox
-  const Employees = [
-    { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
-    { label: "Raj Sathe", email: "rsathe@gmail.com" },
-    { label: "Jay Jadhav", email: "jayjadhav1@gmail.com" },
-    { label: "Vaibhav Pawar", email: "vaibhavp@gmail.com" },
-    { label: "Ram Desai", email: "ramdesai1@gmail.com" },
-    { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
-    { label: "Viraj Raman", email: "vraman@gmail.com" },
-    { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
-  ];
-
-  const Locations = [
-    { City: "Banglore" },
-    { City: "Chennai" },
-    { City: "Tokyo" },
-    { City: "Pune" },
-    { City: "Nagpur" },
-    { City: "Jaipur" },
-    { City: "New York" },
-  ];
-
-  // const Locations = [
-  //   { City: "Banglore" },
-  //   { City: "Chennai" },
-  //   { City: "Tokyo" },
-  //   { City: "Pune" },
-  //   { City: "Nagpur" },
-  //   { City: "Jaipur" },
-  //   { City: "New York" }
-  // ]
 
   return (
     <div
       style={{
         display: "flex",
         width: "100%",
-        // height: "100%",         //
         justifyContent: "center",
         padding: "20px 0 0",
         boxSizing: "border-box",
@@ -133,22 +124,22 @@ const Department = () => {
               placeholder="Enter Department Description"
               onChange={handleChange}
             />
-            <Autocomplete
+               <Autocomplete
               size="small"
               fullWidth
               disablePortal
               id="departmentLocation"
-              options={Locations}
+              options={locations}
               onChange={(e, value) => {
-                const location = value ? value.City : "";
+                const location = value ? value.shortName : "";
                 handleChange({
                   target: { name: "departmentLocation", value: location },
                 });
               }}
               isOptionEqualToValue={(option, value) =>
-                option.City === value.City
+                option.shortName === value.shortName
               }
-              getOptionLabel={(option) => option.City}
+              getOptionLabel={(option) => option.shortName}
               renderInput={(params) => (
                 <TextField
                   {...params}

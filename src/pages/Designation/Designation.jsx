@@ -250,7 +250,7 @@ const Designation = () => {
 
   return (
     <>
-        <div className='py-5 m-auto w-full flex justify-center'>
+      <div className='py-5 m-auto w-full flex justify-center'>
         <Button onClick={handleClick} className='relative top-4 flex justify-center items-center' variant='contained' color='info'>
           Add Designation
         </Button>
@@ -299,7 +299,7 @@ const Designation = () => {
             label="Prefix Required"
           />
           {enterDesignationId && (<><p className='font-extrabold'>Note 1: Please provide the length of prefix characters below.</p>
-          <p className='font-extrabold'>Note 2: If the number of characters is 0, only numeric values are accepted.</p></>)
+            <p className='font-extrabold'>Note 2: If the number of characters is 0, only numeric values are accepted.</p></>)
           }
           {!enterDesignationId && <p className='font-extrabold'>Note : you can add numbers by default</p>}
 
@@ -373,7 +373,7 @@ const Designation = () => {
         </DialogActions>
       </Dialog>
 
-     <Container className="relative top-5 flex flex-col items-center " style={{ width: "25rem", borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"}}>
+      <Container className="relative top-5 flex flex-col items-center " style={{ width: "25rem", borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
         {designation.length === 0 && (<h1 className='text-center'>no designations right now</h1>)}
         {designation && Array.isArray(designation) ? (
           designation.map((data, index) => (
