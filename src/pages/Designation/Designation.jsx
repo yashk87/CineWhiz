@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Container,
   IconButton,
@@ -16,8 +16,10 @@ import {
 import axios from 'axios';
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { UseContext } from '../../State/UseState/UseContext';
 
 const Designation = () => {
+  const { setAppAlert } = useContext(UseContext);
   const [click, setClick] = useState(false);
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const [prefixRequired, setPrefixRequired] = useState(false);
@@ -102,11 +104,21 @@ const Designation = () => {
       axios.post("http://localhost:4000/route/designation/create", data)
         .then((response) => {
           console.log("Designation added successfully:", response.data);
+          setAppAlert({
+            alert: true,
+            type: 'success',
+            msg: 'Designation added successfully!',
+          });
           fetchDesignations();
           handleClick();
         })
         .catch((error) => {
           console.error("Error adding designation:", error);
+          setAppAlert({
+            alert: true,
+            type: 'error',
+            msg: 'Error adding designation. Please try again.',
+          });
         });
     }
 
@@ -123,12 +135,22 @@ const Designation = () => {
     axios.patch(`http://localhost:4000/route/designation/create/${trackedId}`, patchData)
       .then((response) => {
         console.log("Designation updated successfully:", response.data);
+        setAppAlert({
+          alert: true,
+          type: 'success',
+          msg: 'Designation updated successfully!',
+        });
         fetchDesignations();
         handleClick();
         setClick(false)
       })
       .catch((error) => {
         console.error("Error updating designation:", error);
+        setAppAlert({
+          alert: true,
+          type: 'error',
+          msg: 'Error updating designation. Please try again.',
+        });
       });
   };
 
@@ -176,10 +198,20 @@ const Designation = () => {
       axios.delete(`http://localhost:4000/route/designation/create/${designationToDelete}`)
         .then(() => {
           console.log("Designation deleted successfully");
+          setAppAlert({
+            alert: true,
+            type: 'success',
+            msg: 'Designation deleted successfully!',
+          });
           fetchDesignations();
         })
         .catch((error) => {
           console.error("Error deleting designation:", error);
+          setAppAlert({
+            alert: true,
+            type: 'error',
+            msg: 'Error deleting designation. Please try again.',
+          });
         })
         .finally(() => {
           setDesignationToDelete(null);
@@ -218,7 +250,7 @@ const Designation = () => {
 
   return (
     <>
-        <div className='py-5 m-auto w-full flex justify-center'>
+      <div className='py-5 m-auto w-full flex justify-center'>
         <Button onClick={handleClick} className='relative top-4 flex justify-center items-center' variant='contained' color='info'>
           Add Designation
         </Button>
@@ -267,7 +299,7 @@ const Designation = () => {
             label="Prefix Required"
           />
           {enterDesignationId && (<><p className='font-extrabold'>Note 1: Please provide the length of prefix characters below.</p>
-          <p className='font-extrabold'>Note 2: If the number of characters is 0, only numeric values are accepted.</p></>)
+            <p className='font-extrabold'>Note 2: If the number of characters is 0, only numeric values are accepted.</p></>)
           }
           {!enterDesignationId && <p className='font-extrabold'>Note : you can add numbers by default</p>}
 
@@ -341,7 +373,7 @@ const Designation = () => {
         </DialogActions>
       </Dialog>
 
-     <Container className="relative top-5 flex flex-col items-center " style={{ width: "25rem", borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"}}>
+      <Container className="relative top-5 flex flex-col items-center " style={{ width: "25rem", borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
         {designation.length === 0 && (<h1 className='text-center'>no designations right now</h1>)}
         {designation && Array.isArray(designation) ? (
           designation.map((data, index) => (
