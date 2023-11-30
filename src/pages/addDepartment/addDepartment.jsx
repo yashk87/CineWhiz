@@ -28,6 +28,11 @@ const Department = () => {
     { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
   ];
   const [locationID, setLocationId] = useState([])
+
+  const handleGetLocation =(e) =>{
+    setLocationId(e)
+    console.log(e);
+  }
   const initialFormValues = {
     departmentId: "",
     departmentName: "",
