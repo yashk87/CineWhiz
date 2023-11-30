@@ -54,7 +54,6 @@ const OrganizationLocation = () => {
     State.getStatesOfCountry(country?.name)
   );
   const [state, setState] = useState(State.getStatesOfCountry(country?.isoCode)[0] || "");
-  console.log(`🚀 ~ state:`, state);
   const [editIndex, setEditIndex] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -86,7 +85,6 @@ const OrganizationLocation = () => {
 
   const handleOpen = () => {
     setOpen(true);
-    setStateData(State.getStatesOfCountry(country?.isoCode));
   };
 
   const handleClose = () => {
