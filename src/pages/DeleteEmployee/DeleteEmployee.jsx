@@ -11,12 +11,8 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-import {
-  BorderColor,
-  Delete,
-  ManageAccountsOutlined,
-  Warning,
-} from "@mui/icons-material";
+import { BorderColor, Delete, Warning } from "@mui/icons-material";
+import { Checkbox } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
@@ -26,7 +22,7 @@ const DeleteEmployee = () => {
   const [search, setSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-
+  const [selectedEmployees, setSelectedEmployees] = useState([]); // Track selected employees
   const fetchAvailableEmployee = async () => {
     try {
       const response = await axios.get(
@@ -75,6 +71,7 @@ const DeleteEmployee = () => {
       },
     }
   );
+
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -82,22 +79,27 @@ const DeleteEmployee = () => {
           <article className="SetupSection bg-white w-[80%]  h-max shadow-md rounded-sm border  items-center">
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
-                <div className="flex items-center  gap-3 ">
-                  <TextField
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Search Employee Name...."
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: 300 }}
-                  />
-                </div>
+                <TextField
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search Employee Name...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
               </div>
+              <Button
+                className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                variant="contained"
+              >
+                Delete
+              </Button>
             </div>
 
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                   <tr className="!font-semibold ">
+                    <th scope="col" className="!text-left pl-8 py-3 "></th>
                     <th scope="col" className="!text-left pl-8 py-3 ">
                       SR NO
                     </th>
@@ -130,6 +132,9 @@ const DeleteEmployee = () => {
                     })
                     .map((item, id) => (
                       <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3">
+                          <Checkbox /* Add your checkbox properties here */ />
+                        </td>
                         <td className="!text-left pl-8 py-3 ">{id + 1}</td>
                         <td className="py-3 ">{item.first_name}</td>
                         <td className="py-3 ">{item.last_name}</td>
