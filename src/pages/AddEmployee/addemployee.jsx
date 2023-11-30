@@ -51,7 +51,6 @@ const AddEmployee = () => {
       console.error("Failed to decode the token:", error);
     }
   }, [authToken]);
-
   const {
     first_name,
     setFirstName,
@@ -136,7 +135,8 @@ const AddEmployee = () => {
           },
         }
       );
-      setAvailableLocation(response.data.locationsData);
+
+      setAvailableLocation(response.data);
     } catch (error) {
       console.error(error);
       handleAlert(true, "error", "Failed to fetch Available Work Location");
