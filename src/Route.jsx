@@ -31,6 +31,7 @@ import EmailSetting from "./pages/SetupPage/EmailSetting";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
+import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 const App = () => {
   return (
     <Routes>
@@ -46,6 +47,7 @@ const App = () => {
       />
       <Route exact path="/add-department" element={<Department />} />
       <Route exact path="/del-department" element={<DeleteDepartment />} />
+      <Route exact path="/del-employee" element={<DeleteEmployee />} />
       <Route exact path="/menu" element={<MyCalendar />} />
       <Route exact path="/verify/:token/" element={<AnimationComponent />} />
       <Route exact path="/forgot-password" element={<ForgotPassword />} />

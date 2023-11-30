@@ -8,8 +8,9 @@ import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AppDatePicker from "../../components/date-picker/date-picker";
-import LeaveTabel from "./components/LeaveTabel";
+import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
+import SummaryTable from "./components/summaryTable";
 
 // Set up the localizer for moment.js
 
@@ -22,7 +23,6 @@ const LeaveRequisition = () => {
   const [subtractedLeaves, setSubtractedLeaves] = useState([]);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
-  console.log(`🚀 ~ selectedLeave:`, selectedLeave);
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
@@ -34,7 +34,6 @@ const LeaveRequisition = () => {
 
   const handleSubmit = async (e) => {
     e.prevetDefault();
-    console.log(`🚀 ~ e:`, e);
 
     setCalendarOpen(false);
 
@@ -91,15 +90,26 @@ const LeaveRequisition = () => {
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
-          <LeaveTabel
-            subtractedLeaves={subtractedLeaves}
-            setSubtractedLeaves={setSubtractedLeaves}
-            authToken={authToken}
-            vactionList={vactionList}
-            setVactionList={setVactionList}
-            setAppliedLeaveEvents={setAppliedLeaveEvents}
-            newAppliedLeaveEvents={appliedLeaveEvents}
-          />
+          <div className="flex flex-col gap-4">
+            <LeaveTable
+              subtractedLeaves={subtractedLeaves}
+              setSubtractedLeaves={setSubtractedLeaves}
+              authToken={authToken}
+              vactionList={vactionList}
+              setVactionList={setVactionList}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              newAppliedLeaveEvents={appliedLeaveEvents}
+            />{" "}
+            <SummaryTable
+              subtractedLeaves={subtractedLeaves}
+              setSubtractedLeaves={setSubtractedLeaves}
+              authToken={authToken}
+              vactionList={vactionList}
+              setVactionList={setVactionList}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              newAppliedLeaveEvents={appliedLeaveEvents}
+            />
+          </div>
 
           <article className="md:w-[100%] space-y-2">
             <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg ">
@@ -147,24 +157,28 @@ const LeaveRequisition = () => {
                   <h1 className="text-gray-400 font-semibold mb-4 text-md">
                     Selected Leave's
                   </h1>
-                  {newAppliedLeaveEvents?.map((item, index) => (
-                    <Mapped
-                      key={index}
-                      setCalendarOpen={setCalendarOpen}
-                      subtractedLeaves={subtractedLeaves}
-                      item={item}
-                      index={index}
-                      newAppliedLeaveEvents={newAppliedLeaveEvents}
-                      setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-                    />
-                  ))}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className="font-bold m-auto w-fit"
-                  >
-                    Apply for leave
-                  </Button>
+                  <div className="flex flex-col gap-4">
+                    {newAppliedLeaveEvents?.map((item, index) => (
+                      <Mapped
+                        key={index}
+                        setCalendarOpen={setCalendarOpen}
+                        subtractedLeaves={subtractedLeaves}
+                        item={item}
+                        index={index}
+                        newAppliedLeaveEvents={newAppliedLeaveEvents}
+                        setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+                      />
+                    ))}
+                    <div className="w-full m-auto flex justify-center my-4">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        className="font-bold m-auto w-fit"
+                      >
+                        Apply for leave
+                      </Button>
+                    </div>
+                  </div>
                 </form>
               </>
             ) : (

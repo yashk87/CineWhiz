@@ -66,7 +66,7 @@ const NavItems = ({ toggleDrawer }) => {
   return (
     <>
       {userRole &&
-        (userRole.includes("Employee") ||
+        (userRole.includes("employee") ||
         userRole.includes("Manager") ||
         userRole.includes("Department Admin") ||
         userRole.includes("Delagate Department Admin") ||
