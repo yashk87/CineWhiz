@@ -22,6 +22,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import { Checkbox, ListItemText } from "@mui/material";
 import { useParams } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -37,6 +38,19 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { id } = useParams();
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      if (decodedToken && decodedToken.user._id) {
+        setUserId(decodedToken.user._id);
+      } else {
+        setUserId("");
+      }
+    } catch (error) {
+      console.error("Failed to decode the token:", error);
+    }
+  }, [authToken]);
 
   const {
     first_name,
@@ -242,7 +256,25 @@ const AddEmployee = () => {
     fetchAvailbleInputField();
   }, [id]);
 
-  console.log(availableInputField);
+  const [dynamicFields, setDynamicFields] = useState({
+    shifts_allocation: "",
+    dept_cost_no: "",
+    middalName: "",
+    martial_state: "",
+    primary_nationality: "",
+    education: "",
+    permanant_address: "",
+    relative_info: "",
+    manager_name: "",
+    emer_contact: "",
+  });
+
+  const handleDynamicFieldChange = (name, value) => {
+    setDynamicFields({
+      ...dynamicFields,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -263,6 +295,9 @@ const AddEmployee = () => {
       designation,
       worklocation,
       gender,
+      ...dynamicFields,
+      organizationId: id,
+      creatorId: userId,
     };
     console.log("user", user);
     try {
@@ -711,7 +746,7 @@ const AddEmployee = () => {
                   </FormControl>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-8">
                 {availableInputField.map((item) => (
                   <TextField
                     key={item._id}
@@ -720,10 +755,18 @@ const AddEmployee = () => {
                     label={item.label}
                     name={item.label}
                     id={item.label}
+                    value={dynamicFields[item.label] || ""} // Set value from state
+                    onChange={(e) =>
+                      handleDynamicFieldChange(item.label, e.target.value)
+                    } // Update state on change
                     fullWidth
                     margin="normal"
                     required
-                    sx={{ flexBasis: "45%", marginBottom: "16px" }}
+                    sx={{
+                      flexBasis: "45%",
+                      marginBottom: "16px",
+                      marginRight: "15px",
+                    }}
                   />
                 ))}
               </div>
