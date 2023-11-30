@@ -45,7 +45,6 @@ const DepartmentDeletion = () => {
           }
         );
         setLocations(response.data);
-        console.log(locations);
       } catch (error) {
         console.error("Error fetching location data:", error);
       }
@@ -67,22 +66,15 @@ const DepartmentDeletion = () => {
       const location = response.data.find(
         (obj) => obj.shortName === event.target.value
       );
-
-      const departmentsWithSelectedLocation = departments.filter((data) => {
-        const hasLocation = data.organizationLocationId.some(
-          (locationId) => locationId === location._id
-        );
-        console.log(
-          `Checking ${data.departmentName} - Has Location: ${hasLocation}`
-        );
-        return hasLocation;
-      });
-      console.log("Filtered Departments:", departmentsWithSelectedLocation);
-      setFilteredDepartments(departmentsWithSelectedLocation);
+      const singleDept = departments.filter(
+        (dept) => dept.departmentLocation === location._id
+      );
+      setFilteredDepartments(singleDept);
     } catch (error) {
       console.error("Error fetching location data:", error);
     }
   };
+
   const handleDelete = async () => {
     try {
       if (!selectedLocation) {
@@ -114,15 +106,71 @@ const DepartmentDeletion = () => {
   const generateExcel = () => {
     try {
       const wb = XLSX.utils.book_new();
-      const data = [
-        ["John Smith", 20],
-        ["Bob Johnson", 22],
-      ];
-      const ws = XLSX.utils.aoa_to_sheet(data);
-      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      const wsData = [["Department Name", "Department ID"]];
+
+      // Add department information to the worksheet data
+      filteredDepartments.forEach((department) => {
+        wsData.push([department.departmentName, department._id]);
+      });
+
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      // Set column width for the 'Department Name' column
+      const columnWidths = [{ wch: 20 }, { wch: 15 }];
+      ws["!cols"] = columnWidths;
+
+      XLSX.utils.book_append_sheet(wb, ws, "DepartmentSheet");
       XLSX.writeFile(wb, "DepartmentTemplate.xlsx");
     } catch (error) {
       console.error("Error generating Excel:", error);
+    }
+  };
+
+  const handleExcelDelete = async () => {
+    try {
+      // Load the uploaded Excel file
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        console.error("Please upload an Excel file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Assuming the first sheet is named 'DepartmentSheet'
+        const ws = workbook.Sheets["DepartmentSheet"];
+
+        // Iterate through rows starting from the second row (index 1)
+        for (let row = 1; row < ws["!rows"].length; row++) {
+          const deleteCommand = ws[XLSX.utils.encode_cell({ r: row, c: 2 })]; // Assuming "Delete" column is at index 2
+
+          if (
+            deleteCommand &&
+            deleteCommand.v &&
+            deleteCommand.v.toLowerCase() === "delete"
+          ) {
+            const departmentIdToDelete =
+              ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v; // Assuming "Department ID" column is at index 1
+
+            // Perform the deletion logic
+            axios.delete(
+              `http://localhost:4000/route/department/delete/${departmentIdToDelete}`,
+              {
+                headers: { Authorization: authToken },
+              }
+            );
+          }
+        }
+      };
+
+      reader.readAsArrayBuffer(file);
+    } catch (error) {
+      console.error("Error handling Excel delete:", error);
     }
   };
 

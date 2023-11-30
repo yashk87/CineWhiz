@@ -20,19 +20,10 @@ const Department = () => {
     { label: "Viraj Raman", email: "vraman@gmail.com" },
     { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
   ];
-  const [locationID, setLocationId] = useState([])
-  const initialFormValues = {
-    departmentName: "",
-    departmentDescription: "",
-    departmentLocation: "",
-    costCenterPrefix: "",
-    costCenterDescription: "",
-    departmentHeadName: "",
-    departmentHeadDelegateName: "",
-    organizationLocationId:locationID
-  };
-  const [formValues, setFormValues] = useState(initialFormValues);
-  const [locations, setLocations] = useState([]);
+  const [locationID, setLocationId] = useState(null)
+
+
+
 
 
   useEffect(() => {
@@ -51,12 +42,32 @@ const Department = () => {
     setFormValues({
       ...formValues,
       [name]: value,
+      departmentLocation:locationID
     });
   };
+  const handleGetLocation =(e) =>{
+
+    setLocationId(e)
+    console.log(e);
+
+  }
+
+  const initialFormValues = {
+    departmentName: "",
+    departmentDescription: "",
+    departmentLocation:"",
+    costCenterPrefix: "",
+    costCenterDescription: "",
+    departmentHeadName: "",
+    departmentHeadDelegateName: "",
+  };
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [locations, setLocations] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(formValues);
       await axios.post(
         "http://localhost:4000/route/department/create",
         formValues,
@@ -68,12 +79,12 @@ const Department = () => {
       );
       handleAlert(true, "success", `Department created successfully`);
       setFormValues(initialFormValues);
-      window.location.reload();
     } catch (error) {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
     }
   };
+
 
   return (
     <div
@@ -132,16 +143,16 @@ const Department = () => {
               fullWidth
               disablePortal
               id="departmentLocation"
+              name="departmentLocation"
               options={locations}
               onChange={(e, value) => {
+                handleGetLocation(value._id);
                 const location = value ? value.shortName : "";
 
 
                 handleChange({
-                  target: { name: "departmentLocation", value: location },
+                  target: { name: "departmentLocation", value: locationID },
                 });
-                setLocationId((prev) =>[...prev,value._id])
-                console.log(locationID);
               }}
               isOptionEqualToValue={(option, value) =>
                 option.shortName === value.shortName
