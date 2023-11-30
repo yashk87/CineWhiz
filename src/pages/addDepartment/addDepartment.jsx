@@ -9,15 +9,6 @@ const Department = () => {
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
 
-  const initialFormValues = {
-    departmentName: "",
-    departmentDescription: "",
-    departmentLocation: "",
-    costCenterPrefix: "",
-    costCenterDescription: "",
-    departmentHeadName: "",
-    departmentHeadDelegateName: "",
-  };
 
   const Employees = [
     { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
@@ -29,12 +20,24 @@ const Department = () => {
     { label: "Viraj Raman", email: "vraman@gmail.com" },
     { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
   ];
+  const [locationID, setLocationId] = useState([])
+  const initialFormValues = {
+    departmentName: "",
+    departmentDescription: "",
+    departmentLocation: "",
+    costCenterPrefix: "",
+    costCenterDescription: "",
+    departmentHeadName: "",
+    departmentHeadDelegateName: "",
+    organizationLocationId:locationID
+  };
   const [formValues, setFormValues] = useState(initialFormValues);
   const [locations, setLocations] = useState([]);
 
+
   useEffect(() => {
     axios
-      .get("http://localhost:4000/route/location/getOrganizationLocations", {
+    .get("http://localhost:4000/route/location/getOrganizationLocations", {
         headers: {
           Authorization: authToken,
         },
@@ -132,9 +135,13 @@ const Department = () => {
               options={locations}
               onChange={(e, value) => {
                 const location = value ? value.shortName : "";
+
+
                 handleChange({
                   target: { name: "departmentLocation", value: location },
                 });
+                setLocationId((prev) =>[...prev,value._id])
+                console.log(locationID);
               }}
               isOptionEqualToValue={(option, value) =>
                 option.shortName === value.shortName

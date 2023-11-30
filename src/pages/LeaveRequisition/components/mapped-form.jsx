@@ -1,6 +1,5 @@
 import { CalendarMonth, Delete, Edit } from "@mui/icons-material";
 import {
-  Avatar,
   Badge,
   Button,
   FormControl,
@@ -99,16 +98,10 @@ const Mapped = ({
                   <MenuItem id={index} key={index} value={item._id}>
                     <div className="flex justify-between w-full">
                       <div>{item.leaveName} </div>
-                      <Avatar
-                        sx={{
-                          bgcolor: item.color,
-                          width: 24,
-                          height: 24,
-                          fontSize: 16,
-                        }}
-                        alt={`${item.leaveName}`}
-                        src="/broken-image.jpg"
-                      ></Avatar>
+                      <div
+                        style={{ background: item.color }}
+                        className={`w-6 h-6 rounded-full`}
+                      ></div>
                     </div>
                   </MenuItem>
                 )
