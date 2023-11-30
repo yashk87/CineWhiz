@@ -7,10 +7,10 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 const LeaveTable = ({
-  subtractedLeaves,
-  setSubtractedLeaves,
   authToken,
   setAppliedLeaveEvents,
+  setSubtractedLeaves,
+  subtractedLeaves,
 }) => {
   const [total, setTotal] = useState();
 
@@ -36,19 +36,18 @@ const LeaveTable = ({
         _id: orgLeaveType._id,
       });
     });
-
-    setSubtractedLeaves(updatedSubtractedLeaves);
   };
 
   const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
-    console.log(`🚀 ~ data?.leaveTypes:`, data?.leaveTypes);
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryForCurrentMonth`,
       {
         headers: { Authorization: authToken },
       }
     );
+    setAppliedLeaveEvents(response.data.currentYearLeaves);
     updateLeaveCounts(response.data);
+    setSubtractedLeaves(response.data.leaveTypes);
     return response.data;
   });
   useEffect(() => {
@@ -56,7 +55,6 @@ const LeaveTable = ({
     data?.leaveTypes?.map((value) => {
       totalC += value.count;
     });
-    console.log(`🚀 ~ totalC:`, totalC);
     setTotal(totalC);
   }, [data]);
 
@@ -98,7 +96,6 @@ const LeaveTable = ({
       </h1>
       <div className="w-full">
         {data?.leaveTypes?.map((item, index) => {
-          console.log(`🚀 ~ item:`, item);
           return (
             <div key={index} style={{ background: item.color }}>
               <div className="flex justify-between items-center py-6 px-6">

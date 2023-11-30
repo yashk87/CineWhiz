@@ -2,45 +2,12 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-const SummaryTable = ({
-  subtractedLeaves,
-  setSubtractedLeaves,
-  authToken,
-  setAppliedLeaveEvents,
-}) => {
+const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
   const [total, setTotal] = useState();
   const [TotalLeaveSummary, setTotalLeaveSummary] = useState([]);
-  console.log(`🚀 ~ TotalLeaveSummary:`, TotalLeaveSummary);
-
-  const updateLeaveCounts = (data) => {
-    const updatedSubtractedLeaves = [];
-
-    data.leaveTypes.forEach((orgLeaveType) => {
-      const matchingLeave = data.currentYearLeaves.find(
-        (leave) => leave.leaveTypeDetailsId === orgLeaveType._id
-      );
-
-      const subtractedCount = matchingLeave
-        ? dayjs(matchingLeave.end).diff(dayjs(matchingLeave.start), "days")
-        : orgLeaveType.count;
-
-      orgLeaveType.count -= subtractedCount;
-
-      updatedSubtractedLeaves.push({
-        leaveName: orgLeaveType.leaveName,
-        subtractedCount,
-        color: orgLeaveType.color,
-        isActive: orgLeaveType.isActive,
-        _id: orgLeaveType._id,
-      });
-    });
-
-    setSubtractedLeaves(updatedSubtractedLeaves);
-  };
 
   const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
     const response = await axios.get(
@@ -50,7 +17,6 @@ const SummaryTable = ({
       }
     );
 
-    updateLeaveCounts(response.data);
     return response.data;
   });
   useEffect(() => {
