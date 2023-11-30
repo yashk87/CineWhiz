@@ -1,47 +1,34 @@
-import React, { useState } from "react";
-import {
-  Avatar,
-  AvatarGroup,
-  Button,
-  Chip,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Skeleton,
-  TextField,
-  Typography,
-} from "@mui/material";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Axios from "axios";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import ShiftDisplay from "./ShiftDisplay";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ShiftModal from "../../components/Modal/shift/ShiftModal";
-import { useParams } from "react-router";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
-import { useContext } from "react";
-import { TestContext } from "../../State/Function/Main";
-import randomColor from "randomcolor";
-import WarningIcon from "@mui/icons-material/Warning";
 import {
   AccessTimeFilled,
   EventAvailableOutlined,
   Info,
   MoreTime,
 } from "@mui/icons-material";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from "@mui/icons-material/Delete";
+import WarningIcon from "@mui/icons-material/Warning";
+import {
+  Avatar,
+  AvatarGroup,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Skeleton,
+} from "@mui/material";
+import axios from "axios";
 import dayjs from "dayjs";
+import randomColor from "randomcolor";
+import React, { useContext, useState } from "react";
+import "react-datepicker/dist/react-datepicker.css";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router";
+import { TestContext } from "../../State/Function/Main";
+import { UseContext } from "../../State/UseState/UseContext";
+import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import Setup from "../SetUpOrganization/Setup";
 
 const Shifts = () => {
@@ -79,6 +66,7 @@ const Shifts = () => {
 
   const handleEditModalOpen = (shiftId) => {
     setEditModalOpen(true);
+    console.log(shiftId);
     queryClient.invalidateQueries(["shift", ShiftId]);
     setShiftId(shiftId); // Set the shiftId for editing
   };
@@ -162,8 +150,8 @@ const Shifts = () => {
                           className="!w-full !h-[5vh]"
                         />
                       </div>
-                    ) : data?.shifts.length > 0 ? (
-                      <div className="overflow-hidden  !p-0  border-[.5px] border-gray-200">
+                    ) : data?.shifts?.length > 0 ? (
+                      <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
                         <table className="min-w-full bg-white  text-left text-sm font-light">
                           <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
                             <tr className="!font-medium shadow-lg">
