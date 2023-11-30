@@ -37,6 +37,7 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
+    console.log(`🚀 ~  start, end :`, start, end);
     setDelete(false);
     setUpdate(false);
     const selectedStartDate = moment(start);
@@ -57,10 +58,15 @@ const AppDatePicker = ({
     } else {
       const newLeave = {
         title: "Selected Leave",
-        start,
-        end,
+        start: new Date(start).toISOString(),
+        end: new Date(end).toISOString(),
         color: "blue",
       };
+      console.log(`🚀 ~ newLeave:`, newLeave);
+      console.log(
+        `🚀 ~ newLeave.new Date(start):`,
+        new Date(start).toISOString()
+      );
 
       setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
     }
