@@ -19,7 +19,7 @@ const AppDatePicker = ({
   setNewAppliedLeaveEvents,
 }) => {
   const localizer = momentLocalizer(moment);
-  console.log(`🚀 ~ selectedLeave:`, selectedLeave);
+  console.log(`🚀 ~ selectedLeave:`);
   const [selectEvent, setselectEvent] = useState(false);
   const [clickedAway, setClickedAway] = useState(false);
   const [Delete, setDelete] = useState(false);
