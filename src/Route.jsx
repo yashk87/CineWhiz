@@ -32,7 +32,26 @@ import AddEmployee from "./pages/AddEmployee/addemployee";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
 const App = () => {
+  // const [user, setUser] = useState("");
+
+  // const { cookies } = useContext(UseContext);
+  // const authToken = cookies["aeigs"];
+
+  // useEffect(() => {
+  //   try {
+  //     const decodedToken = jwtDecode(authToken);
+  //     if (decodedToken && decodedToken.user) {
+  //       setUser(decodedToken.user);
+  //     } else {
+  //       setUser("");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to decode the token:", error);
+  //   }
+  // }, []);
+
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
@@ -71,6 +90,11 @@ const App = () => {
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
+      <Route
+        exact
+        path="/organisation/edit-employee"
+        element={<EmpTemplate />}
+      />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
@@ -80,6 +104,8 @@ const App = () => {
         path="/setup/employement-types/:id"
         element={<EmployementTypes />}
       />
+
+      {/* {hasRequiredRoles && ( */}
       <Route
         exact
         path="/setup/salary-input-selection/:id"

@@ -1,11 +1,11 @@
+import InputIcon from "@mui/icons-material/Input";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { UseContext } from "../../State/UseState/UseContext";
 import { TestContext } from "../../State/Function/Main";
-import axios from "axios";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
-import InputIcon from "@mui/icons-material/Input";
 
 const Inputfield = () => {
   const { id } = useParams("");
@@ -34,7 +34,7 @@ const Inputfield = () => {
     };
 
     fetchInputFieldData();
-  }, []);
+  }, [authToken, id]);
 
   const handleInputFieldChange = (field) => {
     const updatedInputField = inputDetail.map((inputField) => {

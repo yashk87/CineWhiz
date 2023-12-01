@@ -3,7 +3,6 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import CreteLeaveTypeModal from "../../../components/Modal/LeaveTypeModal/create-leve-type-modal";
 import Setup from "../Setup";
@@ -13,12 +12,9 @@ import SkeletonForLeaveTypes from "./components/skeleton-for-leavetype";
 const LeaveTypes = ({ open, handleClose, id }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const [leaveTypes, setLeaveTypes] = useState([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const queryClient = useQueryClient();
-  const [leaveTypeToDelete, setLeaveTypeToDelete] = useState(null);
 
-  const { invalidateQueries } = useQueryClient();
   const { data, isLoading } = useQuery(
     "leaveTypes",
     async () => {
@@ -42,12 +38,6 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     }
   );
 
-  const handleDeleteType = (leaveTypeId) => {
-    setLeaveTypeToDelete(leaveTypeId);
-    setConfirmOpen(true);
-    invalidateQueries("leaveTypes");
-  };
-  const { handleAlert } = useContext(TestContext);
   const handleCreateLeave = () => {
     console.log("he");
 

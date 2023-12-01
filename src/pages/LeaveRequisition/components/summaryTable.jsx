@@ -22,7 +22,7 @@ const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
   useEffect(() => {
     let totalC = 0;
     data?.leaveTypes?.map((value) => {
-      totalC += value.count;
+      return (totalC += value.count);
     });
     setTotal(totalC);
     // Create an array to store the details of each leave type
