@@ -1,11 +1,8 @@
-import { jwtDecode } from "jwt-decode";
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { UseContext } from "../../State/UseState/UseContext";
-import { useContext } from "react";
 import { LocationOn, Person } from "@mui/icons-material";
 import { Divider } from "@mui/material";
+import { jwtDecode } from "jwt-decode";
+import React, { useContext, useEffect, useState } from "react";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const UserProfile = () => {
   const { cookies } = useContext(UseContext);
@@ -22,7 +19,7 @@ const UserProfile = () => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
-  }, []);
+  }, [token]);
   return (
     <section className="min-h-screen bg-gray-50 px">
       <article className="flex pt-20">

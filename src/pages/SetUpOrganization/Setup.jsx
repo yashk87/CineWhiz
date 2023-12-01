@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   AddLocationAltOutlined,
   BeachAccessOutlined,
@@ -10,10 +10,33 @@ import {
   West,
 } from "@mui/icons-material";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { UseContext } from "../../State/UseState/UseContext";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Setup = ({ children }) => {
   const location = useLocation();
   const { id } = useParams("");
+
+  const [user, setUser] = useState("");
+
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      if (decodedToken && decodedToken.user) {
+        setUser(decodedToken.user);
+      } else {
+        setUser();
+      }
+    } catch (error) {
+      console.error("Failed to decode the token:", error);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   const data = [
     {
@@ -21,12 +44,14 @@ const Setup = ({ children }) => {
       icon: PersonAddAlt1Outlined,
       href: `/setup/add-roles/${id}`,
       active: location.pathname === `/setup/add-roles/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Leave Types",
       icon: BeachAccessOutlined,
       href: `/setup/leave-types/${id}`,
       active: location.pathname === `/setup/leave-types/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
     {
@@ -34,12 +59,14 @@ const Setup = ({ children }) => {
       icon: EventAvailableOutlined,
       href: `/setup/set-shifts/${id}`,
       active: location.pathname === `/setup/set-shifts/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
       href: "/",
       active: location.pathname === "",
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
     {
@@ -47,18 +74,23 @@ const Setup = ({ children }) => {
       icon: AddLocationAltOutlined,
       href: "/",
       active: location.pathname === "",
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Employement type",
       icon: ManageAccountsOutlined,
       href: `/setup/employement-types/${id}`,
       active: location.pathname === `/setup/employement-types/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Salary Input Field selection",
       icon: PriceChangeOutlined,
       href: `/setup/salary-input-selection/${id}`,
       active: location.pathname === `/setup/salary-input-selection/${id}`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "HR"].includes(role)
+      ),
     },
   ];
 
@@ -84,9 +116,9 @@ const Setup = ({ children }) => {
               <Link
                 to={item.href}
                 key={id}
-                className={`group ${
-                  item.active && "bg-sky-100 !text-blue-500"
-                }  hover:bg-sky-100 transition-all   flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
+                className={`group ${item.active && "bg-sky-100 !text-blue-500"}
+                ${!item.isVisible && "!hidden"}
+                  hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
               >
                 <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />
                 <h1 className="group-hover:!text-blue-500 ">{item.label}</h1>

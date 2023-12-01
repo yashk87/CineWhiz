@@ -1,17 +1,11 @@
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Skeleton,
-  Switch,
-} from "@mui/material";
+import { PersonAddOutlined } from "@mui/icons-material";
+import { Checkbox, FormControlLabel, Skeleton, Switch } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import { useQuery } from "react-query";
-import { PersonAddOutlined } from "@mui/icons-material";
 import Setup from "../SetUpOrganization/Setup";
 
 import "../../index.css";

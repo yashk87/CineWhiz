@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
 import {
-  Container,
   Button,
-  MenuItem,
-  Select,
+  Container,
   FormControl,
   InputLabel,
+  MenuItem,
+  Select,
   Typography,
   TextField,
   Dialog,
@@ -14,8 +13,9 @@ import {
   DialogActions,
 } from "@mui/material";
 import axios from "axios";
-import { UseContext } from "../../State/UseState/UseContext";
+import React, { useContext, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentDeletion = () => {
   const { setAppAlert } = useContext(UseContext);
@@ -109,7 +109,9 @@ const DepartmentDeletion = () => {
         setShowConfirmation(false);
       })
 
-      const response = await axios.get('http://localhost:4000/route/department/get');
+      const response = await axios.get(
+        "http://localhost:4000/route/department/get"
+      );
       setDepartments(response.data.department);
       setSelectedLocation("");
       setFilteredDepartments([]);
@@ -126,10 +128,10 @@ const DepartmentDeletion = () => {
   const generateExcel = () => {
     try {
       const wb = XLSX.utils.book_new();
-      const wsData = [['Department Name', 'Department ID']];
+      const wsData = [["Department Name", "Department ID"]];
 
       // Add department information to the worksheet data
-      filteredDepartments.forEach(department => {
+      filteredDepartments.forEach((department) => {
         wsData.push([department.departmentName, department._id]);
       });
 
@@ -137,10 +139,10 @@ const DepartmentDeletion = () => {
 
       // Set column width for the 'Department Name' column
       const columnWidths = [{ wch: 20 }, { wch: 15 }];
-      ws['!cols'] = columnWidths;
+      ws["!cols"] = columnWidths;
 
-      XLSX.utils.book_append_sheet(wb, ws, 'DepartmentSheet');
-      XLSX.writeFile(wb, 'DepartmentTemplate.xlsx');
+      XLSX.utils.book_append_sheet(wb, ws, "DepartmentSheet");
+      XLSX.writeFile(wb, "DepartmentTemplate.xlsx");
     } catch (error) {
       console.error("Error generating Excel:", error);
     }
@@ -151,10 +153,10 @@ const DepartmentDeletion = () => {
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
 
-      if (!file) {
-        console.error('Please upload an Excel file.');
-        return;
-      }
+  //     if (!file) {
+  //       console.error("Please upload an Excel file.");
+  //       return;
+  //     }
 
       const reader = new FileReader();
       reader.onload = async function (e) {

@@ -31,7 +31,7 @@ export default function ProfileIcon() {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
-  }, []);
+  }, [token]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,10 +48,10 @@ export default function ProfileIcon() {
     window.location.reload();
   };
 
-  const handleNotificationClick = () => {
-    navigate("/notification");
-    setAnchorEl(null);
-  };
+  // const handleNotificationClick = () => {
+  //   navigate("/notification");
+  //   setAnchorEl(null);
+  // };
 
   const handleNavigate = (link) => {
     navigate(link);
