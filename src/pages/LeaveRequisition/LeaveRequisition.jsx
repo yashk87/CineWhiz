@@ -4,7 +4,6 @@ import { Badge, Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
@@ -21,14 +20,12 @@ const LeaveRequisition = () => {
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
   const [vactionList, setVactionList] = useState([]);
-  const [age, setAge] = React.useState("");
   const [subtractedLeaves, setSubtractedLeaves] = useState([]);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-  const queryClient = useQueryClient();
 
   const handleInputChange = () => {
     setCalendarOpen(true);
