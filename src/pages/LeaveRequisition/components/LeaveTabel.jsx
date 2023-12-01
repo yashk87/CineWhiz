@@ -1,67 +1,64 @@
+import { Help } from "@mui/icons-material";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
+import { TestContext } from "../../../State/Function/Main";
 
-const LeaveTable = ({
-  authToken,
-  setAppliedLeaveEvents,
-  setSubtractedLeaves,
-  subtractedLeaves,
-}) => {
-  const [total, setTotal] = useState();
-  const [balanceForLeave, setBalanceForLeave] = useState([]);
-
-  const updateLeaveCounts = (data) => {
-    const updatedSubtractedLeaves = [];
-
-    data?.leaveTypes?.forEach((orgLeaveType) => {
-      const matchingLeave = data.currentYearLeaves.find(
-        (leave) => leave.leaveTypeDetailsId === orgLeaveType._id
+const LeaveTable = ({ authToken, setAppliedLeaveEvents }) => {
+  const { handleAlert } = useContext(TestContext);
+  const { data, isLoading, isError, error } = useQuery(
+    ["employee-leave-table"],
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/getEmployeeLeaveTable`,
+        {
+          headers: { Authorization: authToken },
+        }
       );
 
-      const subtractedCount = matchingLeave
-        ? dayjs(matchingLeave.end).diff(dayjs(matchingLeave.start), "days")
-        : orgLeaveType.count;
+      setAppliedLeaveEvents(response.data.currentYearLeaves);
+      return response.data;
+    }
+  );
 
-      orgLeaveType.count -= subtractedCount;
-
-      updatedSubtractedLeaves.push({
-        leaveName: orgLeaveType.leaveName,
-        subtractedCount,
-        color: orgLeaveType.color,
-        isActive: orgLeaveType.isActive,
-        _id: orgLeaveType._id,
-      });
-    });
-    setBalanceForLeave(updatedSubtractedLeaves);
-  };
-
-  const { isLoading, isError } = useQuery("remainingLeaves", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryForCurrentMonth`,
-      {
-        headers: { Authorization: authToken },
-      }
+  if (isError) {
+    handleAlert(
+      true,
+      "warning",
+      error?.response?.data?.message || "Sorry Server is under maintainance"
     );
-
-    setAppliedLeaveEvents(response.data.currentYearLeaves);
-    updateLeaveCounts(response.data);
-    setSubtractedLeaves(response.data.leaveTypes);
-
-    return response.data;
-  });
-  useEffect(() => {
-    let totalC = 0;
-    balanceForLeave?.map((value) => {
-      return (totalC += value.subtractedCount);
-    });
-    setTotal(totalC);
-  }, [balanceForLeave]);
-
+    return (
+      <article className="w-[350px] h-max py-6 bg-white border-red-700 border shadow-xl rounded-lg ">
+        <h1 className="text-xl px-8 font-semibold flex items-center gap-3 ">
+          <Help className="text-red-700" /> Failed to load data
+        </h1>
+        <Divider
+          className="pt-6 !border-red-700"
+          variant="fullWidth"
+          orientation="horizontal"
+        />
+        <div className="w-full px-6 mt-4 space-y-4 ">
+          {[1, 2, 3, 4].map((index) => (
+            <div key={index} className="mt-6">
+              <Skeleton variant="text" className="w-[15%] h-6 text-lg " />
+              <Skeleton
+                variant="text"
+                className="w-[25%] !h-8 !mb-4 text-md "
+              />
+              <Divider
+                variant="fullWidth"
+                className="!border-red-700 !border"
+                orientation="horizontal"
+              />
+            </div>
+          ))}
+        </div>
+      </article>
+    );
+  }
   if (isLoading) {
     return (
       <article className="w-[350px] h-max py-6 bg-white shadow-xl rounded-lg ">
@@ -99,7 +96,7 @@ const LeaveTable = ({
         <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
       </h1>
       <div className="w-full">
-        {balanceForLeave?.map((item, index) => {
+        {data?.leaveTypes?.map((item, index) => {
           return (
             <div key={index} style={{ background: item.color }}>
               <div className="flex justify-between items-center py-6 px-6">
@@ -117,7 +114,9 @@ const LeaveTable = ({
           <h1 className="text-md text-gray-200 font-bold tracking-wide">
             Total Leave Balance
           </h1>
-          <h1 className="text-lg tracking-wide text-gray-400">{total}</h1>
+          <h1 className="text-lg tracking-wide text-gray-400">
+            {data.totalCoutn}
+          </h1>
         </div>
       </div>
     </article>
