@@ -22,7 +22,7 @@ const DeleteEmployee = () => {
   const [search, setSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [selectedEmployees, setSelectedEmployees] = useState([]); // Track selected employees
+
   const fetchAvailableEmployee = async () => {
     try {
       const response = await axios.get(
