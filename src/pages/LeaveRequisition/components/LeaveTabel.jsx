@@ -13,11 +13,12 @@ const LeaveTable = ({
   subtractedLeaves,
 }) => {
   const [total, setTotal] = useState();
+  const [balanceForLeave, setBalanceForLeave] = useState([]);
 
   const updateLeaveCounts = (data) => {
     const updatedSubtractedLeaves = [];
 
-    data.leaveTypes.forEach((orgLeaveType) => {
+    data?.leaveTypes?.forEach((orgLeaveType) => {
       const matchingLeave = data.currentYearLeaves.find(
         (leave) => leave.leaveTypeDetailsId === orgLeaveType._id
       );
@@ -36,6 +37,7 @@ const LeaveTable = ({
         _id: orgLeaveType._id,
       });
     });
+    setBalanceForLeave(updatedSubtractedLeaves);
   };
 
   const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
@@ -45,18 +47,20 @@ const LeaveTable = ({
         headers: { Authorization: authToken },
       }
     );
+
     setAppliedLeaveEvents(response.data.currentYearLeaves);
     updateLeaveCounts(response.data);
     setSubtractedLeaves(response.data.leaveTypes);
+
     return response.data;
   });
   useEffect(() => {
     let totalC = 0;
-    data?.leaveTypes?.map((value) => {
-      totalC += value.count;
+    balanceForLeave?.map((value) => {
+      totalC += value.subtractedCount;
     });
     setTotal(totalC);
-  }, [data]);
+  }, [balanceForLeave]);
 
   if (isLoading) {
     return (
@@ -95,7 +99,7 @@ const LeaveTable = ({
         <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
       </h1>
       <div className="w-full">
-        {data?.leaveTypes?.map((item, index) => {
+        {balanceForLeave?.map((item, index) => {
           return (
             <div key={index} style={{ background: item.color }}>
               <div className="flex justify-between items-center py-6 px-6">
@@ -103,7 +107,7 @@ const LeaveTable = ({
                   {item.leaveName}
                 </h1>
                 <h1 className="text-lg tracking-wide font-bold text-gray-200">
-                  {item.count}
+                  {item.subtractedCount}
                 </h1>
               </div>
             </div>

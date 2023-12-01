@@ -61,6 +61,7 @@ const AppDatePicker = ({
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString(),
         color: "blue",
+        leaveTypeDetailsId: "",
       };
       console.log(`🚀 ~ newLeave:`, newLeave);
       console.log(
@@ -160,7 +161,7 @@ const AppDatePicker = ({
   }, []);
   return (
     <Popover
-      PaperProps={{ className: "w-[90vw]" }}
+      PaperProps={{ className: "w-full md:w-[70vw] xl:w-[60vw]" }}
       open={isCalendarOpen}
       anchorEl={anchorEl}
       onClose={() => setCalendarOpen(false)}
@@ -177,7 +178,7 @@ const AppDatePicker = ({
       }}
     >
       <div className=" bg-white shadow-lg z-10">
-        <div className=" w-full">
+        <div className="w-full">
           <Calendar
             localizer={localizer}
             views={["month"]}
