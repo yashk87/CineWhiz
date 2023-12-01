@@ -1,4 +1,4 @@
-import { BorderColor, Delete, Warning } from "@mui/icons-material";
+import { Delete, Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -9,18 +9,13 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-<<<<<<< HEAD
-import { Delete, Warning } from "@mui/icons-material";
-import { Checkbox } from "@mui/material";
 import { useMutation, useQueryClient } from "react-query";
-=======
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
->>>>>>> 36ab27c3b9122a8c7dca88632dab4bce1d6a4427
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
