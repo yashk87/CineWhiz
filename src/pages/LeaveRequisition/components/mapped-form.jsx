@@ -1,6 +1,5 @@
 import { CalendarMonth, Delete, Edit } from "@mui/icons-material";
 import {
-  Avatar,
   Badge,
   Button,
   FormControl,
@@ -8,7 +7,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays, format, parseISO } from "date-fns";
 import React, { useState } from "react";
 
 const Mapped = ({
@@ -19,8 +18,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  console.log(`🚀 ~ subtractedLeaves:`, subtractedLeaves);
-  const [leavesTypes, setLeavesTypes] = useState("");
+  const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -33,6 +31,8 @@ const Mapped = ({
     console.log(`🚀 ~ event:`, event.target);
     console.log(`🚀 ~ event:`, subtractedLeaves);
     setLeavesTypes(event.target.value);
+    newAppliedLeaveEvents[index].leaveTypeDetailsId = event.target.value;
+    setNewAppliedLeaveEvents(newAppliedLeaveEvents);
   };
   const removeItem = (idToRemove) => {
     const updatedAppliedLeaveEvents = newAppliedLeaveEvents.filter(
@@ -54,7 +54,9 @@ const Mapped = ({
             },
           }}
           badgeContent={
-            <span>{differenceInDays(item.end, item.start)} day</span>
+            <span>
+              {differenceInDays(parseISO(item.end), parseISO(item.start))} day
+            </span>
           }
           sx={badgeStyle}
           color="primary"
@@ -86,6 +88,7 @@ const Mapped = ({
             Select Leave Type
           </InputLabel>
           <Select
+            defaultValue={leavesTypes}
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -93,26 +96,26 @@ const Mapped = ({
             label="Select Leave Type"
             onChange={handleChange}
           >
-            {subtractedLeaves?.map(
-              (item, index) =>
+            {subtractedLeaves?.map((item, index) => {
+              return (
                 item.isActive && (
-                  <MenuItem id={index} key={index} value={item._id}>
+                  <MenuItem
+                    selected={leavesTypes === item.leaveTypeDetailsId}
+                    id={index}
+                    key={index}
+                    value={item._id}
+                  >
                     <div className="flex justify-between w-full">
                       <div>{item.leaveName} </div>
-                      <Avatar
-                        sx={{
-                          bgcolor: item.color,
-                          width: 24,
-                          height: 24,
-                          fontSize: 16,
-                        }}
-                        alt={`${item.leaveName}`}
-                        src="/broken-image.jpg"
-                      ></Avatar>
+                      <div
+                        style={{ background: item.color }}
+                        className={`w-6 h-6 rounded-full`}
+                      ></div>
                     </div>
                   </MenuItem>
                 )
-            )}
+              );
+            })}
           </Select>
         </FormControl>
         <Button

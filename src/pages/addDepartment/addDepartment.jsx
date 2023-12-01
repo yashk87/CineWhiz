@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { Button, TextField, Autocomplete } from "@mui/material";
+import React, { useContext, useState, useEffect } from "react";
+import { Button, TextField, Autocomplete, Checkbox, FormControlLabel} from "@mui/material";
 import axios from "axios";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -8,29 +8,82 @@ const Department = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
+  
+  // const [departmentIdRequired, setDepartmentIdRequired] = useState(false);
+  // const [prefixRequired, setPrefixRequired] = useState(false);
+  // const [prefixLength, setPrefixLength] = useState(0);
+  const [enterDepartmentId, setEnterDepartmentId] = useState(false);
+  const [numCharacters, setNumCharacters] = useState(0);
+  const [departmentId, setDepartmentId] = useState("");
+  const [departmentError, setDepartmentError] = useState("");
 
+  const Employees = [
+    { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
+    { label: "Raj Sathe", email: "rsathe@gmail.com" },
+    { label: "Jay Jadhav", email: "jayjadhav1@gmail.com" },
+    { label: "Vaibhav Pawar", email: "vaibhavp@gmail.com" },
+    { label: "Ram Desai", email: "ramdesai1@gmail.com" },
+    { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
+    { label: "Viraj Raman", email: "vraman@gmail.com" },
+    { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
+  ];
+  const [locationID, setLocationId] = useState([])
+
+  const handleGetLocation =(e) =>{
+    setLocationId(e)
+    console.log(e);
+  }
   const initialFormValues = {
+    departmentId: "",
     departmentName: "",
     departmentDescription: "",
     departmentLocation: "",
-    costCenter: "",
+    costCenterName: "",
     costCenterDescription: "",
     departmentHeadName: "",
     departmentHeadDelegateName: "",
+    organizationLocationId:locationID
   };
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [locations, setLocations] = useState([]);
+
+
+  useEffect(() => {
+    axios
+    .get("http://localhost:4000/route/location/getOrganizationLocations", {
+        headers: {
+          Authorization: authToken,
+        },
+      })
+      .then((response) => {
+        setLocations(response.data)
+        console.log("locations are: ",response.data);
+      })
+      .catch((error) => console.error("Error fetching locations:", error));
+  }, [authToken]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({
       ...formValues,
       [name]: value,
+      departmentLocation:locationID
     });
+  };
+  
+  const handleDepartmentIdChange = (e) => {
+    const input = e.target.value;
+    const charactersOnly = input.replace(/\d/g, '');
+
+    if (charactersOnly.length <= numCharacters) {
+      setDepartmentId(input);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(formValues);
       await axios.post(
         "http://localhost:4000/route/department/create",
         formValues,
@@ -42,57 +95,30 @@ const Department = () => {
       );
       handleAlert(true, "success", `Department created successfully`);
       setFormValues(initialFormValues);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
-      console.error(error.response.data.message);
-      handleAlert(true, "error", error.response.data.message);
+      console.error(error.response.data.error);
+      handleAlert(true, "error", error.response.data.error);
     }
   };
-  // Dummy list for combobox
-  const Employees = [
-    { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
-    { label: "Raj Sathe", email: "rsathe@gmail.com" },
-    { label: "Jay Jadhav", email: "jayjadhav1@gmail.com" },
-    { label: "Vaibhav Pawar", email: "vaibhavp@gmail.com" },
-    { label: "Ram Desai", email: "ramdesai1@gmail.com" },
-    { label: "Vishal Solanki", email: "vsolanki1@gmail.com" },
-    { label: "Viraj Raman", email: "vraman@gmail.com" },
-    { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
-  ];
 
-  const Locations = [
-    { City: "Banglore" },
-    { City: "Chennai" },
-    { City: "Tokyo" },
-    { City: "Pune" },
-    { City: "Nagpur" },
-    { City: "Jaipur" },
-    { City: "New York" },
-  ];
-
-  // const Locations = [
-  //   { City: "Banglore" },
-  //   { City: "Chennai" },
-  //   { City: "Tokyo" },
-  //   { City: "Pune" },
-  //   { City: "Nagpur" },
-  //   { City: "Jaipur" },
-  //   { City: "New York" }
-  // ]
 
   return (
     <div
       style={{
         display: "flex",
-        width: "100%",
-        // height: "100%",         //
+        minWidth: "100vw",
         justifyContent: "center",
         padding: "20px 0 0",
         boxSizing: "border-box",
+        minHeight: '100vh',
+        overflow: "hidden"
+        // overflowY: "auto",
+        // height: "100vh"
       }}
     >
       <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
-        <div className="w-[400px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
+        <div className="w-[500px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
           <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
             Add Department details
           </h4>
@@ -108,7 +134,7 @@ const Department = () => {
                 maxLength: 40,
                 value: formValues.departmentName,
               }}
-              helperText={"No special characters, Max 5 words allowed"}
+              helperText={"Department Name cannot repeat. No special characters, Max 5 words."}
               size="small"
               fullWidth
               name="departmentName"
@@ -133,22 +159,26 @@ const Department = () => {
               placeholder="Enter Department Description"
               onChange={handleChange}
             />
-            <Autocomplete
+               <Autocomplete
               size="small"
               fullWidth
               disablePortal
               id="departmentLocation"
-              options={Locations}
+              name="departmentLocation"
+              options={locations}
               onChange={(e, value) => {
-                const location = value ? value.City : "";
+                handleGetLocation(value._id);
+                const location = value ? value.shortName : "";
+
+
                 handleChange({
-                  target: { name: "departmentLocation", value: location },
+                  target: { name: "departmentLocation", value: locationID },
                 });
               }}
               isOptionEqualToValue={(option, value) =>
-                option.City === value.City
+                option.shortName === value.shortName
               }
-              getOptionLabel={(option) => option.City}
+              getOptionLabel={(option) => option.shortName}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -161,11 +191,11 @@ const Department = () => {
               required
               size="small"
               fullWidth
-              name="costCenter"
+              name="costCenterName"
               inputProps={{
-                value: formValues.costCenter,
+                value: formValues.costCenterName,
               }}
-              label="Cost Center (Prefix)"
+              label="Cost Center Name"
               type="text"
               placeholder="Enter Cost Center"
               onChange={handleChange}
@@ -185,6 +215,61 @@ const Department = () => {
               placeholder="Enter Cost Center description"
               onChange={handleChange}
             />
+            <div 
+              style={{
+                width: "100%",
+                display: "flex",
+                gap: "8px",
+                marginTop: "8px",
+                marginBottom: "-1rem",
+              }}>
+            <FormControlLabel 
+            style={{
+              width: "85%",
+              alignItems: "center"
+            }}
+            control={<Checkbox checked={enterDepartmentId} onChange={() => setEnterDepartmentId(!enterDepartmentId)} 
+            />}
+            label="Use prefix in ID"
+            />
+            {/* Make departmentIdRequired And prefixRequired variable and not string. */}
+
+          {enterDepartmentId && (
+            <TextField
+              style={{ marginTop: "1rem" }}
+              inputProps={{
+                  min: 1,
+              }}
+              required
+              name="numCharacters"
+              size="small"
+              className="w-full"
+              label="no of Characters"
+              type="number"
+              value={numCharacters}
+              onChange={(e) => setNumCharacters(e.target.value)}
+            />
+          )}
+          </div>{enterDepartmentId && (
+            <p style={{alignSelf: "start"}} className="font-extralight">Note: Please adjust the character length of prefix in ID.</p>
+            )}
+          {!enterDepartmentId && 
+          <p className="font-extralight" style={{alignSelf: "start", marginTop: "5px"}}>
+            Note : No prefix added to Department ID.
+          </p>}
+          <TextField
+            required
+            name="departmentId"
+            size="small"
+            className="w-full"
+            label="Department ID"
+            type="text"
+            value={departmentId}
+            onChange={handleDepartmentIdChange}
+            error={departmentError !== ""}
+            helperText={departmentError}
+          />
+          {!departmentId}
             <Autocomplete
               size="small"
               fullWidth

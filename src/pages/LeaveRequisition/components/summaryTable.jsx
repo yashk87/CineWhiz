@@ -2,43 +2,12 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-const LeaveTable = ({
-  authToken,
-  setAppliedLeaveEvents,
-  setSubtractedLeaves,
-  subtractedLeaves,
-}) => {
+const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
   const [total, setTotal] = useState();
-  const [balanceForLeave, setBalanceForLeave] = useState([]);
-
-  const updateLeaveCounts = (data) => {
-    const updatedSubtractedLeaves = [];
-
-    data?.leaveTypes?.forEach((orgLeaveType) => {
-      const matchingLeave = data.currentYearLeaves.find(
-        (leave) => leave.leaveTypeDetailsId === orgLeaveType._id
-      );
-
-      const subtractedCount = matchingLeave
-        ? dayjs(matchingLeave.end).diff(dayjs(matchingLeave.start), "days")
-        : orgLeaveType.count;
-
-      orgLeaveType.count -= subtractedCount;
-
-      updatedSubtractedLeaves.push({
-        leaveName: orgLeaveType.leaveName,
-        subtractedCount,
-        color: orgLeaveType.color,
-        isActive: orgLeaveType.isActive,
-        _id: orgLeaveType._id,
-      });
-    });
-    setBalanceForLeave(updatedSubtractedLeaves);
-  };
+  const [TotalLeaveSummary, setTotalLeaveSummary] = useState([]);
 
   const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
     const response = await axios.get(
@@ -48,19 +17,44 @@ const LeaveTable = ({
       }
     );
 
-    setAppliedLeaveEvents(response.data.currentYearLeaves);
-    updateLeaveCounts(response.data);
-    setSubtractedLeaves(response.data.leaveTypes);
-
     return response.data;
   });
   useEffect(() => {
     let totalC = 0;
-    balanceForLeave?.map((value) => {
-      totalC += value.subtractedCount;
+    data?.leaveTypes?.map((value) => {
+      totalC += value.count;
     });
     setTotal(totalC);
-  }, [balanceForLeave]);
+    // Create an array to store the details of each leave type
+    const leaveTypeDetailsArray = [];
+    let totalCount = 0;
+    // Iterate through leaveData to collect details of each leave type
+    data &&
+      data?.currentMonthLeaves?.forEach((item) => {
+        const leaveTypeId = item.leaveTypeDetailsId._id;
+        const existingLeaveType = leaveTypeDetailsArray.find(
+          (leaveType) => leaveType._id === leaveTypeId
+        );
+
+        if (!existingLeaveType) {
+          leaveTypeDetailsArray.push({
+            _id: item.leaveTypeDetailsId._id,
+            leaveName: item.leaveTypeDetailsId.leaveName,
+            isActive: item.leaveTypeDetailsId.isActive,
+            color: item.leaveTypeDetailsId.color,
+            count: 0, // Initialize count to 0
+          });
+        }
+
+        const index = leaveTypeDetailsArray.findIndex(
+          (leaveType) => leaveType._id === leaveTypeId
+        );
+        leaveTypeDetailsArray[index].count++;
+        totalCount++;
+      });
+    setTotal(totalCount);
+    setTotalLeaveSummary(leaveTypeDetailsArray);
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -95,26 +89,27 @@ const LeaveTable = ({
 
   return (
     <article className="w-[350px] h-max bg-white shadow-lg rounded-lg ">
-      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 ">
-        <AccountBalanceIcon className="text-gray-400" /> Balance for Leaves
+      <h1 className="text-xl py-6 px-6 font-semibold flex items-center gap-3 text-gray-400">
+        <AccountBalanceIcon className="text-gray-400" /> Summary for current
+        month
       </h1>
       <div className="w-full">
-        {balanceForLeave?.map((item, index) => {
+        {TotalLeaveSummary?.map((item, index) => {
           return (
-            <div key={index} style={{ background: item.color }}>
+            <div key={index} className="border-b border">
               <div className="flex justify-between items-center py-6 px-6">
-                <h1 className="text-md text-gray-200 font-bold tracking-wide">
+                <h1 className="text-md text-gray-400 font-bold tracking-wide">
                   {item.leaveName}
                 </h1>
-                <h1 className="text-lg tracking-wide font-bold text-gray-200">
-                  {item.subtractedCount}
+                <h1 className="text-lg tracking-wide font-bold text-gray-400">
+                  {item.count}
                 </h1>
               </div>
             </div>
           );
         })}
         <div className="flex justify-between items-center py-6 px-6">
-          <h1 className="text-md text-gray-200 font-bold tracking-wide">
+          <h1 className="text-md text-gray-400 font-bold tracking-wide">
             Total Leave Balance
           </h1>
           <h1 className="text-lg tracking-wide text-gray-400">{total}</h1>
@@ -124,4 +119,4 @@ const LeaveTable = ({
   );
 };
 
-export default LeaveTable;
+export default SummaryTable;

@@ -19,11 +19,13 @@ const AppDatePicker = ({
   setNewAppliedLeaveEvents,
 }) => {
   const localizer = momentLocalizer(moment);
+  console.log(`🚀 ~ selectedLeave:`, selectedLeave);
   const [selectEvent, setselectEvent] = useState(false);
   const [clickedAway, setClickedAway] = useState(false);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
+  const [updateLeave, setUpdateLeave] = useState(false);
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -36,7 +38,9 @@ const AppDatePicker = ({
     }
   };
 
+  console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const handleSelectSlot = ({ start, end }) => {
+    console.log(`🚀 ~  start, end :`, start, end);
     setDelete(false);
     setUpdate(false);
     const selectedStartDate = moment(start);
@@ -55,17 +59,47 @@ const AppDatePicker = ({
     if (isOverlap) {
       handleAlert(true, "warning", "You have already selected this leave");
     } else {
-      const newLeave = {
-        title: "Selected Leave",
-        start,
-        end,
-        color: "blue",
-      };
+      if (selectEvent) {
+        const newLeave = {
+          ...selectedLeave,
+          title: "Updated Leave",
+          start: new Date(start).toISOString(),
+          end: new Date(end).toISOString(),
+          color: "black",
+        };
 
-      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+        setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+        setSelectedLeave(null);
+
+        setselectEvent(true);
+      } else {
+        const newLeave = {
+          title: "Selected Leave",
+          start: new Date(start).toISOString(),
+          end: new Date(end).toISOString(),
+          color: "blue",
+          leaveTypeDetailsId: "",
+        };
+        console.log(`🚀 ~ newLeave:`, newLeave);
+        console.log(
+          `🚀 ~ newLeave.new Date(start):`,
+          new Date(start).toISOString()
+        );
+
+        setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+      }
     }
   };
-
+  const handleUpdateFunction = (e) => {
+    console.log("selectedLeave", selectedLeave);
+    setselectEvent(true);
+    // newAppliedLeaveEvents
+    console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
+    let array = appliedLeaveEvents.filter(
+      (item) => item._id !== selectedLeave._id
+    );
+    setAppliedLeaveEvents(array);
+  };
   const CustomToolbar = (toolbar) => {
     const handleMonthChange = (event) => {
       const newDate = moment(toolbar.date).month(event.target.value).toDate();
@@ -154,7 +188,7 @@ const AppDatePicker = ({
   }, []);
   return (
     <Popover
-      PaperProps={{ className: "w-[90vw]" }}
+      PaperProps={{ className: "w-full md:w-[70vw] xl:w-[60vw]" }}
       open={isCalendarOpen}
       anchorEl={anchorEl}
       onClose={() => setCalendarOpen(false)}
@@ -171,7 +205,7 @@ const AppDatePicker = ({
       }}
     >
       <div className=" bg-white shadow-lg z-10">
-        <div className=" w-full">
+        <div className="w-full">
           <Calendar
             localizer={localizer}
             views={["month"]}
@@ -211,6 +245,7 @@ const AppDatePicker = ({
         </Button>
         <Button
           variant="contained"
+          onClick={handleUpdateFunction}
           className="rbc-event-content"
           disabled={!update}
         >

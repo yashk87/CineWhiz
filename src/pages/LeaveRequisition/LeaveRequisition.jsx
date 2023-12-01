@@ -1,15 +1,18 @@
 import { CalendarMonth } from "@mui/icons-material";
 import WestIcon from "@mui/icons-material/West";
 import { Badge, Button } from "@mui/material";
+import axios from "axios";
 import React, { useContext, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import AppDatePicker from "../../components/date-picker/date-picker";
-import LeaveTabel from "./components/LeaveTabel";
+import LeaveTable from "./components/LeaveTabel";
 import Mapped from "./components/mapped-form";
+import SummaryTable from "./components/summaryTable";
 
 // Set up the localizer for moment.js
 
@@ -22,10 +25,10 @@ const LeaveRequisition = () => {
   const [subtractedLeaves, setSubtractedLeaves] = useState([]);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
-  console.log(`🚀 ~ selectedLeave:`, selectedLeave);
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
+  const queryClient = useQueryClient();
 
   const handleInputChange = () => {
     setCalendarOpen(true);
@@ -33,51 +36,48 @@ const LeaveRequisition = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.prevetDefault();
-    console.log(`🚀 ~ e:`, e);
+    e.preventDefault();
 
     setCalendarOpen(false);
 
     setCalendarOpen(false);
     setAnchorEl("");
 
-    // try {
-    //   const data = await axios.post(
-    //     `${process.env.REACT_APP_API}/route/leave/create`,
-    //     {
-    //       daysOfLeave: newAppliedLeaveEvents.map(
-    //         ({ title, ...rest }) => rest
-    //       ),
-    //       leaveTypeId: leavesTypes._id,
-    //       description: leavesTypes.leaveName,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: authToken,
-    //       },
-    //     }
-    //   );
-
-    //   if (!data.data.success) {
-    //     handleAlert(true, "warning", "You have already selected this leave");
-    //   }
-
-    //   if (data.data.success) {
-    //     handleAlert(
-    //       true,
-    //       "success",
-    //       data.data.message || "Leave generated successfully."
-    //     );
-    //     setLeavesTypes("");
-    //     setNewAppliedLeaveEvents([]);
-    //   }
-    // } catch (error) {
-    //   handleAlert(
-    //     true,
-    //     "error",
-    //     error?.response?.data?.message || "Server Error, please try later."
-    //   );
-    // }
+    try {
+      await newAppliedLeaveEvents.forEach(async (value) => {
+        console.log("value", value);
+        try {
+          const data = await axios.post(
+            `${process.env.REACT_APP_API}/route/leave/create`,
+            value,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
+          handleAlert(
+            true,
+            "success",
+            data.data.message || "Leave generated successfully."
+          );
+        } catch (error) {
+          console.error(`🚀 ~ error:`, error);
+          handleAlert(
+            true,
+            "warning",
+            "You have already selected this leave" || error.message
+          );
+        }
+      });
+      // setNewAppliedLeaveEvents([]);
+    } catch (error) {
+      handleAlert(
+        true,
+        "error",
+        error?.response?.data?.message || "Server Error, please try later."
+      );
+    }
   };
 
   return (
@@ -91,15 +91,26 @@ const LeaveRequisition = () => {
         </header>
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
-          <LeaveTabel
-            subtractedLeaves={subtractedLeaves}
-            setSubtractedLeaves={setSubtractedLeaves}
-            authToken={authToken}
-            vactionList={vactionList}
-            setVactionList={setVactionList}
-            setAppliedLeaveEvents={setAppliedLeaveEvents}
-            newAppliedLeaveEvents={appliedLeaveEvents}
-          />
+          <div className="flex flex-col gap-4">
+            <LeaveTable
+              subtractedLeaves={subtractedLeaves}
+              setSubtractedLeaves={setSubtractedLeaves}
+              authToken={authToken}
+              vactionList={vactionList}
+              setVactionList={setVactionList}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              newAppliedLeaveEvents={appliedLeaveEvents}
+            />{" "}
+            <SummaryTable
+              subtractedLeaves={subtractedLeaves}
+              setSubtractedLeaves={setSubtractedLeaves}
+              authToken={authToken}
+              vactionList={vactionList}
+              setVactionList={setVactionList}
+              setAppliedLeaveEvents={setAppliedLeaveEvents}
+              newAppliedLeaveEvents={appliedLeaveEvents}
+            />
+          </div>
 
           <article className="md:w-[100%] space-y-2">
             <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg ">
@@ -147,24 +158,28 @@ const LeaveRequisition = () => {
                   <h1 className="text-gray-400 font-semibold mb-4 text-md">
                     Selected Leave's
                   </h1>
-                  {newAppliedLeaveEvents?.map((item, index) => (
-                    <Mapped
-                      key={index}
-                      setCalendarOpen={setCalendarOpen}
-                      subtractedLeaves={subtractedLeaves}
-                      item={item}
-                      index={index}
-                      newAppliedLeaveEvents={newAppliedLeaveEvents}
-                      setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
-                    />
-                  ))}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    className="font-bold m-auto w-fit"
-                  >
-                    Apply for leave
-                  </Button>
+                  <div className="flex flex-col gap-4">
+                    {newAppliedLeaveEvents?.map((item, index) => (
+                      <Mapped
+                        key={index}
+                        setCalendarOpen={setCalendarOpen}
+                        subtractedLeaves={subtractedLeaves}
+                        item={item}
+                        index={index}
+                        newAppliedLeaveEvents={newAppliedLeaveEvents}
+                        setNewAppliedLeaveEvents={setNewAppliedLeaveEvents}
+                      />
+                    ))}
+                    <div className="w-full m-auto flex justify-center my-4">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        className="font-bold m-auto w-fit"
+                      >
+                        Apply for leave
+                      </Button>
+                    </div>
+                  </div>
                 </form>
               </>
             ) : (
