@@ -33,7 +33,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-
   const { data, isLoading } = useQuery(
     ["empType", empTypeId],
     async () => {
@@ -102,17 +101,14 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
     }
   );
 
-  console.log(empTypeId);
-
   useEffect(() => {
     if (data?.empType) {
-      setTitleEmpType(data?.empType?.title || "hii");
+      setTitleEmpType(data?.empType?.title || "");
     }
   }, [data]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (workingFrom === "") return handleError("Shift type field is mandatory");
     try {
       const data = {
         title: titleEmpType,

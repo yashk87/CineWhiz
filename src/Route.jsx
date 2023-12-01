@@ -29,7 +29,31 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
+import { useContext } from "react";
+import { useState } from "react";
+import { UseContext } from "./State/UseState/UseContext";
+import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
 const App = () => {
+  const [user, setUser] = useState("");
+
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+
+  useEffect(() => {
+    try {
+      const decodedToken = jwtDecode(authToken);
+      if (decodedToken && decodedToken.user) {
+        setUser(decodedToken.user);
+      } else {
+        setUser("");
+      }
+    } catch (error) {
+      console.error("Failed to decode the token:", error);
+    }
+  }, []);
+
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
@@ -64,6 +88,11 @@ const App = () => {
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
+      <Route
+        exact
+        path="/organisation/edit-employee"
+        element={<EmpTemplate />}
+      />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
@@ -73,11 +102,14 @@ const App = () => {
         path="/setup/employement-types/:id"
         element={<EmployementTypes />}
       />
+
+      {/* {hasRequiredRoles && ( */}
       <Route
         exact
         path="/setup/salary-input-selection/:id"
         element={<SalaryInput />}
       />
+      {/* )} */}
 
       <Route exact path="/notification" element={<Notification />} />
       <Route exact path="/application" element={<Application />} />

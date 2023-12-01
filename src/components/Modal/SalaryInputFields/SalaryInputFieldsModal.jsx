@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import {
+  Autocomplete,
   Box,
   Button,
   CircularProgress,
@@ -8,13 +9,16 @@ import {
   DialogContent,
   Divider,
   FormControl,
+  FormLabel,
   IconButton,
   InputLabel,
   MenuItem,
   Modal,
   OutlinedInput,
   Select,
+  TextField,
   Tooltip,
+  createFilterOptions,
 } from "@mui/material";
 import { MobileTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,10 +37,13 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import { useEffect } from "react";
 import {
   Add,
+  InfoOutlined,
   Remove,
   RemoveCircleOutline,
   RemoveOutlined,
 } from "@mui/icons-material";
+
+const filter = createFilterOptions();
 
 const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -44,23 +51,19 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const authToken = cookies["aeigs"];
 
   let salaryComponentArray = [
-    "Basic",
-    "HRA",
-    "DA",
-    "Varialble allowance",
-    "Special allowance",
-    "Travel allowance",
-    "Food allowance",
-    "Sales allowance",
-    "other",
+    { title: "Basic" },
+    { title: "HRA" },
+    { title: "DA" },
+    { title: "Varialble allowance" },
+    { title: "Special allowance" },
+    { title: "Travel allowance" },
+    { title: "Food allowance" },
+    { title: "Sales allowance" },
   ];
-
-  const [SalaryComponent, setSalaryComponent] = useState(salaryComponentArray);
-  const [filterdArray, setFillterArray] = useState(salaryComponentArray);
 
   const descriptionElementRef = React.useRef(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -82,32 +85,105 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     return response.data;
   });
 
-  // const { data, isLoading } = useQuery(
-  //   ["salaryComponent", salaryId],
-  //   async () => {
-  //     if (open && salaryId !== null) {
-  //       const response = await axios.get(
-  //         `${process.env.REACT_APP_API}/route/employment-types/${salaryId}`,
-  //         {
-  //           headers: {
-  //             Authorization: authToken,
-  //           },
-  //         }
-  //       );
-  //       return response.data;
-  //     }
-  //   },
-  //   {
-  //     enabled: open && salaryId !== null,
-  //   }
-  // );
+  const { data: salaryInput } = useQuery(
+    ["empType", salaryId],
+    async () => {
+      if (open && salaryId !== null) {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API}/route/salary-template/${salaryId}`,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+        return response.data;
+      }
+    },
+    {
+      enabled: open && salaryId !== null,
+    }
+  );
 
   const [userInput, setUserInput] = useState({
     name: "",
     desc: "",
   });
-
   const [empTypes, setEmpTypes] = useState("");
+  const [salaryStructures, setSalaryStructures] = useState([
+    { salaryComponent: "", manuallyInput: "", calculation: "" },
+  ]);
+
+  const [errors, setErrors] = useState({
+    name: "",
+    desc: "",
+    empTypes: "",
+    salaryStructures: [],
+  });
+
+  const validateForm = () => {
+    const newErrors = { ...errors };
+    let isValid = true;
+
+    if (!userInput.name.trim()) {
+      newErrors.name = "Name is required";
+      isValid = false;
+    } else {
+      newErrors.name = "";
+    }
+
+    if (!empTypes) {
+      newErrors.empTypes = "Employment Types is required";
+      isValid = false;
+    } else {
+      newErrors.empTypes = "";
+    }
+
+    // Validate salary structures
+    const structuresError = [];
+    salaryStructures.forEach((structure, index) => {
+      const error = {};
+
+      if (!structure.salaryComponent.trim()) {
+        error.salaryComponent = "Salary Component is required";
+        isValid = false;
+      }
+
+      if (!structure.manuallyInput.trim()) {
+        error.manuallyInput = "Manually Input is required";
+        isValid = false;
+      }
+
+      if (!structure.calculation.trim()) {
+        error.calculation = "Calculation is required";
+        isValid = false;
+      }
+
+      structuresError[index] = error;
+    });
+    newErrors.salaryStructures = structuresError;
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  useEffect(() => {
+    if (salaryInput?.SalarTemplates) {
+      const extractedSalaryStructure =
+        salaryInput.SalarTemplates.salaryStructure.map((salaryComponent) => ({
+          ...salaryComponent,
+          manuallyInput: salaryComponent.manuallyInput ? "yes" : "no",
+        }));
+
+      setEmpTypes(salaryInput?.SalarTemplates.empType._id);
+      setUserInput({
+        name: salaryInput?.SalarTemplates?.name,
+        desc: salaryInput?.SalarTemplates?.desc,
+      });
+
+      setSalaryStructures(extractedSalaryStructure);
+    }
+  }, [salaryInput]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -117,26 +193,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     }));
   };
 
-  const [error, setError] = useState("");
-
-  // About  row
-  const [salaryStructures, setSalaryStructures] = useState([
-    { salaryComponent: "", manuallyInput: "", calculation: "None" },
-  ]);
-
   const handleSalaryStructureChange = (index, field, value) => {
     setSalaryStructures((prevStructures) => {
       const newStructures = [...prevStructures];
       newStructures[index][field] = value;
-
-      const filteredArray = salaryComponentArray.filter((item) => {
-        return !newStructures.some(
-          (structure) => structure.salaryComponent === item
-        );
-      });
-
-      setFillterArray(filteredArray);
-
       return newStructures;
     });
   };
@@ -144,7 +204,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const handleAddRow = () => {
     setSalaryStructures((prevStructures) => [
       ...prevStructures,
-      { salaryComponent: "", manuallyInput: "", calculation: "None" },
+      { salaryComponent: "", manuallyInput: "", calculation: "" },
     ]);
   };
 
@@ -166,66 +226,66 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
 
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["empTypes"] });
+        queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
+        setUserInput("");
+        setEmpTypes("");
+        setSalaryStructures("");
         handleClose();
         handleAlert(true, "success", "Employee types generated succesfully");
       },
 
       onError: () => {
-        setError("An error occurred while creating a new employe Type");
+        handleAlert(true, "error", "Somerthing went wrong");
       },
     }
   );
 
-  // const EditEmployeeType = useMutation(
-  //   (data) =>
-  //     axios.put(
-  //       `${process.env.REACT_APP_API}/route/employment-types/${salaryId}`,
-  //       data,
-  //       {
-  //         headers: {
-  //           Authorization: authToken,
-  //         },
-  //       }
-  //     ),
-  //   {
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["empTypes"] });
-  //       handleClose();
-  //       handleAlert(true, "success", "Employee Types updated succesfully");
-  //     },
-  //     onError: () => {
-  //       setError("An error occurred while creating a neemppTypet");
-  //     },
-  //   }
-  // );
-
-  // useEffect(() => {
-  //   if (data?.salaryComponent) {
-  //     setTitleEmpType(data?.salaryComponent?.title || "hii");
-  //   }
-  // }, [data]);
+  const EditSalaryTemplate = useMutation(
+    (data) =>
+      axios.put(
+        `${process.env.REACT_APP_API}/route/salary-template/${salaryId}`,
+        data,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["salaryTemplates"] });
+        handleClose();
+        handleAlert(true, "success", "Salary template updated succesfully");
+      },
+      onError: () => {
+        handleAlert(true, "error", "Somerthing went wrong");
+      },
+    }
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (workingFrom === "") return handleError("Shift type field is mandatory");
-    try {
-      const data = {
-        salaryStructure: salaryStructures,
-        ...userInput,
-        salaryComponent: empTypes,
-      };
+    const isValid = validateForm();
+    console.log(isValid);
 
-      if (salaryId) {
-        // await EditEmployeeType.mutateAsync(data);
-      } else {
-        await AddSalaryInputs.mutateAsync(data);
+    if (isValid) {
+      try {
+        const data = {
+          salaryStructure: salaryStructures,
+          ...userInput,
+          empType: empTypes,
+        };
+
+        if (salaryId) {
+          await EditSalaryTemplate.mutateAsync(data);
+        } else {
+          await AddSalaryInputs.mutateAsync(data);
+        }
+        // Reset form state
+      } catch (error) {
+        console.error(error);
+        handleAlert(true, "error", "Somerthing went wrong");
       }
-      // Reset form state
-      setError("");
-    } catch (error) {
-      console.error(error);
-      setError("An error occurred while creating a neemppTypet");
     }
   };
 
@@ -260,36 +320,45 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
         </div>
 
         <div className="px-5 space-y-4 mt-4">
-          {error && <p className="text-red-500">*{error}</p>}
+          {/* {error && <p className="text-red-500">*{error}</p>} */}
 
           <div className="space-y-2 ">
-            <label className="text-md" htmlFor="demo-simple-select-label">
+            <FormLabel
+              error={errors.name.length > 0}
+              className="text-md mb-2"
+              htmlFor="name"
+            >
               Enter template name
-            </label>
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
-              <InputLabel htmlFor="outlined-adornment-password">
-                Enter name
-              </InputLabel>
+            </FormLabel>
+            <FormControl
+              error={errors.name.length > 0}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              <InputLabel htmlFor="name">Enter name</InputLabel>
               <OutlinedInput
-                id="outlined-adornment-password"
+                id="name"
                 label="Enter name"
                 name={"name"}
+                value={userInput.name}
                 onChange={handleInputChange}
               />
             </FormControl>
+            {errors.name && <p className="text-red-500">*{errors.name}</p>}
           </div>
 
           <div className="space-y-2 ">
-            <label className="text-md" htmlFor="demo-simple-select-label">
-              Enter description
-            </label>
+            <FormLabel className="text-md mb-2" htmlFor="name">
+              Enter template desc
+            </FormLabel>
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
               <InputLabel htmlFor="outlined-adornment-password">
-                Enter description
+                Enter description (optional)
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password"
-                label="Enter description"
+                label="Enter description (optional)"
                 multiline
                 rows={3}
                 name={"desc"}
@@ -300,16 +369,22 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
           </div>
 
           <div className="space-y-2 ">
-            <label className="text-md" htmlFor="demo-simple-select-label">
-              Select Employment Types
-              {/* {shiftId && isLoading ? "loading" : "Select shift type"} */}
-            </label>
-            <FormControl size="small" fullWidth>
+            <FormLabel
+              error={errors.empTypes.length > 0}
+              className="text-md mb-2"
+              htmlFor="name"
+            >
+              Enter employment types
+            </FormLabel>
+            <FormControl
+              error={errors.empTypes.length > 0}
+              size="small"
+              fullWidth
+            >
               <InputLabel id="demo-simple-select-label">
                 Employment Types
               </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={empTypes}
                 onChange={(e) => setEmpTypes(e.target.value)}
@@ -328,115 +403,180 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                 )}
               </Select>
             </FormControl>
+            {errors.empTypes && (
+              <p className="text-red-500">*{errors.empTypes}</p>
+            )}
           </div>
-
           <p className="text-md">Salary Structure</p>
-          <div className="overflow-auto  !p-0  border-[.5px] border-gray-200">
-            <table className="min-w-full bg-white  text-left !text-sm font-light">
-              <thead className="border-b bg-gray-100  font-medium dark:border-neutral-500">
-                <tr>
-                  <th scope="col" className="!text-left pl-8 py-3 ">
-                    Salary Component
-                  </th>
-                  <th scope="col" className="py-3 ">
-                    Manually input
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Calculation
-                  </th>
-                  <th scope="col" className="px-6 py-3 ">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {salaryStructures.map((structure, index) => (
-                  <tr
-                    key={index}
-                    className="px-2 !border border-gray-300 !py-4 !space-x-4 gap-4 w-full"
-                  >
-                    <td className="w-[40%] py-4 pl-2">
-                      <FormControl className="w-[90%]" size="small">
-                        <InputLabel id="demo-simple-select-label">
-                          Salary Component
-                        </InputLabel>
-                        <Select
-                          labelId={`salaryComponent-label-${index}`}
+          {salaryStructures?.length <= 0 ? (
+            <div className="flex items-center gap-4 w-full bg-red-200 p-3 rounded-md ">
+              <InfoOutlined className="!text-5xl text-red-600" />
+              <div className="">
+                <h1 className="!text-2xl text-red-600">
+                  Salary Structure not found
+                </h1>
+                <p>Add a new data by clicking on the plus button </p>
+              </div>
+            </div>
+          ) : (
+            <div className="overflow-auto  !p-0 bg-gray-200">
+              <table className="min-w-full bg-white  text-left !text-sm font-light">
+                <thead className="border-b bg-gray-100  font-medium dark:border-neutral-500">
+                  <tr>
+                    <th scope="col" className="!text-left pl-8 py-3 ">
+                      Salary Component
+                    </th>
+                    <th scope="col" className="py-3 ">
+                      Manually input
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Calculation
+                    </th>
+                    <th scope="col" className="px-6 py-3 ">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {salaryStructures?.map((structure, index) => (
+                    <tr
+                      key={index}
+                      className="px-2 !border border-gray-300 !py-4 !space-x-4 gap-4 w-full"
+                    >
+                      <td className="w-[35%] py-4 pl-2">
+                        <Autocomplete
                           id={`salaryComponent-select-${index}`}
                           value={structure.salaryComponent}
-                          onChange={(e) =>
-                            handleSalaryStructureChange(
-                              index,
-                              "salaryComponent",
-                              e.target.value
-                            )
-                          }
-                          label="Select Leave Type"
-                        >
-                          {SalaryComponent.length > 0 ? (
-                            SalaryComponent?.map((item, id) => (
-                              <MenuItem
-                                className={`${
-                                  !filterdArray.includes(item) && "hidden"
-                                }`}
-                                key={id}
-                                value={item}
-                              >
-                                {item}
-                              </MenuItem>
-                            ))
-                          ) : (
-                            <div className="flex w-full items-center justify-center p-2">
-                              No data Found
-                            </div>
-                          )}
-                        </Select>
-                      </FormControl>
-                    </td>
-                    <td className="w-[40%] !mx-4">
-                      <FormControl size="small" className="w-[90%]">
-                        <InputLabel id="demo-simple-select-label">
-                          Select Employment Types
-                        </InputLabel>
-                        <Select
-                          labelId={`manuallyInput-label-${index}`}
-                          id={`manuallyInput-select-${index}`}
-                          value={structure.manuallyInput}
-                          onChange={(e) =>
-                            handleSalaryStructureChange(
-                              index,
-                              "manuallyInput",
-                              e.target.value
-                            )
-                          }
-                          label="Select Employment Types"
-                        >
-                          <MenuItem key={id} value={"yes"}>
-                            yes
-                          </MenuItem>
-                          <MenuItem key={id} value={"no"}>
-                            No
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </td>
+                          onChange={(event, newValue) => {
+                            if (typeof newValue === "string") {
+                              handleSalaryStructureChange(
+                                index,
+                                "salaryComponent",
+                                newValue
+                              );
+                            } else if (newValue && newValue.inputValue) {
+                              handleSalaryStructureChange(
+                                index,
+                                "salaryComponent",
+                                newValue.inputValue
+                              );
+                            }
+                          }}
+                          filterOptions={(options, params) => {
+                            const filtered = filter(options, params);
+                            const { inputValue } = params;
 
-                    <td className="w-[10%]">None</td>
-                    <td className="w-[10%]">
-                      <Tooltip title="Remove this row">
-                        <IconButton
-                          className="!text-sm !text-red-500  rounded-full"
-                          onClick={() => handleRemoveRow(index)}
+                            const isExisting = options.some(
+                              (option) => inputValue === option.title
+                            );
+                            if (inputValue !== "" && !isExisting) {
+                              filtered.push({
+                                inputValue,
+                                title: `Add "${inputValue}"`,
+                              });
+                            }
+
+                            return filtered;
+                          }}
+                          selectOnFocus
+                          clearOnBlur
+                          options={salaryComponentArray}
+                          getOptionLabel={(option) =>
+                            typeof option === "string" ? option : option.title
+                          }
+                          size="small"
+                          renderOption={(props, option) => (
+                            <li {...props}>{option.title}</li>
+                          )}
+                          sx={{ width: "90%" }}
+                          freeSolo
+                          renderInput={(params) => (
+                            <TextField {...params} label="Salary Component" />
+                          )}
+                        />
+                        {errors.salaryStructures[index]?.salaryComponent && (
+                          <p className="text-red-500">
+                            *{errors.salaryStructures[index].salaryComponent}
+                          </p>
+                        )}
+                      </td>
+                      <td className="w-[35%] !mx-4">
+                        <FormControl size="small" className="w-[90%]">
+                          <InputLabel id="demo-simple-select-label">
+                            manually
+                          </InputLabel>
+                          <Select
+                            id={`manuallyInput-select-${index}`}
+                            value={structure.manuallyInput}
+                            onChange={(e) =>
+                              handleSalaryStructureChange(
+                                index,
+                                "manuallyInput",
+                                e.target.value
+                              )
+                            }
+                            label="manually"
+                          >
+                            <MenuItem key={id} value={"yes"}>
+                              yes
+                            </MenuItem>
+                            <MenuItem key={id} value={"no"}>
+                              No
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                        {errors.salaryStructures[index]?.manuallyInput && (
+                          <p className="text-red-500">
+                            *{errors.salaryStructures[index].manuallyInput}
+                          </p>
+                        )}
+                      </td>
+
+                      <td className="w-[35%]">
+                        <FormControl
+                          size="small"
+                          className="w-full"
+                          variant="outlined"
                         >
-                          <RemoveOutlined />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                          <InputLabel htmlFor="outlined-adornment-password">
+                            Calculation
+                          </InputLabel>
+                          <OutlinedInput
+                            label="Calculation"
+                            id={`calculation-select-${index}`}
+                            value={structure.calculation}
+                            onChange={(e) =>
+                              handleSalaryStructureChange(
+                                index,
+                                "calculation",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </FormControl>
+                        {errors.salaryStructures[index]?.calculation && (
+                          <p className="text-red-500">
+                            *{errors.salaryStructures[index].calculation}
+                          </p>
+                        )}
+                      </td>
+
+                      <td className="w-[10%]">
+                        <Tooltip title="Remove this row">
+                          <IconButton
+                            className="!text-sm !text-red-500  rounded-full"
+                            onClick={() => handleRemoveRow(index)}
+                          >
+                            <RemoveOutlined />
+                          </IconButton>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           <div>
             <Tooltip title="Add a row for salary structure">
@@ -455,16 +595,16 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
             </Button>
             {salaryId ? (
               <Button
-                // onClick={handleSubmit}
+                onClick={handleSubmit}
                 variant="contained"
                 color="primary"
-                // disabled={EditEmployeeType.isLoading}
+                disabled={EditSalaryTemplate.isLoading}
               >
-                {/* {EditEmployeeType.isLoading ? (
+                {EditSalaryTemplate.isLoading ? (
                   <CircularProgress size={20} />
                 ) : (
-                )} */}
-                Edit Employee Types
+                  "Edit Employee Types"
+                )}
               </Button>
             ) : (
               <Button
