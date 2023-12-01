@@ -126,53 +126,53 @@ const DepartmentDeletion = () => {
     }
   };
 
-  const handleExcelDelete = async () => {
-    try {
-      // Load the uploaded Excel file
-      const fileInput = document.getElementById("fileInput");
-      const file = fileInput.files[0];
+  // const handleExcelDelete = async () => {
+  //   try {
+  //     // Load the uploaded Excel file
+  //     const fileInput = document.getElementById("fileInput");
+  //     const file = fileInput.files[0];
 
-      if (!file) {
-        console.error("Please upload an Excel file.");
-        return;
-      }
+  //     if (!file) {
+  //       console.error("Please upload an Excel file.");
+  //       return;
+  //     }
 
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
+  //     const reader = new FileReader();
+  //     reader.onload = function (e) {
+  //       const data = new Uint8Array(e.target.result);
+  //       const workbook = XLSX.read(data, { type: "array" });
 
-        // Assuming the first sheet is named 'DepartmentSheet'
-        const ws = workbook.Sheets["DepartmentSheet"];
+  //       // Assuming the first sheet is named 'DepartmentSheet'
+  //       const ws = workbook.Sheets["DepartmentSheet"];
 
-        // Iterate through rows starting from the second row (index 1)
-        for (let row = 1; row < ws["!rows"].length; row++) {
-          const deleteCommand = ws[XLSX.utils.encode_cell({ r: row, c: 2 })]; // Assuming "Delete" column is at index 2
+  //       // Iterate through rows starting from the second row (index 1)
+  //       for (let row = 1; row < ws["!rows"].length; row++) {
+  //         const deleteCommand = ws[XLSX.utils.encode_cell({ r: row, c: 2 })]; // Assuming "Delete" column is at index 2
 
-          if (
-            deleteCommand &&
-            deleteCommand.v &&
-            deleteCommand.v.toLowerCase() === "delete"
-          ) {
-            const departmentIdToDelete =
-              ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v; // Assuming "Department ID" column is at index 1
+  //         if (
+  //           deleteCommand &&
+  //           deleteCommand.v &&
+  //           deleteCommand.v.toLowerCase() === "delete"
+  //         ) {
+  //           const departmentIdToDelete =
+  //             ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v; // Assuming "Department ID" column is at index 1
 
-            // Perform the deletion logic
-            axios.delete(
-              `http://localhost:4000/route/department/delete/${departmentIdToDelete}`,
-              {
-                headers: { Authorization: authToken },
-              }
-            );
-          }
-        }
-      };
+  //           // Perform the deletion logic
+  //           axios.delete(
+  //             `http://localhost:4000/route/department/delete/${departmentIdToDelete}`,
+  //             {
+  //               headers: { Authorization: authToken },
+  //             }
+  //           );
+  //         }
+  //       }
+  //     };
 
-      reader.readAsArrayBuffer(file);
-    } catch (error) {
-      console.error("Error handling Excel delete:", error);
-    }
-  };
+  //     reader.readAsArrayBuffer(file);
+  //   } catch (error) {
+  //     console.error("Error handling Excel delete:", error);
+  //   }
+  // };
 
   return (
     <Container

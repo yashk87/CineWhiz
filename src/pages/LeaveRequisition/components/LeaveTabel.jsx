@@ -40,7 +40,7 @@ const LeaveTable = ({
     setBalanceForLeave(updatedSubtractedLeaves);
   };
 
-  const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
+  const { isLoading, isError } = useQuery("remainingLeaves", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryForCurrentMonth`,
       {
@@ -57,7 +57,7 @@ const LeaveTable = ({
   useEffect(() => {
     let totalC = 0;
     balanceForLeave?.map((value) => {
-      totalC += value.subtractedCount;
+      return (totalC += value.subtractedCount);
     });
     setTotal(totalC);
   }, [balanceForLeave]);

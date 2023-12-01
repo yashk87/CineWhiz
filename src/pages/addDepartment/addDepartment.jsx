@@ -1,6 +1,12 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Button, TextField, Autocomplete, Checkbox, FormControlLabel} from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
@@ -8,14 +14,10 @@ const Department = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-  
-  // const [departmentIdRequired, setDepartmentIdRequired] = useState(false);
-  // const [prefixRequired, setPrefixRequired] = useState(false);
-  // const [prefixLength, setPrefixLength] = useState(0);
+
   const [enterDepartmentId, setEnterDepartmentId] = useState(false);
   const [numCharacters, setNumCharacters] = useState(0);
   const [departmentId, setDepartmentId] = useState("");
-  const [departmentError, setDepartmentError] = useState("");
 
   const Employees = [
     { label: "Ramesh patnayak", email: "ramesh1@gmail.com" },
@@ -27,12 +29,12 @@ const Department = () => {
     { label: "Viraj Raman", email: "vraman@gmail.com" },
     { label: "Harsh Modi", email: "harshmodi2@gmail.com" },
   ];
-  const [locationID, setLocationId] = useState([])
+  const [locationID, setLocationId] = useState([]);
 
-  const handleGetLocation =(e) =>{
-    setLocationId(e)
+  const handleGetLocation = (e) => {
+    setLocationId(e);
     console.log(e);
-  }
+  };
   const initialFormValues = {
     departmentId: "",
     departmentName: "",
@@ -42,22 +44,21 @@ const Department = () => {
     costCenterDescription: "",
     departmentHeadName: "",
     departmentHeadDelegateName: "",
-    organizationLocationId:locationID
+    organizationLocationId: locationID,
   };
   const [formValues, setFormValues] = useState(initialFormValues);
   const [locations, setLocations] = useState([]);
 
-
   useEffect(() => {
     axios
-    .get("http://localhost:4000/route/location/getOrganizationLocations", {
+      .get("http://localhost:4000/route/location/getOrganizationLocations", {
         headers: {
           Authorization: authToken,
         },
       })
       .then((response) => {
-        setLocations(response.data)
-        console.log("locations are: ",response.data);
+        setLocations(response.data);
+        console.log("locations are: ", response.data);
       })
       .catch((error) => console.error("Error fetching locations:", error));
   }, [authToken]);
@@ -67,13 +68,13 @@ const Department = () => {
     setFormValues({
       ...formValues,
       [name]: value,
-      departmentLocation:locationID
+      departmentLocation: locationID,
     });
   };
-  
+
   const handleDepartmentIdChange = (e) => {
     const input = e.target.value;
-    const charactersOnly = input.replace(/\d/g, '');
+    const charactersOnly = input.replace(/\d/g, "");
 
     if (charactersOnly.length <= numCharacters) {
       setDepartmentId(input);
@@ -102,7 +103,6 @@ const Department = () => {
     }
   };
 
-
   return (
     <div
       style={{
@@ -111,8 +111,8 @@ const Department = () => {
         justifyContent: "center",
         padding: "20px 0 0",
         boxSizing: "border-box",
-        minHeight: '100vh',
-        overflow: "hidden"
+        minHeight: "100vh",
+        overflow: "hidden",
         // overflowY: "auto",
         // height: "100vh"
       }}
@@ -134,7 +134,9 @@ const Department = () => {
                 maxLength: 40,
                 value: formValues.departmentName,
               }}
-              helperText={"Department Name cannot repeat. No special characters, Max 5 words."}
+              helperText={
+                "Department Name cannot repeat. No special characters, Max 5 words."
+              }
               size="small"
               fullWidth
               name="departmentName"
@@ -159,7 +161,7 @@ const Department = () => {
               placeholder="Enter Department Description"
               onChange={handleChange}
             />
-               <Autocomplete
+            <Autocomplete
               size="small"
               fullWidth
               disablePortal
@@ -168,8 +170,6 @@ const Department = () => {
               options={locations}
               onChange={(e, value) => {
                 handleGetLocation(value._id);
-                const location = value ? value.shortName : "";
-
 
                 handleChange({
                   target: { name: "departmentLocation", value: locationID },
@@ -215,61 +215,71 @@ const Department = () => {
               placeholder="Enter Cost Center description"
               onChange={handleChange}
             />
-            <div 
+            <div
               style={{
                 width: "100%",
                 display: "flex",
                 gap: "8px",
                 marginTop: "8px",
                 marginBottom: "-1rem",
-              }}>
-            <FormControlLabel 
-            style={{
-              width: "85%",
-              alignItems: "center"
-            }}
-            control={<Checkbox checked={enterDepartmentId} onChange={() => setEnterDepartmentId(!enterDepartmentId)} 
-            />}
-            label="Use prefix in ID"
-            />
-            {/* Make departmentIdRequired And prefixRequired variable and not string. */}
-
-          {enterDepartmentId && (
-            <TextField
-              style={{ marginTop: "1rem" }}
-              inputProps={{
-                  min: 1,
               }}
+            >
+              <FormControlLabel
+                style={{
+                  width: "85%",
+                  alignItems: "center",
+                }}
+                control={
+                  <Checkbox
+                    checked={enterDepartmentId}
+                    onChange={() => setEnterDepartmentId(!enterDepartmentId)}
+                  />
+                }
+                label="Use prefix in ID"
+              />
+              {/* Make departmentIdRequired And prefixRequired variable and not string. */}
+
+              {enterDepartmentId && (
+                <TextField
+                  style={{ marginTop: "1rem" }}
+                  inputProps={{
+                    min: 1,
+                  }}
+                  required
+                  name="numCharacters"
+                  size="small"
+                  className="w-full"
+                  label="no of Characters"
+                  type="number"
+                  value={numCharacters}
+                  onChange={(e) => setNumCharacters(e.target.value)}
+                />
+              )}
+            </div>
+            {enterDepartmentId && (
+              <p style={{ alignSelf: "start" }} className="font-extralight">
+                Note: Please adjust the character length of prefix in ID.
+              </p>
+            )}
+            {!enterDepartmentId && (
+              <p
+                className="font-extralight"
+                style={{ alignSelf: "start", marginTop: "5px" }}
+              >
+                Note : No prefix added to Department ID.
+              </p>
+            )}
+            <TextField
               required
-              name="numCharacters"
+              name="departmentId"
               size="small"
               className="w-full"
-              label="no of Characters"
-              type="number"
-              value={numCharacters}
-              onChange={(e) => setNumCharacters(e.target.value)}
+              label="Department ID"
+              type="text"
+              value={departmentId}
+              onChange={handleDepartmentIdChange}
             />
-          )}
-          </div>{enterDepartmentId && (
-            <p style={{alignSelf: "start"}} className="font-extralight">Note: Please adjust the character length of prefix in ID.</p>
-            )}
-          {!enterDepartmentId && 
-          <p className="font-extralight" style={{alignSelf: "start", marginTop: "5px"}}>
-            Note : No prefix added to Department ID.
-          </p>}
-          <TextField
-            required
-            name="departmentId"
-            size="small"
-            className="w-full"
-            label="Department ID"
-            type="text"
-            value={departmentId}
-            onChange={handleDepartmentIdChange}
-            error={departmentError !== ""}
-            helperText={departmentError}
-          />
-          {!departmentId}
+            {!departmentId}
             <Autocomplete
               size="small"
               fullWidth

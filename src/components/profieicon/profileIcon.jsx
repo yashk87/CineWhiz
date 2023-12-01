@@ -31,7 +31,7 @@ export default function ProfileIcon() {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
-  }, []);
+  }, [token]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

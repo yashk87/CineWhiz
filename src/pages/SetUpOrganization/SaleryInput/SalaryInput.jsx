@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
-import Setup from "../Setup";
 import {
   BorderColor,
   Delete,
   MoreHoriz,
   PriceChangeOutlined,
-  Visibility,
   VisibilityOutlined,
   Warning,
 } from "@mui/icons-material";
@@ -19,11 +16,11 @@ import {
   Popover,
   Tooltip,
 } from "@mui/material";
-import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { TestContext } from "../../../State/Function/Main";
 import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";

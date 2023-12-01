@@ -1,5 +1,9 @@
-import React from "react";
-import Setup from "../Setup";
+import {
+  BorderColor,
+  Delete,
+  ManageAccountsOutlined,
+  Warning,
+} from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -8,20 +12,14 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-import {
-  BorderColor,
-  Delete,
-  ManageAccountsOutlined,
-  Warning,
-} from "@mui/icons-material";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import { useContext } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
-import { useState } from "react";
-import { TestContext } from "../../../State/Function/Main";
-import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeModal";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
+import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeModal";
+import Setup from "../Setup";
 
 const EmployementTypes = () => {
   const { cookies } = useContext(UseContext);
@@ -37,8 +35,6 @@ const EmployementTypes = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [empTypeId, setempTypeId] = useState(null);
 
-  const [scroll, setScroll] = React.useState("paper");
-
   // const handleClickOpen = (scrollType) => () => {
   //   setOpen(true);
   //   setScroll(scrollType);
@@ -46,7 +42,6 @@ const EmployementTypes = () => {
 
   const handleOpen = (scrollType) => {
     setOpen(true);
-    setScroll(scrollType);
     setempTypeId(null);
   };
 
@@ -57,7 +52,7 @@ const EmployementTypes = () => {
   };
 
   // Get Query
-  const { data: empList, isLoading } = useQuery("empTypes", async () => {
+  const { data: empList } = useQuery("empTypes", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/employment-types`,
       {
