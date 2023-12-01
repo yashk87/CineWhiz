@@ -14,7 +14,6 @@ import { UseContext } from "../../State/UseState/UseContext";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useState } from "react";
-import { isVisible } from "@testing-library/user-event/dist/utils";
 
 const Setup = ({ children }) => {
   const location = useLocation();
@@ -36,6 +35,7 @@ const Setup = ({ children }) => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
+    // eslint-disable-next-line
   }, []);
 
   const data = [

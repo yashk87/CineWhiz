@@ -48,10 +48,10 @@ export default function ProfileIcon() {
     window.location.reload();
   };
 
-  const handleNotificationClick = () => {
-    navigate("/notification");
-    setAnchorEl(null);
-  };
+  // const handleNotificationClick = () => {
+  //   navigate("/notification");
+  //   setAnchorEl(null);
+  // };
 
   const handleNavigate = (link) => {
     navigate(link);

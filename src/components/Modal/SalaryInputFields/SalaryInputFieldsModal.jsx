@@ -1,7 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Autocomplete,
-  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -13,21 +12,12 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  Modal,
   OutlinedInput,
   Select,
   TextField,
   Tooltip,
   createFilterOptions,
 } from "@mui/material";
-import { MobileTimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
-import dayjs from "dayjs";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
@@ -35,13 +25,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { useContext } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
 import { useEffect } from "react";
-import {
-  Add,
-  InfoOutlined,
-  Remove,
-  RemoveCircleOutline,
-  RemoveOutlined,
-} from "@mui/icons-material";
+import { Add, InfoOutlined, RemoveOutlined } from "@mui/icons-material";
 
 const filter = createFilterOptions();
 
@@ -73,7 +57,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   }, [open]);
 
   // Get Query
-  const { data: empTypeslist, isLoading } = useQuery("empTypes", async () => {
+  const { data: empTypeslist } = useQuery("empTypes", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/employment-types`,
       {

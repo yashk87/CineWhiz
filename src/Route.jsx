@@ -32,6 +32,7 @@ import AddEmployee from "./pages/AddEmployee/addemployee";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
+import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
 const App = () => {
   // const [user, setUser] = useState("");
 

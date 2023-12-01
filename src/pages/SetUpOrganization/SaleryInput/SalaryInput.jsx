@@ -3,7 +3,6 @@ import {
   Delete,
   MoreHoriz,
   PriceChangeOutlined,
-  VisibilityOutlined,
   Warning,
 } from "@mui/icons-material";
 import {
@@ -22,8 +21,9 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { TestContext } from "../../../State/Function/Main";
 import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";
+import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
+import Setup from "../Setup";
 
 const SalaryInput = () => {
   const [open, setOpen] = React.useState(false);

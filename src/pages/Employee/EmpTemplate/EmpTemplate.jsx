@@ -1,35 +1,23 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  OutlinedInput,
-  InputLabel,
-  FormControl,
-  FormLabel,
-  Avatar,
-} from "@mui/material";
+import { OutlinedInput, FormControl, Avatar } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 const EmpTemplate = () => {
-  const data = [
-    { id: 1, name: "John", age: 25, city: "New York" },
-    { id: 2, name: "Jane", age: 30, city: "Los Angeles" },
-    { id: 3, name: "Bob", age: 28, city: "Chicago" },
-    // Add more data as needed
-  ];
+  // const data = [
+  //   { id: 1, name: "John", age: 25, city: "New York" },
+  //   { id: 2, name: "Jane", age: 30, city: "Los Angeles" },
+  //   { id: 3, name: "Bob", age: 28, city: "Chicago" },
+  //   // Add more data as needed
+  // ];
 
   const [filter, setFilter] = useState("");
 
-  const filteredData = data.filter(
-    (item) =>
-      item.name.toLowerCase().includes(filter.toLowerCase()) ||
-      item.age.toString().includes(filter) ||
-      item.city.toLowerCase().includes(filter.toLowerCase())
-  );
+  // const filteredData = data.filter(
+  //   (item) =>
+  //     item.name.toLowerCase().includes(filter.toLowerCase()) ||
+  //     item.age.toString().includes(filter) ||
+  //     item.city.toLowerCase().includes(filter.toLowerCase())
+  // );
 
   return (
     <>
