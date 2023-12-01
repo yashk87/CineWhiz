@@ -110,7 +110,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/get-designation`
+        `${process.env.REACT_APP_API}/route/designation/create`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -330,6 +330,7 @@ const AddEmployee = () => {
   };
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   return (
     <>
       <div

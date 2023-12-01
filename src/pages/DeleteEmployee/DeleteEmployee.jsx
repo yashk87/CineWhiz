@@ -9,23 +9,31 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
+<<<<<<< HEAD
+import { Delete, Warning } from "@mui/icons-material";
+import { Checkbox } from "@mui/material";
+import { useMutation, useQueryClient } from "react-query";
+=======
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+>>>>>>> 36ab27c3b9122a8c7dca88632dab4bce1d6a4427
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState("");
+  const [nameSearch, setNameSearch] = useState("");
+  const [deptSearch, setDeptSearch] = useState("");
+  const [locationSearch, setLocationSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [selectedEmployees, setSelectedEmployees] = useState([]); // Track selected employees
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [deleteMultiEmpConfirmation, setDeleteMultiEmpConfirmation] =
-    useState(false); // Track dialog visibility
+    useState(false);
 
   const fetchAvailableEmployee = async () => {
     try {
@@ -137,13 +145,37 @@ const DeleteEmployee = () => {
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
                 <TextField
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setNameSearch(e.target.value)}
                   placeholder="Search Employee Name...."
                   variant="outlined"
                   size="small"
                   sx={{ width: 300 }}
                 />
               </div>
+              <div className="flex items-center  gap-3 ">
+                <TextField
+                  onChange={(e) => setDeptSearch(e.target.value)}
+                  placeholder="Search Department Name...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </div>
+              <div className="flex items-center  gap-3 ">
+                <TextField
+                  onChange={(e) => setLocationSearch(e.target.value)}
+                  placeholder="Search Location ...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </div>
+              <Button
+                className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                variant="contained"
+              >
+                Bulk Delete
+              </Button>
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
@@ -156,26 +188,30 @@ const DeleteEmployee = () => {
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 "></th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="!text-left pl-8 py-3"></th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       SR NO
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    <th scope="col" className="!text-left pl-8 py-3">
                       First Name
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Last Name
-                    </th>{" "}
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Email
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Location
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Department
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Phone Number
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
-                      Address
-                    </th>
+
                     <th scope="col" className="px-6 py-3 ">
                       Actions
                     </th>
@@ -184,9 +220,26 @@ const DeleteEmployee = () => {
                 <tbody>
                   {availableEmployee
                     .filter((item) => {
-                      return search.toLowerCase() === ""
-                        ? item
-                        : item.first_name.toLowerCase().includes(search);
+                      return (
+                        (!nameSearch.toLowerCase() ||
+                          (item.first_name &&
+                            item.first_name
+                              .toLowerCase()
+                              .includes(nameSearch))) &&
+                        (!deptSearch.toLowerCase() ||
+                          (item.deptname &&
+                            item.deptname
+                              .toLowerCase()
+                              .includes(deptSearch))) &&
+                        (!locationSearch.toLowerCase() ||
+                          item.worklocation.some(
+                            (location) =>
+                              location.city &&
+                              location.city
+                                .toLowerCase()
+                                .includes(locationSearch)
+                          ))
+                      );
                     })
                     .map((item, id) => (
                       <tr className="!font-medium border-b" key={id}>
@@ -196,20 +249,23 @@ const DeleteEmployee = () => {
                             onChange={() => handleEmployeeSelection(item._id)}
                           />
                         </td>
-                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="py-3 ">{item.first_name}</td>
-                        <td className="py-3 ">{item.last_name}</td>
-                        <td className="py-3 ">{item.email}</td>
-                        <td className="py-3 ">{item.phone_number}</td>
-                        <td className="py-3 ">{item.address}</td>
+                        <td className="!text-left pl-8 py-3">{id + 1}</td>
+                        <td className="py-3">{item.first_name}</td>
+                        <td className="py-3">{item.last_name}</td>
+                        <td className="py-3">{item.email}</td>
+                        <td className="py-3">
+                          {item.worklocation.map((location, index) => (
+                            <span key={index}>{location.city}</span>
+                          ))}
+                        </td>
+                        <td className="py-3">{item.deptname}</td>
+                        <td className="py-3">{item.phone_number}</td>
+
                         <td className="whitespace-nowrap px-6 py-2">
                           <IconButton
                             onClick={() => handleDeleteConfirmation(item._id)}
                           >
                             <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                          <IconButton>
-                            <BorderColor className="!text-xl" color="success" />
                           </IconButton>
                         </td>
                       </tr>
