@@ -2,12 +2,15 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
+import { UseContext } from "../../../State/UseState/UseContext";
 
-const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
+const SummaryTable = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   const { data, isLoading, isError } = useQuery(
-    ["employee-summary-table"],
+    "employee-summary-table",
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryTable`,
@@ -18,7 +21,6 @@ const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
       return response.data;
     }
   );
-  console.log(`🚀 ~ data:`, data);
 
   if (isLoading) {
     return (

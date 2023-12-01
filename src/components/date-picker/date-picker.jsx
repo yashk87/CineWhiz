@@ -19,13 +19,11 @@ const AppDatePicker = ({
   setNewAppliedLeaveEvents,
 }) => {
   const localizer = momentLocalizer(moment);
-  console.log(`🚀 ~ selectedLeave:`);
   const [selectEvent, setselectEvent] = useState(false);
   const [clickedAway, setClickedAway] = useState(false);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
-  const [updateLeave, setUpdateLeave] = useState(false);
   const handleSelectEvent = (event) => {
     setSelectedLeave(event);
     setCalendarOpen(true);
@@ -38,9 +36,7 @@ const AppDatePicker = ({
     }
   };
 
-  console.log(`🚀 ~ appliedLeaveEvents:`, appliedLeaveEvents);
   const handleSelectSlot = ({ start, end }) => {
-    console.log(`🚀 ~  start, end :`, start, end);
     setDelete(false);
     setUpdate(false);
     const selectedStartDate = moment(start);
@@ -71,7 +67,7 @@ const AppDatePicker = ({
         setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
         setSelectedLeave(null);
 
-        setselectEvent(true);
+        setselectEvent(false);
       } else {
         const newLeave = {
           title: "Selected Leave",
@@ -80,21 +76,13 @@ const AppDatePicker = ({
           color: "blue",
           leaveTypeDetailsId: "",
         };
-        console.log(`🚀 ~ newLeave:`, newLeave);
-        console.log(
-          `🚀 ~ newLeave.new Date(start):`,
-          new Date(start).toISOString()
-        );
-
         setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
       }
     }
   };
   const handleUpdateFunction = (e) => {
-    console.log("selectedLeave", selectedLeave);
     setselectEvent(true);
     // newAppliedLeaveEvents
-    console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
     let array = appliedLeaveEvents.filter(
       (item) => item._id !== selectedLeave._id
     );
@@ -146,6 +134,10 @@ const AppDatePicker = ({
             </MenuItem>
           ))}
         </Select>
+        <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic">
+          {" "}
+          {selectEvent ? "Please select dates for you leaves" : ""}
+        </div>
       </div>
     );
   };

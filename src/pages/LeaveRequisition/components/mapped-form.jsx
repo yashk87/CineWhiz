@@ -109,7 +109,7 @@ const Mapped = ({
                       <div>{item.leaveName} </div>
                       <div
                         style={{ background: item.color }}
-                        className={`w-6 h-6 rounded-full`}
+                        className={`w-4 h-4 rounded-full my-auto`}
                       ></div>
                     </div>
                   </MenuItem>

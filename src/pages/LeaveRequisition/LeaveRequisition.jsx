@@ -1,9 +1,10 @@
 import { CalendarMonth } from "@mui/icons-material";
 import WestIcon from "@mui/icons-material/West";
-import { Badge, Button } from "@mui/material";
+import { Badge, Button, Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import "tailwindcss/tailwind.css";
 import { TestContext } from "../../State/Function/Main";
@@ -26,7 +27,66 @@ const LeaveRequisition = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
-
+  const queryclient = useQueryClient();
+  const { data, isLoading, isError, error } = useQuery(
+    "employee-leave-table-without-default",
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/getEmployeeCurrentYearLeave`,
+        {
+          headers: { Authorization: authToken },
+        }
+      );
+      console.log(`🚀 ~ response:`, response);
+      setAppliedLeaveEvents([...response.data.currentYearLeaves]);
+      setSubtractedLeaves(response.data.LeaveTypedEdited);
+      handleAlert(
+        true,
+        "success",
+        data.data.message || "Leave generated successfully."
+      );
+      return response.data;
+    },
+    {
+      cacheTime: 0, // Disable caching for this query
+      staleTime: 0,
+    }
+  );
+  const createLeaves = async () => {
+    newAppliedLeaveEvents.forEach(async (value) => {
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API}/route/leave/create`,
+          value,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(`🚀 ~ error:`, error);
+      }
+    });
+  };
+  const leaveMutation = useMutation(createLeaves, {
+    onSuccess: () => {
+      console.log("success");
+      // setNewAppliedLeaveEvents([]);
+      handleAlert(true, "success", "Leaves created succcesfully");
+      queryclient.invalidateQueries({
+        queryKey: [
+          "employee-leave-table-without-default",
+          "employee-leave-table",
+          "employee-summary-table",
+          "employee-leave-table-without-default",
+        ],
+      });
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
   const handleInputChange = () => {
     setCalendarOpen(true);
     setSelectedLeave(null);
@@ -40,41 +100,7 @@ const LeaveRequisition = () => {
     setCalendarOpen(false);
     setAnchorEl("");
 
-    try {
-      await newAppliedLeaveEvents.forEach(async (value) => {
-        console.log("value", value);
-        try {
-          const data = await axios.post(
-            `${process.env.REACT_APP_API}/route/leave/create`,
-            value,
-            {
-              headers: {
-                Authorization: authToken,
-              },
-            }
-          );
-          handleAlert(
-            true,
-            "success",
-            data.data.message || "Leave generated successfully."
-          );
-        } catch (error) {
-          console.error(`🚀 ~ error:`, error);
-          handleAlert(
-            true,
-            "warning",
-            "You have already selected this leave" || error.message
-          );
-        }
-      });
-      // setNewAppliedLeaveEvents([]);
-    } catch (error) {
-      handleAlert(
-        true,
-        "error",
-        error?.response?.data?.message || "Server Error, please try later."
-      );
-    }
+    leaveMutation.mutate();
   };
 
   return (
@@ -89,49 +115,55 @@ const LeaveRequisition = () => {
 
         <div className="flex flex-col-reverse md:flex-row w-full justify-start p-6 gap-4">
           <div className="flex flex-col gap-4">
-            <LeaveTable
-              subtractedLeaves={subtractedLeaves}
-              setSubtractedLeaves={setSubtractedLeaves}
-              authToken={authToken}
-              vactionList={vactionList}
-              setVactionList={setVactionList}
-              setAppliedLeaveEvents={setAppliedLeaveEvents}
-              newAppliedLeaveEvents={appliedLeaveEvents}
-            />{" "}
-            <SummaryTable
-              subtractedLeaves={subtractedLeaves}
-              setSubtractedLeaves={setSubtractedLeaves}
-              authToken={authToken}
-              vactionList={vactionList}
-              setVactionList={setVactionList}
-              setAppliedLeaveEvents={setAppliedLeaveEvents}
-              newAppliedLeaveEvents={appliedLeaveEvents}
-            />
+            <LeaveTable />
+            <SummaryTable />
           </div>
 
           <article className="md:w-[100%] space-y-2">
-            <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg ">
-              <div className="flex items-center gap-8 px-2">
-                <Badge
-                  badgeContent={"Click"}
-                  color="primary"
-                  variant="standard"
-                >
-                  <Button
-                    onClick={handleInputChange}
-                    variant="contained"
-                    size="large"
-                    className="!rounded-full !h-16 !w-16 group-hover:!text-white !text-black"
-                    color="info"
+            {isLoading ? (
+              <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg">
+                <div className="flex items-center gap-8 px-2">
+                  <Badge
+                    badgeContent={"loading"}
+                    color="primary"
+                    variant="standard"
                   >
-                    <CalendarMonth className=" !text-4xl" />
-                  </Button>
-                </Badge>
-                <p className="!text-gray-400 font-semibold mb-2 text-xl">
-                  Select Leaves Dates
-                </p>
+                    <Button
+                      disabled
+                      variant="contained"
+                      size="large"
+                      className="!rounded-full !h-16 !w-16 group-hover:!text-white !text-black"
+                      color="info"
+                    >
+                      <CalendarMonth className="!text-4xl text-gr" />
+                    </Button>
+                  </Badge>
+                  <div>
+                    <Skeleton variant="text" width={160} height={20} />
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="space-y-2 mb-4 w-full h-max bg-white p-4 shadow-xl rounded-lg ">
+                <div className="flex items-center gap-8 px-2">
+                  <Badge badgeContent={"Click"} color="primary">
+                    <Button
+                      disabled={isLoading}
+                      onClick={handleInputChange}
+                      variant="contained"
+                      size="large"
+                      className="!rounded-full !h-16 !w-16 group-hover:!text-white !text-black"
+                      color="info"
+                    >
+                      <CalendarMonth className=" !text-4xl" />
+                    </Button>
+                  </Badge>
+                  <p className="!text-gray-400 font-semibold mb-2 text-xl">
+                    Select Leaves Dates
+                  </p>
+                </div>
+              </div>
+            )}
 
             <AppDatePicker
               isCalendarOpen={isCalendarOpen}

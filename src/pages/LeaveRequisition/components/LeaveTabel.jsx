@@ -6,11 +6,14 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 
-const LeaveTable = ({ authToken, setAppliedLeaveEvents }) => {
+const LeaveTable = () => {
   const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
   const { data, isLoading, isError, error } = useQuery(
-    ["employee-leave-table"],
+    "employee-leave-table",
     async () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API}/route/leave/getEmployeeLeaveTable`,
@@ -19,7 +22,6 @@ const LeaveTable = ({ authToken, setAppliedLeaveEvents }) => {
         }
       );
 
-      setAppliedLeaveEvents(response.data.currentYearLeaves);
       return response.data;
     }
   );
