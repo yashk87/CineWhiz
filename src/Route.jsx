@@ -33,23 +33,23 @@ import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 const App = () => {
-  const [user, setUser] = useState("");
+  // const [user, setUser] = useState("");
 
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
+  // const { cookies } = useContext(UseContext);
+  // const authToken = cookies["aeigs"];
 
-  useEffect(() => {
-    try {
-      const decodedToken = jwtDecode(authToken);
-      if (decodedToken && decodedToken.user) {
-        setUser(decodedToken.user);
-      } else {
-        setUser("");
-      }
-    } catch (error) {
-      console.error("Failed to decode the token:", error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const decodedToken = jwtDecode(authToken);
+  //     if (decodedToken && decodedToken.user) {
+  //       setUser(decodedToken.user);
+  //     } else {
+  //       setUser("");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to decode the token:", error);
+  //   }
+  // }, []);
 
   return (
     <Routes>
