@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
   AddLocationAltOutlined,
-  BadgeOutlined,
   BeachAccessOutlined,
   EventAvailableOutlined,
   ManageAccountsOutlined,
