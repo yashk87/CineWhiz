@@ -24,6 +24,7 @@ import { Checkbox, ListItemText } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Tooltip from "@mui/material/Tooltip";
+import { useQuery } from "react-query";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -80,6 +81,8 @@ const AddEmployee = () => {
     setJoiningDate,
     date_of_birth,
     setDateOfBirth,
+    salarystructure,
+    setSalaryStructure,
     gender,
     setGender,
     worklocation,
@@ -113,6 +116,9 @@ const AddEmployee = () => {
     setMgrEmpId(event.target.value);
   };
 
+  const handleSalaryStructure = (event) => {
+    setSalaryStructure(event.target.value);
+  };
   const [availabelDesignation, setAvailableDesignation] = useState([]);
   const fetchAvailableDesignation = async () => {
     try {
@@ -131,6 +137,18 @@ const AddEmployee = () => {
     fetchAvailableDesignation();
     // eslint-disable-next-line
   }, []);
+
+  const { data: salaryInput } = useQuery(["empType"], async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/salary-template`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  });
 
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
@@ -313,6 +331,7 @@ const AddEmployee = () => {
     event.preventDefault();
     const user = {
       first_name,
+      salarystructure,
       last_name,
       email,
       password,
@@ -374,8 +393,9 @@ const AddEmployee = () => {
           padding: "50px 0 0",
           boxSizing: "border-box",
         }}
+        className="!min-h-screen"
       >
-        <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
+        <div className="content-center  flex justify-center my-0 p-0 bg-[#F8F8F8]">
           <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
             <div className="flex items-center justify-center gap-4">
               <Tooltip title={`${staticTitle}`}>
@@ -695,6 +715,25 @@ const AddEmployee = () => {
                     </Select>
                   </FormControl>
                 </div>
+              </div>
+              <div className="w-full">
+                <FormControl sx={{ width: 280 }}>
+                  <Select
+                    value={salarystructure}
+                    onChange={handleSalaryStructure}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Employment Type" }}
+                  >
+                    <MenuItem value="" disabled>
+                      Select Salary Type
+                    </MenuItem>
+                    {salaryInput?.salaryTemplates?.map((item) => (
+                      <MenuItem key={item._id} value={item._id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </div>
               <div className="flex items-center gap-20">
                 <div className="w-full">

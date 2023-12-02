@@ -20,6 +20,7 @@ import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import EmpTypeModal from "../../../components/Modal/EmployeeTypesModal/EmpTypeModal";
 import Setup from "../Setup";
+import EmployeeTypeSkeleton from "../components/EmployeeTypeSkeleton";
 
 const EmployementTypes = () => {
   const { cookies } = useContext(UseContext);
@@ -52,7 +53,7 @@ const EmployementTypes = () => {
   };
 
   // Get Query
-  const { data: empList } = useQuery("empTypes", async () => {
+  const { data: empList, isLoading } = useQuery("empTypes", async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/employment-types`,
       {
@@ -142,24 +143,30 @@ const EmployementTypes = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {empList?.empTypes?.map((emptype, id) => (
-                    <tr className="!font-medium border-b" key={id}>
-                      <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                      <td className="py-3 ">{emptype?.title}</td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          onClick={() => handleDeleteConfirmation(emptype._id)}
-                        >
-                          <Delete className="!text-xl" color="error" />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleEditModalOpen(emptype._id)}
-                        >
-                          <BorderColor className="!text-xl" color="success" />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))}
+                  {isLoading ? (
+                    <EmployeeTypeSkeleton />
+                  ) : (
+                    empList?.empTypes?.map((emptype, id) => (
+                      <tr className="!font-medium border-b" key={id}>
+                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
+                        <td className="py-3 ">{emptype?.title}</td>
+                        <td className="whitespace-nowrap px-6 py-2">
+                          <IconButton
+                            onClick={() =>
+                              handleDeleteConfirmation(emptype._id)
+                            }
+                          >
+                            <Delete className="!text-xl" color="error" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleEditModalOpen(emptype._id)}
+                          >
+                            <BorderColor className="!text-xl" color="success" />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

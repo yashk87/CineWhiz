@@ -28,8 +28,8 @@ const SetupSideBar = ({ children }) => {
     {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
-      href: "/",
-      active: location.pathname === "",
+      href: `/setup/add-organization-locations/${id}`,
+      active: location.pathname === `setup/add-organization-locations/${id}`,
     },
     {
       label: "Create Shift",
