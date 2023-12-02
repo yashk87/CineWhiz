@@ -32,7 +32,7 @@ import AddEmployee from "./pages/AddEmployee/addemployee";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
-import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
+import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 const App = () => {
   // const [user, setUser] = useState("");
 
@@ -90,11 +90,6 @@ const App = () => {
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
-      <Route
-        exact
-        path="/organisation/edit-employee"
-        element={<EmpTemplate />}
-      />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
@@ -110,6 +105,11 @@ const App = () => {
         exact
         path="/setup/salary-input-selection/:id"
         element={<SalaryInput />}
+      />
+      <Route
+        exact
+        path="/setup/employee-code-genreation/:id"
+        element={<EmployeeCodeGenerator />}
       />
       <Route exact path="/setup/email-setting" element={<EmailSetting />} />
 

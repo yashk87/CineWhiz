@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Divider,
   FormControl,
+  FormLabel,
   IconButton,
   InputLabel,
   Modal,
@@ -37,7 +38,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       }
     },
     {
-      enabled: open && empTypeId !== null,
+      enabled: open && empTypeId !== null && empTypeId !== undefined,
     }
   );
 
@@ -58,6 +59,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["empTypes"] });
         handleClose();
+        setTitleEmpType("");
         handleAlert(true, "success", "Employee types generated succesfully");
       },
       onError: () => {
@@ -102,6 +104,11 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         title: titleEmpType,
       };
 
+      if (titleEmpType.length <= 0) {
+        setError("Title field is Mandatory");
+        return false;
+      }
+
       if (empTypeId) {
         await EditEmployeeType.mutateAsync(data);
       } else {
@@ -109,7 +116,6 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         await AddEmployeeTypes.mutateAsync(data);
       }
       // Reset form state
-      setError("");
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating a neemppTypet");
@@ -150,13 +156,20 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
         </div>
 
         <div className="px-5 space-y-4 mt-4">
-          {error && <p className="text-red-500">*{error}</p>}
-
           <div className="space-y-2 ">
-            <label className="text-md" htmlFor="demo-simple-select-label">
+            <FormLabel
+              error={error}
+              className="text-md"
+              htmlFor="demo-simple-select-label"
+            >
               Enter Employment Type
-            </label>
-            <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
+            </FormLabel>
+            <FormControl
+              error={error}
+              size="small"
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
               <InputLabel htmlFor="outlined-adornment-password">
                 Add Employment type
               </InputLabel>
@@ -167,6 +180,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
                 onChange={(e) => setTitleEmpType(e.target.value)}
               />
             </FormControl>
+            {error && <p className="text-red-500">*{error}</p>}
           </div>
 
           <div className="flex gap-4  mt-4 justify-end">
