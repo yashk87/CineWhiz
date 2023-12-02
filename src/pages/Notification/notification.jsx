@@ -16,20 +16,14 @@ const Notification = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [open, setOpen] = useState(false);
-  const [workFlow, setWorkFlow] = useState([]);
   const [id, setid] = useState("");
 
   const GetApproval = async () => {
-    const getNotification = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/get`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-
-    setWorkFlow(getNotification.data.leaveRequests);
+    await axios.get(`${process.env.REACT_APP_API}/route/leave/get`, {
+      headers: {
+        Authorization: authToken,
+      },
+    });
   };
   const { data, isLoading } = useQuery("employee-leave", async () => {
     const response = await axios.get(
