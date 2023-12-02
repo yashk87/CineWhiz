@@ -270,28 +270,29 @@ const OrganizationLocation = () => {
     <Setup>
       <IntlProvider locale="en">
         <Container>
-          <Typography
-            variant="h4"
-            gutterBottom
-            color={"primary"}
-            fontWeight={800}
-            fontSize={20}
-            className="text-2xl pt-5"
-          >
-            <FormattedMessage
-              id="organizationLocations"
-              defaultMessage="Organization Locations"
-            />
-          </Typography>
+          <div className="flex items-center justify-between">
+            <Typography
+              variant="h4"
+              gutterBottom
+              color={"primary"}
+              fontWeight={800}
+              fontSize={20}
+              className="text-2xl"
+            >
+              <FormattedMessage
+                id="organizationLocations"
+                defaultMessage="Organization Locations"
+              />
+            </Typography>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpen}
-            style={{ marginBottom: "16px" }}
-          >
-            <FormattedMessage id="addLocation" defaultMessage="Add Location" />
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpen}
+            >
+              <FormattedMessage id="addLocation" defaultMessage="Add Location" />
+            </Button>
+          </div>
 
           {locationList.length === 0 ? (
             <Typography variant="body1">No Locations Added</Typography>
