@@ -106,7 +106,7 @@ const LeaveTable = () => {
                   {item.leaveName}
                 </h1>
                 <h1 className="text-lg tracking-wide font-bold text-gray-200">
-                  {item.subtractedCount}
+                  {item.count}
                 </h1>
               </div>
             </div>

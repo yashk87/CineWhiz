@@ -134,7 +134,7 @@ const AppDatePicker = ({
             </MenuItem>
           ))}
         </Select>
-        <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic">
+        <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
           {" "}
           {selectEvent ? "Please select dates for you leaves" : ""}
         </div>
@@ -226,7 +226,9 @@ const AppDatePicker = ({
       </div>
 
       <div className="!px-4 !py-2 bg-white flex justify-between">
-        <Button variant="contained">Submit</Button>
+        <Button variant="contained" onClick={() => setCalendarOpen(false)}>
+          Submit
+        </Button>
         <Button
           variant="contained"
           onClick={handleDelete}
