@@ -463,18 +463,35 @@ const DeleteEmployee = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Confirmation dialog */}
+      {/* This Dialogue for delting Multiple Employe from excel sheet*/}
       <Dialog
         open={confirmDeleteDialog}
         onClose={() => setConfirmDeleteDialog(false)}
       >
-        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogTitle color={"error"}>
+          <Warning color="error" /> Are you sure to delete employee from excel
+          sheet?
+        </DialogTitle>
         <DialogContent>
-          <p>Do you want to delete the employees from the Excel sheet?</p>
+          <p>
+            This action will delete the employees, and they cannot be retrieved.
+          </p>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmDeleteDialog(false)}>Cancel</Button>
-          <Button color="error" onClick={handleConfirmDeleteExcelData}>
+          <Button
+            onClick={() => setConfirmDeleteDialog(false)}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleConfirmDeleteExcelData}
+            color="error"
+          >
             Delete
           </Button>
         </DialogActions>
