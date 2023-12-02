@@ -40,18 +40,20 @@ const NavItems = ({ toggleDrawer }) => {
 
   useEffect(() => {
     try {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken && decodedToken.user.profile) {
-        setUserRole(decodedToken.user.profile);
-      } else {
-        setUserRole("guest");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        if (decodedToken && decodedToken.user.profile) {
+          setUserRole(decodedToken.user.profile);
+        } else {
+          setUserRole("guest");
+        }
       }
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
   }, [token]);
-  const decodedToken = jwtDecode(token);
-  const id = decodedToken.user.organizationId;
+  const decodedToken = token && jwtDecode(token);
+  const id = decodedToken?.user?.organizationId;
 
   function formatRoles(userRole) {
     if (userRole.length === 1) {

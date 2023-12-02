@@ -10,7 +10,6 @@ import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
-import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
@@ -24,7 +23,6 @@ import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHol
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
-import EmailSetting from "./pages/SetupPage/EmailSetting";
 import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
@@ -34,10 +32,6 @@ import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 import EmailSetting from "./pages/SetupPage/EmailSetting";
-import AddEmployee from "./pages/AddEmployee/addemployee";
-import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
-import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
-import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 const App = () => {
   // const [user, setUser] = useState("");
