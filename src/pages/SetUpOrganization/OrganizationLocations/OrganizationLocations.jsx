@@ -392,7 +392,7 @@ const OrganizationLocation = () => {
                 />
               </div>
               <div className="!w-[46%]">
-                <p>Continent:</p>
+                <p>Short Name:</p>
                 <TextField
                   label={"short name *"}
                   className="pb-0"
