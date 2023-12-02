@@ -20,7 +20,6 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const [selectEvent, setselectEvent] = useState(false);
-  const [clickedAway, setClickedAway] = useState(false);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
@@ -149,9 +148,7 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
-      setClickedAway(true);
     } else {
-      setClickedAway(false);
     }
   };
   const handleDelete = (e) => {
