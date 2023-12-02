@@ -20,7 +20,6 @@ const LeaveRequisition = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-  const [vactionList, setVactionList] = useState([]);
   const [subtractedLeaves, setSubtractedLeaves] = useState([]);
   const [isCalendarOpen, setCalendarOpen] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState(null);
@@ -28,7 +27,7 @@ const LeaveRequisition = () => {
   const [appliedLeaveEvents, setAppliedLeaveEvents] = useState([]);
   const [newAppliedLeaveEvents, setNewAppliedLeaveEvents] = useState([]);
   const queryclient = useQueryClient();
-  const { data, isLoading, isError, error } = useQuery(
+  const { data, isLoading } = useQuery(
     "employee-leave-table-without-default",
     async () => {
       const response = await axios.get(
