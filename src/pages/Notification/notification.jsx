@@ -1,12 +1,9 @@
-import { CalendarMonth, NotificationImportant } from "@mui/icons-material";
-import CheckIcon from "@mui/icons-material/Check"; // Import the accept icon
-import CloseIcon from "@mui/icons-material/Close"; // Import the reject icon
+import { CalendarMonth } from "@mui/icons-material";
 import { Badge, Chip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { format } from "date-fns";
 import React, { useContext, useEffect, useState } from "react";
@@ -32,7 +29,6 @@ const Notification = () => {
     );
 
     setWorkFlow(getNotification.data.leaveRequests);
-    console.log(getNotification.data.leaveRequests);
   };
   const { data, isLoading } = useQuery("employee-leave", async () => {
     const response = await axios.get(
