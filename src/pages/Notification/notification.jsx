@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import axios from "axios";
 import { format } from "date-fns";
+import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
@@ -94,7 +95,10 @@ const Notification = () => {
           <>Loaiding</>
         ) : (
           data?.leaveRequests?.map((items, id) => {
-            console.log(`🚀 ~ items:`, items);
+            console.log(
+              `🚀 ~ items:`,
+              dayjs(items.end).diff(dayjs(items.start))
+            );
             return (
               <Grid
                 key={id}
@@ -110,15 +114,17 @@ const Notification = () => {
                   <Box className="flex md:flex-row items-center  justify-center flex-col gap-8  md:gap-16">
                     <div className="w-max">
                       <Badge
-                        badgeContent={"loading"}
+                        badgeContent={dayjs(items.end).diff(
+                          dayjs(items.start),
+                          "day"
+                        )}
                         color="info"
                         variant="standard"
                       >
                         <Button
-                          disabled
                           variant="contained"
                           size="large"
-                          className="!rounded-full !bg-gray-50  !h-16 !w-16 group-hover:!text-white !text-black"
+                          className="!rounded-full !bg-gray-100  !h-16 !w-16 group-hover:!text-white !text-black"
                           color="info"
                         >
                           <CalendarMonth className="!text-4xl text-gr" />
