@@ -132,6 +132,7 @@ const DepartmentDeletion = () => {
   const handleDeleteFromExcel = async () => {
     try {
       const fileInput = document.getElementById("fileInput");
+      const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
       console.log(file);
 
@@ -373,8 +374,10 @@ const DepartmentDeletion = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleConfirmation(false)} color="primary">
+          <Button onClick={() => handleConfirmation(false)} color="primary">
             Cancel
           </Button>
+          <Button onClick={handleDelete} color="primary">
           <Button onClick={handleDelete} color="primary">
             Delete
           </Button>
@@ -392,6 +395,7 @@ const DepartmentDeletion = () => {
             Cancel
           </Button>
           <Button onClick={handleDeleteFromExcel} color="primary">
+          <Button onClick={handleDeleteFromExcel} color="primary">
             Delete
           </Button>
         </DialogActions>
@@ -401,3 +405,4 @@ const DepartmentDeletion = () => {
 };
 
 export default DepartmentDeletion;
+

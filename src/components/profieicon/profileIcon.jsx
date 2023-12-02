@@ -92,28 +92,27 @@ export default function ProfileIcon() {
                 <div className="absolute w-max h-max rounded-full top-[50%]">
                   <Avatar
                     variant="circular"
-                    src="/argan_founder.png"
+                    src=""
                     alt="none"
                     sx={{ width: 56, height: 56 }}
-                    className="!rounded-[50%] ring-[3px] ring-white  !shadow-lg  !object-cover"
+                    className="!rounded-[50%]
+                     
+                     !shadow-lg  !object-cover"
                   />
-                  {/* <img src="/argan_founder.png" alt="user" /> */}
+
+                  {/* ring-[3px] ring-white  */}
                 </div>
               </div>
             </MenuItem>
             <MenuItem className="h-max !border !border-gray-700 !w-[230px] !pt-8 !pb-2 flex-col flex items-center justify-center !p-0  !bg-gray-100 !z-0">
               <h1 className=" italic tracking-wider  !font-semibold  text-gray-600  !text-sm !text-center">
-                Mr Rahul Gaikwad
+                {user?.first_name} {user?.last_name}
               </h1>
               <p className="text-sm text-gray-600 pb-2 ">{user?.email}</p>
 
               <p className="text-sm italic">
                 Working as{" "}
-                <Tooltip
-                  title={user?.profile.map((item) => {
-                    return <span>{item} , </span>;
-                  })}
-                >
+                <Tooltip title={user?.profile.join(",")}>
                   <span className="text-blue-500 hover:underline ">@job</span>
                 </Tooltip>
               </p>

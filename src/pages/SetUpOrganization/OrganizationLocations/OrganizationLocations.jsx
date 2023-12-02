@@ -2,17 +2,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
-  List,
-  ListItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,6 +24,7 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Selector from "./selector";
+import Setup from "../Setup";
 
 const OrganizationLocation = () => {
   const { cookies } = useContext(UseContext);
@@ -38,7 +39,7 @@ const OrganizationLocation = () => {
     { name: "North America" },
     { name: "South America" },
     { name: "Australia" },
-    { name: "Antartica" },
+    { name: "Antarctica" },
   ];
 
   const [locationList, setLocationList] = useState([]);
@@ -53,8 +54,10 @@ const OrganizationLocation = () => {
   const [stateData, setStateData] = useState(
     State.getStatesOfCountry(country?.name)
   );
-  const [state, setState] = useState(State.getStatesOfCountry(country?.isoCode)[0] || "");
   const [editIndex, setEditIndex] = useState(null);
+  const [state, setState] = useState(
+    State.getStatesOfCountry(country?.isoCode)[0]
+  );
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -79,8 +82,17 @@ const OrganizationLocation = () => {
 
   useEffect(() => {
     if (open) {
-      setStateData(State.getStatesOfCountry(country?.isoCode));
+      setStateData(
+        (prevData) => State.getStatesOfCountry(country?.isoCode) || prevData
+      );
     }
+
+    if (!open) {
+      setState("");
+      setContinent(continents[0]);
+      setStateData("");
+    }
+    // eslint-disable-next-line
   }, [open, country]);
 
   const handleOpen = () => {
@@ -95,7 +107,7 @@ const OrganizationLocation = () => {
     setAddressLine2("");
     setCity("");
     setShortName("");
-    setContinent(continents[0].name);
+    setContinent(continents[0]?.name);
     setState("");
     setPinCode("");
     setCountry(Country.getAllCountries()[0]);
@@ -103,11 +115,11 @@ const OrganizationLocation = () => {
 
   const handleAddLocation = async () => {
     const newLocation = {
-      country: country.name,
-      state: state.name,
+      country: country?.name,
+      state: state?.name,
       city,
       shortName,
-      continent:continent.name,
+      continent: continent?.name,
       pinCode,
       addressLine1,
       addressLine2,
@@ -138,10 +150,11 @@ const OrganizationLocation = () => {
       handleClose();
     } catch (error) {
       console.error(error.response.data.message);
-      handleAlert(true, "error", error.response.data.message);
+      handleAlert(true, "error", error.response.data.error);
+      console.log(error);
     }
-    // adding = false;
   };
+
   const handleEditLocation = async (index) => {
     setEditing(true);
     setEditIndex(index);
@@ -150,22 +163,24 @@ const OrganizationLocation = () => {
     setAddressLine2(selectedLocation.addressLine2);
     setCity(selectedLocation.city);
     setShortName(selectedLocation.shortName);
-    setContinent(continents.find(
-      (continent) => continent.name === selectedLocation.continent
-    ));
+    setContinent(
+      continents.find(
+        (continent) => continent?.name === selectedLocation.continent
+      )
+    );
     setPinCode(selectedLocation.pinCode);
     const selectedCountry = Country.getAllCountries().find(
-      (country) => country.name === selectedLocation.country
+      (country) => country?.name === selectedLocation.country
     );
     setCountry(
       Country.getAllCountries().find(
-        (country) => country.name === selectedLocation.country
+        (country) => country?.name === selectedLocation.country
       ) || null
     );
-    setStateData(Country.getAllCountries(country?.isoCode))
+    setStateData(Country.getAllCountries(country?.isoCode));
     setState(
       State.getStatesOfCountry(selectedCountry.isoCode).find(
-        (state) => state.name === selectedLocation.state
+        (state) => state?.name === selectedLocation.state
       )
     );
 
@@ -176,15 +191,15 @@ const OrganizationLocation = () => {
     setEditIndex(index);
 
     const newLocation = {
-      country: country.name,
-      state: state.name,
-      continent: continent.name,
+      country: country?.name,
+      state: state?.name,
+      continent: continent?.name,
       shortName,
       city,
       pinCode,
       addressLine1,
       addressLine2,
-      organizationId
+      organizationId,
     };
     try {
       await axios.put(
@@ -195,7 +210,7 @@ const OrganizationLocation = () => {
             Authorization: authToken,
           },
         }
-        );
+      );
 
       const response = await axios.get(
         "http://localhost:4000/route/location/getOrganizationLocations",
@@ -206,12 +221,11 @@ const OrganizationLocation = () => {
         }
       );
       setLocationList(response.data);
-      handleAlert(true, "success", "Location udpated successfully");
-      handleClose()
-
+      handleAlert(true, "success", "Location updated successfully");
+      handleClose();
     } catch (error) {
-      console.error("error is: ",error.response.data.error);
-      handleAlert(true, "error", error.response.data.message);
+      console.error("error is: ", error.response.data.error);
+      handleAlert(true, "error", error.response.data.error);
     }
   };
 
@@ -239,99 +253,113 @@ const OrganizationLocation = () => {
       handleAlert(true, "success", "Location deleted successfully");
     } catch (error) {
       console.error(error.response.data.message);
-      handleAlert(true, "error", error.response.data.message);
+      handleAlert(true, "error", error.response.data.error);
     }
   };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      if(editing)
-      handleUpdateLocation();
-    else
-      handleAddLocation();
+      if (editing) handleUpdateLocation();
+      else handleAddLocation();
       handleClose();
     }
   };
 
   return (
-    <IntlProvider locale="en">
-      <Container>
-        <Typography
-          variant="h4"
-          gutterBottom
-          color={"primary"}
-          fontWeight={800}
-          fontSize={20}
-          className="text-2xl pt-5"
-        >
-          <FormattedMessage
-            id="organizationLocations"
-            defaultMessage="Organization Locations"
-          />
-        </Typography>
+    <Setup>
+      <IntlProvider locale="en">
+        <Container>
+          <div className="flex items-center justify-between px-4 py-2">
+            <Typography
+              variant="h4"
+              gutterBottom
+              color={"primary"}
+              fontWeight={800}
+              fontSize={20}
+              className="text-2xl"
+            >
+              <FormattedMessage
+                id="organizationLocations"
+                defaultMessage="Organization Locations"
+              />
+            </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpen}
-          style={{ marginBottom: "16px" }}
-        >
-          <FormattedMessage id="addLocation" defaultMessage="Add Location" />
-        </Button>
-        {locationList.length === 0 ? (
-          <Typography variant="body1">No Locations Added</Typography>
-        ) : (
-          <List>
-            {locationList.map((location, index) => (
-              <ListItem key={index} style={{ marginBottom: "8px" }}>
-                <Card
-                  variant="outlined"
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="body1">
-                      {location.continent && `${location.continent}, `}
-                      {location.shortName && `${location.shortName}, `}
-                      {location.country && `${location.country}, `}
-                      {location.state && `${location.state}, `}
-                      {location.city && `${location.city}, `}
-                      {location.pinCode && `${location.pinCode}, `}
-                      {location.addressLine1 && `${location.addressLine1}, `}
-                      {location.addressLine2 && `${location.addressLine2}.`}
-                    </Typography>
-                  </CardContent>
-                  <CardActions
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div>
-                      <IconButton
-                        onClick={() => handleEditLocation(index)}
-                        aria-label="edit"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteLocation(index)}
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </div>
-                  </CardActions>
-                </Card>
-              </ListItem>
-            ))}
-          </List>
-        )}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpen}
+            >
+              <FormattedMessage id="addLocation" defaultMessage="Add Location" />
+            </Button>
+          </div>
+
+          {locationList.length === 0 ? (
+            <Typography variant="body1">No Locations Added</Typography>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <FormattedMessage id="continent" defaultMessage="Continent" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="country" defaultMessage="Country" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="state" defaultMessage="State" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage
+                      id="shortname"
+                      defaultMessage="Short Name"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="address" defaultMessage="Address" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="actions" defaultMessage="Actions" />
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {locationList
+                  .sort((a, b) => {
+                    if (a.continent !== b.continent) {
+                      return a.continent.localeCompare(b.continent);
+                    }
+                    return a.country.localeCompare(b.country);
+                  })
+                  .map((location, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{location.continent}</TableCell>
+                      <TableCell>{location.country}</TableCell>
+                      <TableCell>{location.state}</TableCell>
+                      <TableCell>{location.shortName}</TableCell>
+                      <TableCell>
+                        {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleEditLocation(index)}
+                          aria-label="edit"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDeleteLocation(index)}
+                          aria-label="delete"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          )}
+
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
           <DialogTitle>
             {editIndex !== null ? (
@@ -358,22 +386,25 @@ const OrganizationLocation = () => {
               <div>
                 <p>Continent:</p>
                 <Selector
-                  key={continent.name}
+                  required
+                  key={continent?.name}
                   data={continents}
                   selected={continent}
                   setSelected={setContinent}
                 />
               </div>
-              <TextField
-                label={
-                  <FormattedMessage id="shortname" defaultMessage="Short Name(Location)" />
-                }
-                variant="outlined"
-                value={shortName}
-                onChange={(e) => setShortName(e.target.value)}
-                fullWidth
-                style={{ marginTop: "8px" }}
-              />
+              <div className="!w-[46%]">
+                <p>Short Name:</p>
+                <TextField
+                  label={"short name *"}
+                  className="pb-0"
+                  variant="outlined"
+                  size="small"
+                  value={shortName}
+                  onChange={(e) => setShortName(e.target.value)}
+                  fullWidth
+                />
+              </div>
             </div>
             <div
               style={{
@@ -390,6 +421,7 @@ const OrganizationLocation = () => {
                   data={Country.getAllCountries()}
                   selected={country}
                   setSelected={setCountry}
+                  required
                 />
               </div>
               {stateData && (
@@ -400,6 +432,7 @@ const OrganizationLocation = () => {
                     data={stateData}
                     selected={state}
                     setSelected={setState}
+                    required
                   />
                 </div>
               )}
@@ -411,6 +444,7 @@ const OrganizationLocation = () => {
               onChange={(e) => setCity(e.target.value)}
               fullWidth
               style={{ marginTop: "8px" }}
+              required
             />
             <TextField
               label={
@@ -423,6 +457,7 @@ const OrganizationLocation = () => {
               value={pinCode}
               onChange={(e) => setPinCode(e.target.value)}
               fullWidth
+              required
               style={{ marginTop: "8px" }}
             />
             <TextField
@@ -437,6 +472,7 @@ const OrganizationLocation = () => {
               onChange={(e) => setAddressLine1(e.target.value)}
               style={{ marginTop: "8px" }}
               fullWidth
+              required
             />
             <TextField
               label={
@@ -458,10 +494,10 @@ const OrganizationLocation = () => {
             </Button>
             <Button
               onClick={() => {
-                if(editIndex !== null){
-                  handleUpdateLocation(editIndex)
-                }else{
-                  handleAddLocation()
+                if (editIndex !== null) {
+                  handleUpdateLocation(editIndex);
+                } else {
+                  handleAddLocation();
                 }
               }}
               color="primary"
@@ -472,13 +508,17 @@ const OrganizationLocation = () => {
                   defaultMessage="Save Changes"
                 />
               ) : (
-                <FormattedMessage id="addLocation" defaultMessage="Add Location" />
+                <FormattedMessage
+                  id="addLocation"
+                  defaultMessage="Add Location"
+                />
               )}
             </Button>
           </DialogActions>
         </Dialog>
       </Container>
     </IntlProvider>
+    </Setup>
   );
 };
 

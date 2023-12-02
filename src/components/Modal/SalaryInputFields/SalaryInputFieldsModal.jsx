@@ -1,3 +1,4 @@
+import { Add, InfoOutlined, RemoveOutlined } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Autocomplete,
@@ -18,14 +19,11 @@ import {
   Tooltip,
   createFilterOptions,
 } from "@mui/material";
-import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
-import { useContext } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { useEffect } from "react";
-import { Add, InfoOutlined, RemoveOutlined } from "@mui/icons-material";
 
 const filter = createFilterOptions();
 
@@ -81,11 +79,12 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
             },
           }
         );
+
         return response.data;
       }
     },
     {
-      enabled: open && salaryId !== null,
+      enabled: open && salaryId !== null && salaryId !== undefined,
     }
   );
 
@@ -103,6 +102,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     desc: "",
     empTypes: "",
     salaryStructures: [],
+    salaryLength: "",
   });
 
   const validateForm = () => {
@@ -121,6 +121,13 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
       isValid = false;
     } else {
       newErrors.empTypes = "";
+    }
+
+    if (salaryStructures.length <= 0) {
+      newErrors.salaryLength = "Please add at list one salary input";
+      isValid = false;
+    } else {
+      newErrors.salaryLength = "";
     }
 
     // Validate salary structures
@@ -250,7 +257,6 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateForm();
-    console.log(isValid);
 
     if (isValid) {
       try {
@@ -484,6 +490,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                           </p>
                         )}
                       </td>
+
                       <td className="w-[35%] !mx-4">
                         <FormControl size="small" className="w-[90%]">
                           <InputLabel id="demo-simple-select-label">
@@ -560,6 +567,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                 </tbody>
               </table>
             </div>
+          )}
+
+          {errors.salaryLength && (
+            <p className="text-red-500">*{errors.salaryLength}</p>
           )}
 
           <div>

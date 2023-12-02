@@ -1,4 +1,4 @@
-import { BorderColor, Delete, Warning } from "@mui/icons-material";
+import { Delete, Warning } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -12,21 +12,29 @@ import {
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
+import { Menu, MenuItem } from "@mui/material";
+import * as XLSX from "xlsx";
+
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
-  const [search, setSearch] = useState("");
+  const [nameSearch, setNameSearch] = useState("");
+  const [deptSearch, setDeptSearch] = useState("");
+  const [locationSearch, setLocationSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
-  const [selectedEmployees, setSelectedEmployees] = useState([]); // Track selected employees
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [deleteMultiEmpConfirmation, setDeleteMultiEmpConfirmation] =
-    useState(false); // Track dialog visibility
-
+    useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
+  const [excelDataToDelete, setExcelDataToDelete] = useState(null);
   const fetchAvailableEmployee = async () => {
     try {
       const response = await axios.get(
@@ -128,6 +136,109 @@ const DeleteEmployee = () => {
       setDeleteMultiEmpConfirmation(false);
     }
   };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  // generate excel sheet
+  const generateExcel = () => {
+    try {
+      const wb = XLSX.utils.book_new();
+      const wsData = [
+        [
+          "Employee Id",
+          "First Name",
+          "Last Name",
+          "Email",
+          "Phone Number",
+          "Profile",
+        ],
+      ];
+      // Add Employee information to the worksheet data
+      availableEmployee.forEach((employee) => {
+        wsData.push([
+          employee._id, // Assuming _id is the Employee Id
+          employee.first_name,
+          employee.last_name,
+          employee.email,
+          employee.phone_number,
+          employee.profile.join(", "), // Join profile array into a string
+        ]);
+      });
+      // Create a worksheet and add data to workbook
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+      const columnWidths = [
+        { wch: 30 }, // Employee Id
+        { wch: 20 }, // First Name
+        { wch: 20 }, // Last Name
+        { wch: 35 }, // Email
+        { wch: 15 }, // Phone Number
+        { wch: 35 }, // Profile
+      ];
+      ws["!cols"] = columnWidths;
+      XLSX.utils.book_append_sheet(wb, ws, "Employees");
+      // Save workbook to a file
+      XLSX.writeFile(wb, "employee_data.xlsx");
+    } catch (error) {
+      console.error("Error generating Excel:", error);
+    }
+  };
+  // Function to read Excel file data
+  const readExcelFile = (file) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (event) => {
+      const data = event.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+      const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
+      const worksheet = workbook.Sheets[sheetName];
+      const excelData = XLSX.utils.sheet_to_json(worksheet);
+      console.log("Excel Data:", excelData); // Do something with the read data
+      setExcelDataToDelete(excelData);
+    };
+    fileReader.readAsBinaryString(file);
+  };
+  // Function to handle file upload
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+    readExcelFile(file);
+  };
+  // Function to handle delete button click
+  const handleDeleteExcelData = () => {
+    if (excelDataToDelete) {
+      setConfirmDeleteDialog(true);
+    }
+  };
+  console.log(excelDataToDelete);
+  const handleConfirmDeleteExcelData = async () => {
+    try {
+      // Assuming each item in `excelDataToDelete` contains an `_id` field
+      const idsToDelete = excelDataToDelete.map((item) => item._id);
+
+      // Make an API call to delete the employees with the collected IDs
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API}/route/employee/delete-multiple`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+          data: { ids: idsToDelete },
+        }
+      );
+
+      // If deletion is successful, log the response and reset the state
+      console.log("Deleted Employees:", response);
+      setConfirmDeleteDialog(false);
+      setExcelDataToDelete(null);
+      handleAlert(true, "success", "Employees deleted successfully");
+    } catch (error) {
+      console.error("Error deleting employees:", error);
+      handleAlert(true, "error", "Failed to delete employees");
+    }
+  };
 
   return (
     <>
@@ -137,13 +248,53 @@ const DeleteEmployee = () => {
             <div className="p-4  border-b-[.5px] flex items-center justify-between  gap-3 w-full border-gray-300">
               <div className="flex items-center  gap-3 ">
                 <TextField
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => setNameSearch(e.target.value)}
                   placeholder="Search Employee Name...."
                   variant="outlined"
                   size="small"
                   sx={{ width: 300 }}
                 />
               </div>
+              <div className="flex items-center  gap-3 ">
+                <TextField
+                  onChange={(e) => setDeptSearch(e.target.value)}
+                  placeholder="Search Department Name...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </div>
+              <div className="flex items-center  gap-3 ">
+                <TextField
+                  onChange={(e) => setLocationSearch(e.target.value)}
+                  placeholder="Search Location ...."
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 300 }}
+                />
+              </div>
+              <div>
+                <IconButton onClick={handleMenuClick}>
+                  <DeleteForeverIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={generateExcel}>Generate Excel </MenuItem>
+                  <MenuItem>
+                    {" "}
+                    <input
+                      type="file"
+                      accept=".xlsx, .xls"
+                      onChange={handleFileUpload}
+                    />
+                  </MenuItem>
+                  <MenuItem onClick={handleDeleteExcelData}>Delete</MenuItem>
+                </Menu>
+              </div>
+
               <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
@@ -156,26 +307,30 @@ const DeleteEmployee = () => {
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
               <table className="min-w-full bg-white  text-left !text-sm font-light">
                 <thead className="border-b bg-gray-200  font-medium dark:border-neutral-500">
-                  <tr className="!font-semibold ">
-                    <th scope="col" className="!text-left pl-8 py-3 "></th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                  <tr className="!font-semibold">
+                    <th scope="col" className="!text-left pl-8 py-3"></th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       SR NO
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    <th scope="col" className="!text-left pl-8 py-3">
                       First Name
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Last Name
-                    </th>{" "}
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Email
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Location
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
+                      Department
+                    </th>
+                    <th scope="col" className="!text-left pl-8 py-3">
                       Phone Number
                     </th>
-                    <th scope="col" className="!text-left pl-8 py-3 ">
-                      Address
-                    </th>
+
                     <th scope="col" className="px-6 py-3 ">
                       Actions
                     </th>
@@ -184,9 +339,26 @@ const DeleteEmployee = () => {
                 <tbody>
                   {availableEmployee
                     .filter((item) => {
-                      return search.toLowerCase() === ""
-                        ? item
-                        : item.first_name.toLowerCase().includes(search);
+                      return (
+                        (!nameSearch.toLowerCase() ||
+                          (item.first_name &&
+                            item.first_name
+                              .toLowerCase()
+                              .includes(nameSearch))) &&
+                        (!deptSearch.toLowerCase() ||
+                          (item.deptname &&
+                            item.deptname
+                              .toLowerCase()
+                              .includes(deptSearch))) &&
+                        (!locationSearch.toLowerCase() ||
+                          item.worklocation.some(
+                            (location) =>
+                              location.city &&
+                              location.city
+                                .toLowerCase()
+                                .includes(locationSearch)
+                          ))
+                      );
                     })
                     .map((item, id) => (
                       <tr className="!font-medium border-b" key={id}>
@@ -196,20 +368,23 @@ const DeleteEmployee = () => {
                             onChange={() => handleEmployeeSelection(item._id)}
                           />
                         </td>
-                        <td className="!text-left pl-8 py-3 ">{id + 1}</td>
-                        <td className="py-3 ">{item.first_name}</td>
-                        <td className="py-3 ">{item.last_name}</td>
-                        <td className="py-3 ">{item.email}</td>
-                        <td className="py-3 ">{item.phone_number}</td>
-                        <td className="py-3 ">{item.address}</td>
+                        <td className="!text-left pl-8 py-3">{id + 1}</td>
+                        <td className="py-3">{item.first_name}</td>
+                        <td className="py-3">{item.last_name}</td>
+                        <td className="py-3">{item.email}</td>
+                        <td className="py-3">
+                          {item.worklocation.map((location, index) => (
+                            <span key={index}>{location.city}</span>
+                          ))}
+                        </td>
+                        <td className="py-3">{item.deptname}</td>
+                        <td className="py-3">{item.phone_number}</td>
+
                         <td className="whitespace-nowrap px-6 py-2">
                           <IconButton
                             onClick={() => handleDeleteConfirmation(item._id)}
                           >
                             <Delete className="!text-xl" color="error" />
-                          </IconButton>
-                          <IconButton>
-                            <BorderColor className="!text-xl" color="success" />
                           </IconButton>
                         </td>
                       </tr>
@@ -281,6 +456,40 @@ const DeleteEmployee = () => {
             variant="contained"
             size="small"
             onClick={confirmDeleteMultiple}
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* This Dialogue for delting Multiple Employe from excel sheet*/}
+      <Dialog
+        open={confirmDeleteDialog}
+        onClose={() => setConfirmDeleteDialog(false)}
+      >
+        <DialogTitle color={"error"}>
+          <Warning color="error" /> Are you sure to delete employee from excel
+          sheet?
+        </DialogTitle>
+        <DialogContent>
+          <p>
+            This action will delete the employees, and they cannot be retrieved.
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setConfirmDeleteDialog(false)}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleConfirmDeleteExcelData}
             color="error"
           >
             Delete

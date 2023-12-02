@@ -21,8 +21,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";
 import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
+import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";
 import Setup from "../Setup";
 
 const SalaryInput = () => {

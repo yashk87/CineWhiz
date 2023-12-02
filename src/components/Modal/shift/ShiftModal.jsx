@@ -12,21 +12,19 @@ import {
   OutlinedInput,
   Select,
 } from "@mui/material";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { MobileTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
-import dayjs from "dayjs";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import dayjs from "dayjs";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
-import { useContext } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { useEffect } from "react";
 
 const ShiftModal = ({ handleClose, open, id, shiftId }) => {
   const { handleAlert } = useContext(TestContext);
@@ -276,7 +274,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           {error && <p className="text-red-500">*{error}</p>}
 
           <div className="space-y-2 ">
-            <label className="text-sm" htmlFor="demo-simple-select-label">
+            <label className="text-md" htmlFor="demo-simple-select-label">
               {shiftId && isLoading ? "loading" : "Select shift type"}
             </label>
             <FormControl size="small" fullWidth>
@@ -296,7 +294,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </FormControl>
           </div>
           <div className="space-y-2 ">
-            <label className="text-sm" htmlFor="demo-simple-select-label">
+            <label className="text-md" htmlFor="demo-simple-select-label">
               Enter shift name
             </label>
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
@@ -313,7 +311,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           </div>
           <div className="flex justify-between">
             <div className="space-y-2 w-[45%] ">
-              <label className="text-sm" htmlFor="demo-simple-select-label">
+              <label className="text-md" htmlFor="demo-simple-select-label">
                 Enter shift start time
               </label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -334,7 +332,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </div>
 
             <div className="space-y-2 w-[45%]">
-              <label className="text-sm" htmlFor="demo-simple-select-label">
+              <label className="text-md" htmlFor="demo-simple-select-label">
                 Enter shift end time
               </label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -363,7 +361,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             className="w-full"
             style={{ width: "100%", justifyContent: "center", gap: "2px" }}
           >
-            <label className="text-sm" htmlFor="demo-simple-select-label">
+            <label className="text-md" htmlFor="demo-simple-select-label">
               Select week days
             </label>
             <ToggleButtonGroup
