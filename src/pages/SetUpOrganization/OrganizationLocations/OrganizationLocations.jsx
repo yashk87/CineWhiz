@@ -398,7 +398,6 @@ const OrganizationLocation = () => {
                   label={"short name *"}
                   className="pb-0"
                   variant="outlined"
-                  required
                   size="small"
                   value={shortName}
                   onChange={(e) => setShortName(e.target.value)}
@@ -518,6 +517,7 @@ const OrganizationLocation = () => {
         </Dialog>
       </Container>
     </IntlProvider>
+    </Setup>
   );
 };
 
