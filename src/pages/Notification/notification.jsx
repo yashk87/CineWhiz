@@ -8,7 +8,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import dayjs from "dayjs";
 import React, { useContext, useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { UseContext } from "../../State/UseState/UseContext";
 import LeaveRejectmodal from "../../components/Modal/LeaveModal/LeaveRejectmodal";
 
@@ -42,11 +42,11 @@ const Notification = () => {
     return response.data;
   });
 
-  const AcceptLeave = async (id) => {
-    console.log(id, "id");
+  const queryClient = useQueryClient();
 
-    try {
-      const acceptLeave = await axios.post(
+  const { mutate: acceptLeaveMutation } = useMutation(
+    ({ id }) =>
+      axios.post(
         `${process.env.REACT_APP_API}/route/leave/accept/${id}`,
         { message: "Your Request is successfully approved" },
         {
@@ -54,21 +54,26 @@ const Notification = () => {
             Authorization: authToken,
           },
         }
-      );
-
-      window.location.reload();
-      console.log(acceptLeave, "acc");
-    } catch (error) {
-      console.log(error, "err");
+      ),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("employee-leave");
+      },
     }
-  };
+  );
 
-  console.log(`🚀 ~ data?.leaveRequests:`, data?.leaveRequests);
-  const RejectRequest = async (id) => {
-    console.log(id, "id");
-    setid(id);
-    setOpen(true);
-  };
+  const { mutate: rejectRequestMutation } = useMutation(
+    ({ id }) => {
+      setid(id);
+      setOpen(true);
+    },
+    {
+      onSuccess: () => {
+        // No need to reload the whole window, just invalidate the relevant query
+        queryClient.invalidateQueries("employee-leave");
+      },
+    }
+  );
   const handleClose = () => {
     setOpen(false);
   };
@@ -114,10 +119,10 @@ const Notification = () => {
                   <Box className="flex md:flex-row items-center  justify-center flex-col gap-8  md:gap-16">
                     <div className="w-max">
                       <Badge
-                        badgeContent={dayjs(items.end).diff(
+                        badgeContent={`${dayjs(items.end).diff(
                           dayjs(items.start),
                           "day"
-                        )}
+                        )} days`}
                         color="info"
                         variant="standard"
                       >
@@ -151,7 +156,9 @@ const Notification = () => {
                           <Stack direction="row" spacing={3}>
                             <Button
                               variant="contained"
-                              onClick={() => AcceptLeave(items._id)}
+                              onClick={() =>
+                                acceptLeaveMutation({ id: items._id })
+                              }
                               // startIcon={<CheckIcon />}
                               sx={{
                                 fontStyle: "italic",
@@ -160,17 +167,17 @@ const Notification = () => {
                                 textTransform: "capitalize",
                                 backgroundColor: "#42992D",
                                 "&:hover": {
-                                  backgroundColor: "#42992D", // Set the same color on hover to maintain the color
+                                  backgroundColor: "#42992D",
                                 },
                               }}
                             >
                               Accept
                             </Button>
                             <Button
-                              // onClick={handleOpen}
-                              onClick={() => RejectRequest(items._id)}
+                              onClick={() =>
+                                rejectRequestMutation({ id: items._id })
+                              }
                               variant="contained"
-                              // startIcon={<CloseIcon />}
                               sx={{
                                 fontStyle: "italic",
                                 fontSize: "12px",
@@ -178,7 +185,7 @@ const Notification = () => {
                                 textTransform: "capitalize",
                                 backgroundColor: "#BB1F11",
                                 "&:hover": {
-                                  backgroundColor: "#BB1F11", // Set the same color on hover to maintain the color
+                                  backgroundColor: "#BB1F11",
                                 },
                               }}
                             >
