@@ -70,8 +70,8 @@ const Setup = ({ children }) => {
     {
       label: "Add Location",
       icon: AddLocationAltOutlined,
-      href: "/",
-      active: location.pathname === "",
+      href: `/setup/add-organization-locations/${id}`,
+      active: location.pathname === `/setup/add-organization-locations/${id}`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
