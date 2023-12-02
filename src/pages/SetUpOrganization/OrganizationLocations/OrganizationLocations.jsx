@@ -82,12 +82,12 @@ const OrganizationLocation = () => {
   useEffect(() => {
     if (open) {
       setStateData((prevData) => State.getStatesOfCountry(country?.isoCode) || prevData);
-    } else {
+    } if(!open) {
       // setStateData(State.getStatesOfCountry(country?.isoCode));
       setState(stateData[0]);
       setContinent(continents[0]);
     }
-  }, [open, country, stateData, continents]);
+  }, [open, country]);
   
   const handleOpen = () => {
     setOpen(true);
