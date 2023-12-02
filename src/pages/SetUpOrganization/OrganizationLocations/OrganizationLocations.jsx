@@ -55,7 +55,7 @@ const OrganizationLocation = () => {
   );
   const [editIndex, setEditIndex] = useState(null);
   const [state, setState] = useState(
-    State.getStatesOfCountry(country?.isoCode)[0] || ""
+    State.getStatesOfCountry(country?.isoCode)[0]
   );
   const [open, setOpen] = useState(false);
 
@@ -78,17 +78,22 @@ const OrganizationLocation = () => {
 
     fetchLocationList();
   }, [authToken]);
-  
+
   useEffect(() => {
     if (open) {
-      setStateData((prevData) => State.getStatesOfCountry(country?.isoCode) || prevData);
-    } else {
-      // setStateData(State.getStatesOfCountry(country?.isoCode));
-      setState(stateData[0]);
-      setContinent(continents[0]);
+      setStateData(
+        (prevData) => State.getStatesOfCountry(country?.isoCode) || prevData
+      );
     }
-  }, [open, country, stateData, continents]);
-  
+
+    if (!open) {
+      setState("");
+      setContinent(continents[0]);
+      setStateData("");
+    }
+    // eslint-disable-next-line
+  }, [open, country]);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -158,7 +163,9 @@ const OrganizationLocation = () => {
     setCity(selectedLocation.city);
     setShortName(selectedLocation.shortName);
     setContinent(
-      continents.find((continent) => continent?.name === selectedLocation.continent)
+      continents.find(
+        (continent) => continent?.name === selectedLocation.continent
+      )
     );
     setPinCode(selectedLocation.pinCode);
     const selectedCountry = Country.getAllCountries().find(
@@ -365,7 +372,7 @@ const OrganizationLocation = () => {
             )}
           </DialogTitle>
           <DialogContent>
-          <div
+            <div
               style={{
                 display: "flex",
                 gap: "8px",
@@ -385,7 +392,10 @@ const OrganizationLocation = () => {
               </div>
               <TextField
                 label={
-                  <FormattedMessage id="shortname" defaultMessage="Short Name" />
+                  <FormattedMessage
+                    id="shortname"
+                    defaultMessage="Short Name"
+                  />
                 }
                 className="pb-0"
                 variant="outlined"
@@ -428,8 +438,7 @@ const OrganizationLocation = () => {
               )}
             </div>
             <TextField
-              label={<FormattedMessage id="city" 
-              defaultMessage="City" />}
+              label={<FormattedMessage id="city" defaultMessage="City" />}
               variant="outlined"
               value={city}
               onChange={(e) => setCity(e.target.value)}
@@ -481,27 +490,30 @@ const OrganizationLocation = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="secondary">
-                <FormattedMessage id="cancel" defaultMessage="Cancel" />
-              </Button>
-              <Button
-                onClick={() => {
-                  if(editIndex !== null){
-                    handleUpdateLocation(editIndex)
-                  }else{
-                    handleAddLocation()
-                  }
-                }}
-                color="primary"
-              >
-                {editIndex !== null ? (
-                  <FormattedMessage
-                    id="saveChanges"
-                    defaultMessage="Save Changes"
-                  />
-                ) : (
-                  <FormattedMessage id="addLocation" defaultMessage="Add Location" />
-                )}
-              </Button>
+              <FormattedMessage id="cancel" defaultMessage="Cancel" />
+            </Button>
+            <Button
+              onClick={() => {
+                if (editIndex !== null) {
+                  handleUpdateLocation(editIndex);
+                } else {
+                  handleAddLocation();
+                }
+              }}
+              color="primary"
+            >
+              {editIndex !== null ? (
+                <FormattedMessage
+                  id="saveChanges"
+                  defaultMessage="Save Changes"
+                />
+              ) : (
+                <FormattedMessage
+                  id="addLocation"
+                  defaultMessage="Add Location"
+                />
+              )}
+            </Button>
           </DialogActions>
         </Dialog>
       </Container>
@@ -510,5 +522,3 @@ const OrganizationLocation = () => {
 };
 
 export default OrganizationLocation;
-
-

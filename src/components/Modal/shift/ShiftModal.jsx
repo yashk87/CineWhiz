@@ -274,7 +274,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           {error && <p className="text-red-500">*{error}</p>}
 
           <div className="space-y-2 ">
-            <label className="text-sm" htmlFor="demo-simple-select-label">
+            <label className="text-md" htmlFor="demo-simple-select-label">
               {shiftId && isLoading ? "loading" : "Select shift type"}
             </label>
             <FormControl size="small" fullWidth>
@@ -294,7 +294,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </FormControl>
           </div>
           <div className="space-y-2 ">
-            <label className="text-sm" htmlFor="demo-simple-select-label">
+            <label className="text-md" htmlFor="demo-simple-select-label">
               Enter shift name
             </label>
             <FormControl size="small" sx={{ width: "100%" }} variant="outlined">
@@ -311,7 +311,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
           </div>
           <div className="flex justify-between">
             <div className="space-y-2 w-[45%] ">
-              <label className="text-sm" htmlFor="demo-simple-select-label">
+              <label className="text-md" htmlFor="demo-simple-select-label">
                 Enter shift start time
               </label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -332,7 +332,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             </div>
 
             <div className="space-y-2 w-[45%]">
-              <label className="text-sm" htmlFor="demo-simple-select-label">
+              <label className="text-md" htmlFor="demo-simple-select-label">
                 Enter shift end time
               </label>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -361,7 +361,7 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
             className="w-full"
             style={{ width: "100%", justifyContent: "center", gap: "2px" }}
           >
-            <label className="text-sm" htmlFor="demo-simple-select-label">
+            <label className="text-md" htmlFor="demo-simple-select-label">
               Select week days
             </label>
             <ToggleButtonGroup
