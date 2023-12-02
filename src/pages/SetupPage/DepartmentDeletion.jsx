@@ -1,3 +1,4 @@
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -13,28 +14,24 @@ import {
   DialogActions,
 } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { UseContext } from "../../State/UseState/UseContext";
 
 const DepartmentDeletion = () => {
-  const { setAppAlert } = useContext(UseContext);
+  const { setAppAlert, cookies } = useContext(UseContext);
   const [departments, setDepartments] = useState([]);
   const [deptLocationId, setDeptLocationId] = useState("");
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [filteredDepartments, setFilteredDepartments] = useState([]);
-  const { cookies } = useContext(UseContext);
-  const authToken = cookies["aeigs"];
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
+  const authToken = cookies["aeigs"];
 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/route/department/get"
-        );
+        const response = await axios.get("http://localhost:4000/route/department/get");
         setDepartments(response.data.department);
       } catch (error) {
         console.error("Error fetching department data:", error);
@@ -46,12 +43,9 @@ const DepartmentDeletion = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/route/location/getOrganizationLocations",
-          {
-            headers: { Authorization: authToken },
-          }
-        );
+        const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
+          headers: { Authorization: authToken },
+        });
         setLocations(response.data);
       } catch (error) {
         console.error("Error fetching location data:", error);
@@ -64,19 +58,12 @@ const DepartmentDeletion = () => {
     setSelectedLocation(event.target.value);
 
     try {
-      const response = await axios.get(
-        "http://localhost:4000/route/location/getOrganizationLocations",
-        {
-          headers: { Authorization: authToken },
-        }
-      );
+      const response = await axios.get("http://localhost:4000/route/location/getOrganizationLocations", {
+        headers: { Authorization: authToken },
+      });
 
-      const location = response.data.find(
-        (obj) => obj.shortName === event.target.value
-      );
-      const singleDept = departments.filter(
-        (dept) => dept.departmentLocation === location._id
-      );
+      const location = response.data.find((obj) => obj.shortName === event.target.value);
+      const singleDept = departments.filter((dept) => dept.departmentLocation === location._id);
       setFilteredDepartments(singleDept);
     } catch (error) {
       console.error("Error fetching location data:", error);
@@ -84,7 +71,6 @@ const DepartmentDeletion = () => {
   };
 
   const handleDelete = async () => {
-
     try {
       if (!selectedLocation) {
         console.error("Please select a department to delete.");
@@ -92,14 +78,14 @@ const DepartmentDeletion = () => {
       }
       await axios.delete(`http://localhost:4000/route/department/delete/${deptLocationId}`, {
         headers: { Authorization: authToken },
-      }).then((response) =>{
+      }).then((response) => {
         setAppAlert({
           alert: true,
           type: 'success',
           msg: 'Department deleted successfully!',
-        })
+        });
         setShowConfirmation(false);
-      }).catch((error) =>{
+      }).catch((error) => {
         console.error("Error deleting department:", error);
         setAppAlert({
           alert: true,
@@ -107,11 +93,9 @@ const DepartmentDeletion = () => {
           msg: 'Error deleting department. Please try again.',
         });
         setShowConfirmation(false);
-      })
+      });
 
-      const response = await axios.get(
-        "http://localhost:4000/route/department/get"
-      );
+      const response = await axios.get("http://localhost:4000/route/department/get");
       setDepartments(response.data.department);
       setSelectedLocation("");
       setFilteredDepartments([]);
@@ -130,14 +114,11 @@ const DepartmentDeletion = () => {
       const wb = XLSX.utils.book_new();
       const wsData = [["Department Name", "Department ID"]];
 
-      // Add department information to the worksheet data
       filteredDepartments.forEach((department) => {
         wsData.push([department.departmentName, department._id]);
       });
 
       const ws = XLSX.utils.aoa_to_sheet(wsData);
-
-      // Set column width for the 'Department Name' column
       const columnWidths = [{ wch: 20 }, { wch: 15 }];
       ws["!cols"] = columnWidths;
 
@@ -150,125 +131,129 @@ const DepartmentDeletion = () => {
 
   const handleDeleteFromExcel = async () => {
     try {
-      const fileInput = document.getElementById('fileInput');
+      const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
+      console.log(file);
 
-  //     if (!file) {
-  //       console.error("Please upload an Excel file.");
-  //       return;
-  //     }
+      if (!file) {
+        console.error("Please upload an Excel file.");
+        setAppAlert({
+          alert: true,
+          type: "error",
+          msg: "Please upload an Excel file.",
+        });
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = async function (e) {
         try {
           const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const ws = workbook.Sheets['DepartmentSheet'];
-
-          const deleteColumnIndex = XLSX.utils.decode_range(ws['!ref']).e.c;
+          const workbook = XLSX.read(data, { type: "array" });
+          const ws = workbook.Sheets["DepartmentSheet"];
+          const deleteColumnIndex = XLSX.utils.decode_range(ws["!ref"]).e.c;
 
           if (deleteColumnIndex === undefined) {
-            console.error('Delete column not found in the Excel sheet.');
+            console.error("Delete column not found in the Excel sheet.");
+            setAppAlert({
+              alert: true,
+              type: "error",
+              msg: "Delete column not found in the Excel sheet.",
+            });
             return;
           }
 
           const departmentsToDelete = [];
 
-          // Iterate through rows starting from the second row (index 1)
-          for (let row = 1; row <= XLSX.utils.decode_range(ws['!ref']).e.r; row++) {
+          for (let row = 1; row <= XLSX.utils.decode_range(ws["!ref"]).e.r; row++) {
             const deleteCommand = ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
 
-            if (
-              deleteCommand &&
-              deleteCommand.v &&
-              deleteCommand.v.toLowerCase() === 'delete'
-            ) {
+            if (deleteCommand && deleteCommand.v && deleteCommand.v.toLowerCase() === "delete") {
               const departmentIdToDelete = ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v;
-
-              // Find the department with the matching ID
-              const departmentToDelete = departments.find(
-                (dept) => dept._id === departmentIdToDelete
-              );
+              const departmentToDelete = departments.find((dept) => dept._id === departmentIdToDelete);
 
               if (departmentToDelete) {
                 departmentsToDelete.push(departmentToDelete);
               }
             }
           }
+          if(departmentsToDelete.length === 0){
+            setAppAlert({
+              alert: true,
+              type: "error",
+              msg: "Failed to delete department from Excel. Please try again.",
+            })
+            setShowConfirmationExcel(false)
+            setSelectedLocation("")
+            return
+          }
 
-          // Perform the deletion logic for each department
           for (const department of departmentsToDelete) {
             try {
-              // Delete from the database
-              await axios.delete(
-                `http://localhost:4000/route/department/delete/${department._id}`,
-                {
-                  headers: { Authorization: authToken },
-                }
-              ).then((response) =>{
-                console.log("Designation added successfully:", response.data);
-                setSelectedLocation("");
-                setFilteredDepartments([]);
+              await axios.delete(`http://localhost:4000/route/department/delete/${department._id}`, {
+                headers: { Authorization: authToken },
+              }).then((resp) => {
+                console.log("deleted successfully");
+                setDepartments((prevDepartments) =>
+                  prevDepartments.filter((dept) => dept._id !== department._id)
+                );
                 setAppAlert({
                   alert: true,
-                  type: 'success',
-                  msg: 'Departments deleted from the excel sheet!',
-                })
-                setShowConfirmationExcel(false)
-
-              }).catch((error) => {
-                console.error("Error deleting departments from excel:", error);
-                setShowConfirmationExcel(false)
-                setAppAlert({
-                  alert: true,
-                  type: 'error',
-                  msg: 'Error deleting departments from excel Please try again.',
-
+                  type: "success",
+                  msg: "Departments deleted from the Excel sheet!",
                 });
-                setSelectedLocation("");
-                setFilteredDepartments([]);
-
-
+                setSelectedLocation("")
+              }).catch((error) => {
+                console.log(error);
+                setAppAlert({
+                  alert: true,
+                  type: "error",
+                  msg: "Failed to delete department from Excel. Please try again.",
+                });
               });
 
-
-              // Optional: Remove the deleted department from the state
-              setDepartments((prevDepartments) =>
-                prevDepartments.filter((dept) => dept._id !== department._id)
-
-              );
             } catch (error) {
-              console.error('Error deleting department:', error);
+              console.log(error);
+              return;
             }
           }
+
+          setShowConfirmationExcel(false);
         } catch (error) {
-          console.error('Error processing Excel data:', error);
+          console.error("Error processing Excel data:", error);
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: "Error processing Excel data.",
+          });
+          setShowConfirmationExcel(false);
+          setSelectedLocation("");
         }
       };
 
       reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error('Error handling Excel delete:', error);
+      console.error("Error handling Excel delete:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Error handling Excel delete.",
+      });
+      setShowConfirmationExcel(false);
+      setSelectedLocation("");
     }
   };
+
   const handleConfirmation = async (confirmed) => {
-    // Close the confirmation dialog
     setShowConfirmation(false);
 
-    // If confirmed is true, proceed with deletion
     if (confirmed) {
       try {
-        // Existing delete logic
-        await axios.delete(
-          `http://localhost:4000/route/department/delete/${deptLocationId}`,
-          {
-            headers: { Authorization: authToken },
-          }
-        );
+        await axios.delete(`http://localhost:4000/route/department/delete/${deptLocationId}`, {
+          headers: { Authorization: authToken },
+        });
 
-        const response = await axios.get(
-          "http://localhost:4000/route/department/get"
-        );
+        const response = await axios.get("http://localhost:4000/route/department/get");
         setDepartments(response.data.department);
         setSelectedLocation("");
         setFilteredDepartments([]);
@@ -285,11 +270,8 @@ const DepartmentDeletion = () => {
           msg: "Error deleting department. Please try again.",
         });
       }
-    } else {
-      // If canceled, reset state or perform any other action
     }
   };
-
 
   return (
     <Container
@@ -362,7 +344,7 @@ const DepartmentDeletion = () => {
         className="w-full rounded"
         onChange={() => setShowConfirmationExcel(true)}
       />
-      <div className="flex justify-between w-full my-5">
+      <div className="flex gap-5 w-full my-5">
         <Button
           color="error"
           variant="contained"
@@ -382,11 +364,7 @@ const DepartmentDeletion = () => {
         </Button>
       </div>
 
-      {/* Confirmation Dialog */}
-      <Dialog
-        open={showConfirmation}
-        onClose={() => handleConfirmation(false)}
-      >
+      <Dialog open={showConfirmation} onClose={() => handleConfirmation(false)}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <Typography>
@@ -394,41 +372,26 @@ const DepartmentDeletion = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => handleConfirmation(false)}
-            color="primary"
-          >
+          <Button onClick={() => handleConfirmation(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleDelete}
-            color="primary"
-          >
+          <Button onClick={handleDelete} color="primary">
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog
-        open={showConfirmationExcel}
-        onClose={() => handleConfirmation(false)}
-      >
+      <Dialog open={showConfirmationExcel} onClose={() => handleConfirmation(false)}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete this departments?
+            Are you sure you want to delete these departments?
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => setShowConfirmationExcel(false)}
-            color="primary"
-          >
+          <Button onClick={() => setShowConfirmationExcel(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleDeleteFromExcel}
-            color="primary"
-          >
+          <Button onClick={handleDeleteFromExcel} color="primary">
             Delete
           </Button>
         </DialogActions>

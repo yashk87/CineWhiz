@@ -9,6 +9,7 @@ import {
   SettingsOutlined,
   West,
 } from "@mui/icons-material";
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { jwtDecode } from "jwt-decode";
@@ -92,6 +93,15 @@ const Setup = ({ children }) => {
         ["Super-Admin", "HR"].includes(role)
       ),
     },
+    {
+      label: "Add Designation",
+      icon: BadgeOutlinedIcon,
+      href: `/set-designation`,
+      active: location.pathname === `/set-designation`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "HR"].includes(role)
+      ),
+    }
   ];
 
   return (

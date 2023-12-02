@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import Setup from '../SetUpOrganization/Setup';
 
 const Designation = () => {
   const [click, setClick] = useState(false);
@@ -218,11 +219,13 @@ const Designation = () => {
 
   return (
     <>
-        <div className='py-5 m-auto w-full flex justify-center'>
-        <Button onClick={handleClick} className='relative top-4 flex justify-center items-center' variant='contained' color='info'>
-          Add Designation
-        </Button>
-      </div>
+     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
+        <Setup>
+
+
+        {/* <div className='right-4 top-[8rem]'>
+
+      </div> */}
 
       <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
         <DialogTitle>{editMode ? "Edit Designation" : "Add Designation"}</DialogTitle>
@@ -341,12 +344,32 @@ const Designation = () => {
         </DialogActions>
       </Dialog>
 
-     <Container className="relative top-5 flex flex-col items-center " style={{ width: "25rem", borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"}}>
+     <Container className="relative gap-5 flex flex-col items-center h-fit" style={{borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"}}>
+
+      <div className='flex justify-between w-full my-2 m-0'>
+      <h1 style={{fontSize:"2rem"}}>Add Designation</h1>
+     <Button onClick={handleClick} className='flex justify-end items-center' variant='contained' color='info'>
+          Add Designation
+        </Button>
+        </div>
+     <div className='py-2' style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid rgb(177, 177, 177)", width: "100%", marginTop:"1rem", borderTop:"2px solid rgb(177, 177, 177)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "11rem", width: "100%" }}>
+              <h1>Sr No</h1>
+                <h4 style={{ margin: 0, color: "black" }}>
+                  Designation Name
+                </h4>
+                <div style={{ display: "flex", gap: "10px", marginLeft: "auto" }}>
+                 <h1>Edit</h1>
+                  <h1>Delete</h1>
+                </div>
+              </div>
+            </div>
         {designation.length === 0 && (<h1 className='text-center'>no designations right now</h1>)}
         {designation && Array.isArray(designation) ? (
           designation.map((data, index) => (
             <div key={data._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: index < designation.length - 1 ? "2px solid rgb(177, 177, 177)" : "none", width: "100%" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12.7rem", width: "100%" }}>
+              <h1>{index+1}</h1>
                 <h4 style={{ margin: 0, color: "black" }}>
                   {data.designationName}
                 </h4>
@@ -365,6 +388,8 @@ const Designation = () => {
           <p>Loading...</p>
         )}
       </Container>
+      </Setup>
+        </section>
     </>
   );
 };
