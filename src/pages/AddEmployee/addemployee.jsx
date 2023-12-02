@@ -109,6 +109,9 @@ const AddEmployee = () => {
   const handleRadioChange = (event) => {
     setGender(event.target.value);
   };
+  const handleMgrEmpId = (event) => {
+    setMgrEmpId(event.target.value);
+  };
 
   const [availabelDesignation, setAvailableDesignation] = useState([]);
   const fetchAvailableDesignation = async () => {
@@ -262,6 +265,29 @@ const AddEmployee = () => {
     fetchAvailbleInputField();
     // eslint-disable-next-line
   }, [id]);
+
+  const [availableMgrId, setAvailableMgrId] = useState([]);
+  const fetchAvailabeMgrId = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-manager`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      setAvailableMgrId(response.data.manager);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Manager Id");
+    }
+  };
+  useEffect(() => {
+    fetchAvailabeMgrId();
+    // eslint-disable-next-line
+  }, []);
 
   const [dynamicFields, setDynamicFields] = useState({
     shifts_allocation: "",
@@ -552,18 +578,26 @@ const AddEmployee = () => {
                 </div>
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="text"
-                      label="Manager Employee ID"
-                      name="mgrempid"
-                      id="mgrempid"
+                    <Select
                       value={mgrempid}
-                      onChange={(e) => setMgrEmpId(e.target.value)}
-                      fullWidth
-                      margin="normal"
-                      required
-                    />
+                      onChange={handleMgrEmpId}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Manager Id" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Select Manager Id
+                      </MenuItem>
+                      {availableMgrId.map((manager) => (
+                        <MenuItem
+                          key={manager._id}
+                          value={manager.managerId ? manager.managerId._id : ""}
+                        >
+                          {manager.managerId
+                            ? manager.managerId._id
+                            : "No Manager ID"}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </div>
               </div>

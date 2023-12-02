@@ -92,6 +92,13 @@ const Setup = ({ children }) => {
         ["Super-Admin", "HR"].includes(role)
       ),
     },
+    {
+      label: "Input Field",
+      icon: PriceChangeOutlined,
+      href: `/add-inputfield/${id}`,
+      active: location.pathname === `/add-inputfield/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
   ];
 
   return (
