@@ -84,30 +84,35 @@ const DepartmentDeletion = () => {
   };
 
   const handleDelete = async () => {
-
     try {
       if (!selectedLocation) {
         console.error("Please select a department to delete.");
         return;
       }
-      await axios.delete(`http://localhost:4000/route/department/delete/${deptLocationId}`, {
-        headers: { Authorization: authToken },
-      }).then((response) =>{
-        setAppAlert({
-          alert: true,
-          type: 'success',
-          msg: 'Department deleted successfully!',
+      await axios
+        .delete(
+          `http://localhost:4000/route/department/delete/${deptLocationId}`,
+          {
+            headers: { Authorization: authToken },
+          }
+        )
+        .then((response) => {
+          setAppAlert({
+            alert: true,
+            type: "success",
+            msg: "Department deleted successfully!",
+          });
+          setShowConfirmation(false);
         })
-        setShowConfirmation(false);
-      }).catch((error) =>{
-        console.error("Error deleting department:", error);
-        setAppAlert({
-          alert: true,
-          type: 'error',
-          msg: 'Error deleting department. Please try again.',
+        .catch((error) => {
+          console.error("Error deleting department:", error);
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: "Error deleting department. Please try again.",
+          });
+          setShowConfirmation(false);
         });
-        setShowConfirmation(false);
-      })
 
       const response = await axios.get(
         "http://localhost:4000/route/department/get"
@@ -150,40 +155,46 @@ const DepartmentDeletion = () => {
 
   const handleDeleteFromExcel = async () => {
     try {
-      const fileInput = document.getElementById('fileInput');
+      const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
 
-  //     if (!file) {
-  //       console.error("Please upload an Excel file.");
-  //       return;
-  //     }
+      //     if (!file) {
+      //       console.error("Please upload an Excel file.");
+      //       return;
+      //     }
 
       const reader = new FileReader();
       reader.onload = async function (e) {
         try {
           const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const ws = workbook.Sheets['DepartmentSheet'];
+          const workbook = XLSX.read(data, { type: "array" });
+          const ws = workbook.Sheets["DepartmentSheet"];
 
-          const deleteColumnIndex = XLSX.utils.decode_range(ws['!ref']).e.c;
+          const deleteColumnIndex = XLSX.utils.decode_range(ws["!ref"]).e.c;
 
           if (deleteColumnIndex === undefined) {
-            console.error('Delete column not found in the Excel sheet.');
+            console.error("Delete column not found in the Excel sheet.");
             return;
           }
 
           const departmentsToDelete = [];
 
           // Iterate through rows starting from the second row (index 1)
-          for (let row = 1; row <= XLSX.utils.decode_range(ws['!ref']).e.r; row++) {
-            const deleteCommand = ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
+          for (
+            let row = 1;
+            row <= XLSX.utils.decode_range(ws["!ref"]).e.r;
+            row++
+          ) {
+            const deleteCommand =
+              ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
 
             if (
               deleteCommand &&
               deleteCommand.v &&
-              deleteCommand.v.toLowerCase() === 'delete'
+              deleteCommand.v.toLowerCase() === "delete"
             ) {
-              const departmentIdToDelete = ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v;
+              const departmentIdToDelete =
+                ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v;
 
               // Find the department with the matching ID
               const departmentToDelete = departments.find(
@@ -200,55 +211,55 @@ const DepartmentDeletion = () => {
           for (const department of departmentsToDelete) {
             try {
               // Delete from the database
-              await axios.delete(
-                `http://localhost:4000/route/department/delete/${department._id}`,
-                {
-                  headers: { Authorization: authToken },
-                }
-              ).then((response) =>{
-                console.log("Designation added successfully:", response.data);
-                setSelectedLocation("");
-                setFilteredDepartments([]);
-                setAppAlert({
-                  alert: true,
-                  type: 'success',
-                  msg: 'Departments deleted from the excel sheet!',
+              await axios
+                .delete(
+                  `http://localhost:4000/route/department/delete/${department._id}`,
+                  {
+                    headers: { Authorization: authToken },
+                  }
+                )
+                .then((response) => {
+                  console.log("Designation added successfully:", response.data);
+                  setSelectedLocation("");
+                  setFilteredDepartments([]);
+                  setAppAlert({
+                    alert: true,
+                    type: "success",
+                    msg: "Departments deleted from the excel sheet!",
+                  });
+                  setShowConfirmationExcel(false);
                 })
-                setShowConfirmationExcel(false)
-
-              }).catch((error) => {
-                console.error("Error deleting departments from excel:", error);
-                setShowConfirmationExcel(false)
-                setAppAlert({
-                  alert: true,
-                  type: 'error',
-                  msg: 'Error deleting departments from excel Please try again.',
-
+                .catch((error) => {
+                  console.error(
+                    "Error deleting departments from excel:",
+                    error
+                  );
+                  setShowConfirmationExcel(false);
+                  setAppAlert({
+                    alert: true,
+                    type: "error",
+                    msg: "Error deleting departments from excel Please try again.",
+                  });
+                  setSelectedLocation("");
+                  setFilteredDepartments([]);
                 });
-                setSelectedLocation("");
-                setFilteredDepartments([]);
-
-
-              });
-
 
               // Optional: Remove the deleted department from the state
               setDepartments((prevDepartments) =>
                 prevDepartments.filter((dept) => dept._id !== department._id)
-
               );
             } catch (error) {
-              console.error('Error deleting department:', error);
+              console.error("Error deleting department:", error);
             }
           }
         } catch (error) {
-          console.error('Error processing Excel data:', error);
+          console.error("Error processing Excel data:", error);
         }
       };
 
       reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error('Error handling Excel delete:', error);
+      console.error("Error handling Excel delete:", error);
     }
   };
   const handleConfirmation = async (confirmed) => {
@@ -289,7 +300,6 @@ const DepartmentDeletion = () => {
       // If canceled, reset state or perform any other action
     }
   };
-
 
   return (
     <Container
@@ -383,10 +393,7 @@ const DepartmentDeletion = () => {
       </div>
 
       {/* Confirmation Dialog */}
-      <Dialog
-        open={showConfirmation}
-        onClose={() => handleConfirmation(false)}
-      >
+      <Dialog open={showConfirmation} onClose={() => handleConfirmation(false)}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <Typography>
@@ -394,16 +401,10 @@ const DepartmentDeletion = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => handleConfirmation(false)}
-            color="primary"
-          >
+          <Button onClick={() => handleConfirmation(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={handleDelete}
-            color="primary"
-          >
+          <Button onClick={handleDelete} color="primary">
             Delete
           </Button>
         </DialogActions>
@@ -425,10 +426,7 @@ const DepartmentDeletion = () => {
           >
             Cancel
           </Button>
-          <Button
-            onClick={handleDeleteFromExcel}
-            color="primary"
-          >
+          <Button onClick={handleDeleteFromExcel} color="primary">
             Delete
           </Button>
         </DialogActions>
