@@ -18,8 +18,7 @@ const Mapped = ({
   setNewAppliedLeaveEvents,
   setCalendarOpen,
 }) => {
-  console.log(`🚀 ~ newAppliedLeaveEvents:`, newAppliedLeaveEvents);
-  const [leavesTypes, setLeavesTypes] = useState("");
+  const [leavesTypes, setLeavesTypes] = useState(item?.leaveTypeDetailsId);
   const badgeStyle = {
     "& .MuiBadge-badge": {
       color: "#d1d5db",
@@ -89,6 +88,7 @@ const Mapped = ({
             Select Leave Type
           </InputLabel>
           <Select
+            defaultValue={leavesTypes}
             required
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -96,20 +96,26 @@ const Mapped = ({
             label="Select Leave Type"
             onChange={handleChange}
           >
-            {subtractedLeaves?.map(
-              (item, index) =>
+            {subtractedLeaves?.map((item, index) => {
+              return (
                 item.isActive && (
-                  <MenuItem id={index} key={index} value={item._id}>
+                  <MenuItem
+                    selected={leavesTypes === item.leaveTypeDetailsId}
+                    id={index}
+                    key={index}
+                    value={item._id}
+                  >
                     <div className="flex justify-between w-full">
                       <div>{item.leaveName} </div>
                       <div
                         style={{ background: item.color }}
-                        className={`w-6 h-6 rounded-full`}
+                        className={`w-4 h-4 rounded-full my-auto`}
                       ></div>
                     </div>
                   </MenuItem>
                 )
-            )}
+              );
+            })}
           </Select>
         </FormControl>
         <Button

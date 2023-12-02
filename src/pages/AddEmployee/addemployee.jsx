@@ -23,6 +23,7 @@ import Chip from "@mui/material/Chip";
 import { Checkbox, ListItemText } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Tooltip from "@mui/material/Tooltip";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -39,9 +40,11 @@ const AddEmployee = () => {
   const authToken = cookies["aeigs"];
   const { id } = useParams();
   const [userId, setUserId] = useState(null);
+
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
+
       if (decodedToken && decodedToken.user._id) {
         setUserId(decodedToken.user._id);
       } else {
@@ -51,6 +54,7 @@ const AddEmployee = () => {
       console.error("Failed to decode the token:", error);
     }
   }, [authToken]);
+
   const {
     first_name,
     setFirstName,
@@ -110,7 +114,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/get-designation`
+        `${process.env.REACT_APP_API}/route/designation/create`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -122,6 +126,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableDesignation();
+    // eslint-disable-next-line
   }, []);
 
   const [availabelLocation, setAvailableLocation] = useState([]);
@@ -144,6 +149,7 @@ const AddEmployee = () => {
   };
   useEffect(() => {
     fetchAvailableLocation();
+    // eslint-disable-next-line
   }, []);
 
   const [availabelEmpTypes, setAvailableEmpTypes] = useState([]);
@@ -165,6 +171,7 @@ const AddEmployee = () => {
   };
   useEffect(() => {
     fetchAvailabeEmpTypes();
+    // eslint-disable-next-line
   }, []);
 
   const [profile, setProfile] = React.useState([]);
@@ -196,7 +203,6 @@ const AddEmployee = () => {
           if (filteredProfiles.length > 0) {
             setAvailableProfiles(filteredProfiles);
           } else {
-            console.log(availableProfiles);
             handleAlert(
               true,
               "error",
@@ -254,6 +260,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailbleInputField();
+    // eslint-disable-next-line
   }, [id]);
 
   const [dynamicFields, setDynamicFields] = useState({
@@ -330,6 +337,8 @@ const AddEmployee = () => {
   };
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const staticTitle =
+    "This form is used to add relavant information of employee ";
   return (
     <>
       <div
@@ -343,7 +352,9 @@ const AddEmployee = () => {
         <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
           <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
             <div className="flex items-center justify-center gap-4">
-              <Button className="text-center">Add Employee</Button>
+              <Tooltip title={`${staticTitle}`}>
+                <Button>Add Employee</Button>
+              </Tooltip>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-wrap gap-6">
@@ -375,10 +386,6 @@ const AddEmployee = () => {
                       }}
                       error={!!firstNameError}
                       helperText={firstNameError}
-                      fullWidth
-                      margin="normal"
-                      required
-                      sx={{ flexBasis: "45%", marginBottom: "16px" }}
                     />
                   </FormControl>
                 </div>

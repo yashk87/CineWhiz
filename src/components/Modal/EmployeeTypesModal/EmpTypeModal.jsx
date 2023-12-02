@@ -7,33 +7,21 @@ import {
   FormControl,
   IconButton,
   InputLabel,
-  MenuItem,
   Modal,
   OutlinedInput,
-  Select,
 } from "@mui/material";
-import { MobileTimePicker } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
-import dayjs from "dayjs";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { TestContext } from "../../../State/Function/Main";
-import { useContext } from "react";
 import { UseContext } from "../../../State/UseState/UseContext";
-import { useEffect } from "react";
 
 const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
 
-  const { data, isLoading } = useQuery(
+  const { data } = useQuery(
     ["empType", empTypeId],
     async () => {
       if (open && empTypeId !== null) {
@@ -101,17 +89,14 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
     }
   );
 
-  console.log(empTypeId);
-
   useEffect(() => {
     if (data?.empType) {
-      setTitleEmpType(data?.empType?.title || "hii");
+      setTitleEmpType(data?.empType?.title || "");
     }
   }, [data]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // if (workingFrom === "") return handleError("Shift type field is mandatory");
     try {
       const data = {
         title: titleEmpType,

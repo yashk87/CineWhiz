@@ -4,10 +4,13 @@ import AnimationComponent from "./components/emailverify/verification-animation"
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import About from "./pages/About/About";
+import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
 import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
+import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
+import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
@@ -15,10 +18,13 @@ import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
+import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
 import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHoliday";
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
+import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
+import EmailSetting from "./pages/SetupPage/EmailSetting";
 import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
@@ -27,12 +33,25 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import EmailSetting from "./pages/SetupPage/EmailSetting";
-import AddEmployee from "./pages/AddEmployee/addemployee";
-import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
-import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
-import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 const App = () => {
+  // const [user, setUser] = useState("");
+
+  // const { cookies } = useContext(UseContext);
+  // const authToken = cookies["aeigs"];
+
+  // useEffect(() => {
+  //   try {
+  //     const decodedToken = jwtDecode(authToken);
+  //     if (decodedToken && decodedToken.user) {
+  //       setUser(decodedToken.user);
+  //     } else {
+  //       setUser("");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to decode the token:", error);
+  //   }
+  // }, []);
+
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
@@ -71,6 +90,11 @@ const App = () => {
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
+      <Route
+        exact
+        path="/organisation/edit-employee"
+        element={<EmpTemplate />}
+      />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
@@ -80,6 +104,8 @@ const App = () => {
         path="/setup/employement-types/:id"
         element={<EmployementTypes />}
       />
+
+      {/* {hasRequiredRoles && ( */}
       <Route
         exact
         path="/setup/salary-input-selection/:id"

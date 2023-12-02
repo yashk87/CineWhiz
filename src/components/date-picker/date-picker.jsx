@@ -20,7 +20,6 @@ const AppDatePicker = ({
 }) => {
   const localizer = momentLocalizer(moment);
   const [selectEvent, setselectEvent] = useState(false);
-  const [clickedAway, setClickedAway] = useState(false);
   const [Delete, setDelete] = useState(false);
   const [update, setUpdate] = useState(false);
   const { handleAlert } = useContext(TestContext);
@@ -37,7 +36,6 @@ const AppDatePicker = ({
   };
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log(`🚀 ~  start, end :`, start, end);
     setDelete(false);
     setUpdate(false);
     const selectedStartDate = moment(start);
@@ -56,23 +54,39 @@ const AppDatePicker = ({
     if (isOverlap) {
       handleAlert(true, "warning", "You have already selected this leave");
     } else {
-      const newLeave = {
-        title: "Selected Leave",
-        start: new Date(start).toISOString(),
-        end: new Date(end).toISOString(),
-        color: "blue",
-        leaveTypeDetailsId: "",
-      };
-      console.log(`🚀 ~ newLeave:`, newLeave);
-      console.log(
-        `🚀 ~ newLeave.new Date(start):`,
-        new Date(start).toISOString()
-      );
+      if (selectEvent) {
+        const newLeave = {
+          ...selectedLeave,
+          title: "Updated Leave",
+          start: new Date(start).toISOString(),
+          end: new Date(end).toISOString(),
+          color: "black",
+        };
 
-      setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+        setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+        setSelectedLeave(null);
+
+        setselectEvent(false);
+      } else {
+        const newLeave = {
+          title: "Selected Leave",
+          start: new Date(start).toISOString(),
+          end: new Date(end).toISOString(),
+          color: "blue",
+          leaveTypeDetailsId: "",
+        };
+        setNewAppliedLeaveEvents((prevEvents) => [...prevEvents, newLeave]);
+      }
     }
   };
-
+  const handleUpdateFunction = (e) => {
+    setselectEvent(true);
+    // newAppliedLeaveEvents
+    let array = appliedLeaveEvents.filter(
+      (item) => item._id !== selectedLeave._id
+    );
+    setAppliedLeaveEvents(array);
+  };
   const CustomToolbar = (toolbar) => {
     const handleMonthChange = (event) => {
       const newDate = moment(toolbar.date).month(event.target.value).toDate();
@@ -119,6 +133,10 @@ const AppDatePicker = ({
             </MenuItem>
           ))}
         </Select>
+        <div className="fled w-full flex-row-reverse px-3 text-blue-500 italic font-extrabold">
+          {" "}
+          {selectEvent ? "Please select dates for you leaves" : ""}
+        </div>
       </div>
     );
   };
@@ -130,9 +148,7 @@ const AppDatePicker = ({
         element.contains(event.target)
       )
     ) {
-      setClickedAway(true);
     } else {
-      setClickedAway(false);
     }
   };
   const handleDelete = (e) => {
@@ -207,7 +223,9 @@ const AppDatePicker = ({
       </div>
 
       <div className="!px-4 !py-2 bg-white flex justify-between">
-        <Button variant="contained">Submit</Button>
+        <Button variant="contained" onClick={() => setCalendarOpen(false)}>
+          Submit
+        </Button>
         <Button
           variant="contained"
           onClick={handleDelete}
@@ -218,6 +236,7 @@ const AppDatePicker = ({
         </Button>
         <Button
           variant="contained"
+          onClick={handleUpdateFunction}
           className="rbc-event-content"
           disabled={!update}
         >

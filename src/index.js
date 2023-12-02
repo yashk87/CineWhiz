@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { BrowserRouter } from "react-router-dom";
 import "tw-elements/dist/css/tw-elements.min.css";
 import App from "./App";
@@ -10,13 +11,20 @@ import reportWebVitals from "./reportWebVitals";
 // import "bootstrap/dist/css/bootstrap.min.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   </React.StrictMode>
 );

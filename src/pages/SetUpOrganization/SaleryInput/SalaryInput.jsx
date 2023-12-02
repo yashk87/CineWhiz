@@ -1,11 +1,8 @@
-import React, { useContext } from "react";
-import Setup from "../Setup";
 import {
   BorderColor,
   Delete,
+  MoreHoriz,
   PriceChangeOutlined,
-  Visibility,
-  VisibilityOutlined,
   Warning,
 } from "@mui/icons-material";
 import {
@@ -18,18 +15,20 @@ import {
   Popover,
   Tooltip,
 } from "@mui/material";
-import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import { UseContext } from "../../../State/UseState/UseContext";
+import React, { useContext, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
+import SalaryInputFieldsModal from "../../../components/Modal/SalaryInputFields/SalaryInputFieldsModal";
+import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-leavetype";
+import Setup from "../Setup";
 
 const SalaryInput = () => {
   const [open, setOpen] = React.useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [empTypeId, setempTypeId] = useState(null);
+  const [salaryInputId, setempTypeId] = useState(null);
   const { id } = useParams;
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -47,6 +46,12 @@ const SalaryInput = () => {
     setOpen(false);
     setempTypeId(null);
     setEditModalOpen(false);
+  };
+
+  const handleEditModalOpen = (salaryInputId) => {
+    setEditModalOpen(true);
+    queryClient.invalidateQueries(["shift", salaryInputId]);
+    setempTypeId(salaryInputId);
   };
 
   // Handle PopOver
@@ -74,6 +79,7 @@ const SalaryInput = () => {
   const handleCloseConfirmation = () => {
     setDeleteConfirmation(null);
   };
+
   const handleDelete = (id) => {
     deleteMutation.mutate(id);
     handleCloseConfirmation();
@@ -140,7 +146,7 @@ const SalaryInput = () => {
 
             <div className="overflow-auto   border-[.5px] border-gray-200">
               <table className="min-w-full bg-white px-4  text-left !text-sm font-light">
-                <thead className="border-b-[1px] border-gray-600  !font-medium ">
+                <thead className="bg-gray-200  !font-medium ">
                   <tr className="!font-semibold ">
                     <th scope="col" className="!text-left px-6 py-3 ">
                       SR NO
@@ -153,44 +159,47 @@ const SalaryInput = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {salaryTemplate?.salaryTemplates?.map((item, id) => (
-                    <tr
-                      className={`
+                  {isLoading ? (
+                    <SkeletonForLeaveTypes />
+                  ) : (
+                    salaryTemplate?.salaryTemplates?.map((item, id) => (
+                      <tr
+                        className={`
                       ${id % 2 === 0 && "bg-[white]"} 
                       !font-medium border-b`}
-                      key={id}
-                    >
-                      <td className="py-3 px-6">{id + 1}</td>
-                      <td className="px-6">{item.name}</td>
-                      <td className="px-6">{item.desc}</td>
-                      <td className="px-6">{item?.empType?.title}</td>
-                      <td className="px-6">
-                        <Tooltip title="Click to get Salary structure">
+                        key={id}
+                      >
+                        <td className="py-3 px-6">{id + 1}</td>
+                        <td className="px-6">{item.name}</td>
+                        <td className="px-6">
+                          {item.desc.length <= 0 ? "No description" : item.desc}
+                        </td>
+                        <td className="px-6">{item?.empType?.title}</td>
+                        <td className="px-6">
+                          <Tooltip title="Click to get Salary structure">
+                            <IconButton
+                              aria-describedby={Popid}
+                              onClick={(event) => handlePopClick(event, item)}
+                            >
+                              <MoreHoriz className="!text-[19px] text-black" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-2">
                           <IconButton
-                            aria-describedby={Popid}
-                            onClick={(event) => handlePopClick(event, item)}
+                            onClick={() => handleDeleteConfirmation(item._id)}
                           >
-                            <VisibilityOutlined
-                              className="!text-md"
-                              color="primary"
-                            />
+                            <Delete className="!text-xl" color="error" />
                           </IconButton>
-                        </Tooltip>
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-2">
-                        <IconButton
-                          onClick={() => handleDeleteConfirmation(item._id)}
-                        >
-                          <Delete className="!text-xl" color="error" />
-                        </IconButton>
-                        <IconButton
-                        // onClick={() => handleEditModalOpen(emptype._id)}
-                        >
-                          <BorderColor className="!text-xl" color="success" />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  ))}
+                          <IconButton
+                            onClick={() => handleEditModalOpen(item._id)}
+                          >
+                            <BorderColor className="!text-xl" color="success" />
+                          </IconButton>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -247,6 +256,12 @@ const SalaryInput = () => {
       </Popover>
 
       <SalaryInputFieldsModal id={id} open={open} handleClose={handleClose} />
+      <SalaryInputFieldsModal
+        id={id}
+        open={editModalOpen}
+        handleClose={handleClose}
+        salaryId={salaryInputId}
+      />
 
       <Dialog
         open={deleteConfirmation !== null}

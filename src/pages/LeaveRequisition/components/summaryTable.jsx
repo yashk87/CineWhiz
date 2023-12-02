@@ -2,59 +2,25 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { Skeleton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
+import { UseContext } from "../../../State/UseState/UseContext";
 
-const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
-  const [total, setTotal] = useState();
-  const [TotalLeaveSummary, setTotalLeaveSummary] = useState([]);
-
-  const { data, isLoading, isError } = useQuery("remainingLeaves", async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryForCurrentMonth`,
-      {
-        headers: { Authorization: authToken },
-      }
-    );
-
-    return response.data;
-  });
-  useEffect(() => {
-    let totalC = 0;
-    data?.leaveTypes?.map((value) => {
-      totalC += value.count;
-    });
-    setTotal(totalC);
-    // Create an array to store the details of each leave type
-    const leaveTypeDetailsArray = [];
-    let totalCount = 0;
-    // Iterate through leaveData to collect details of each leave type
-    data &&
-      data?.currentMonthLeaves?.forEach((item) => {
-        const leaveTypeId = item.leaveTypeDetailsId._id;
-        const existingLeaveType = leaveTypeDetailsArray.find(
-          (leaveType) => leaveType._id === leaveTypeId
-        );
-
-        if (!existingLeaveType) {
-          leaveTypeDetailsArray.push({
-            _id: item.leaveTypeDetailsId._id,
-            leaveName: item.leaveTypeDetailsId.leaveName,
-            isActive: item.leaveTypeDetailsId.isActive,
-            color: item.leaveTypeDetailsId.color,
-            count: 0, // Initialize count to 0
-          });
+const SummaryTable = () => {
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
+  const { data, isLoading, isError } = useQuery(
+    "employee-summary-table",
+    async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/leave/getEmployeeSummaryTable`,
+        {
+          headers: { Authorization: authToken },
         }
-
-        const index = leaveTypeDetailsArray.findIndex(
-          (leaveType) => leaveType._id === leaveTypeId
-        );
-        leaveTypeDetailsArray[index].count++;
-        totalCount++;
-      });
-    setTotal(totalCount);
-    setTotalLeaveSummary(leaveTypeDetailsArray);
-  }, [data]);
+      );
+      return response.data;
+    }
+  );
 
   if (isLoading) {
     return (
@@ -94,7 +60,7 @@ const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
         month
       </h1>
       <div className="w-full">
-        {TotalLeaveSummary?.map((item, index) => {
+        {data?.leaveTypeDetailsArray?.map((item, index) => {
           return (
             <div key={index} className="border-b border">
               <div className="flex justify-between items-center py-6 px-6">
@@ -112,7 +78,9 @@ const SummaryTable = ({ setSubtractedLeaves, authToken }) => {
           <h1 className="text-md text-gray-400 font-bold tracking-wide">
             Total Leave Balance
           </h1>
-          <h1 className="text-lg tracking-wide text-gray-400">{total}</h1>
+          <h1 className="text-lg tracking-wide text-gray-400">
+            {data.totalCoutn}
+          </h1>
         </div>
       </div>
     </article>

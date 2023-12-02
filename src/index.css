@@ -49,6 +49,29 @@ body {
   background-color: var(--secondary-color);
 }
 
+.dlink {
+  text-decoration: none !important;
+  color: #03a9f3 !important;
+}
+
+.data-table-extensions-filter {
+  border: 0.5px solid #eee;
+  padding: 2px;
+  border-radius: 5px;
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.first {
+  padding-right: 10px !important;
+}
+
+.filter-text {
+  border: none !important;
+  width: 80%;
+}
+
 .react-tel-input .form-control {
   @apply !w-full py-6 !text-base;
 }
