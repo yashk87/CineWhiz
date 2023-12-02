@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   IconButton,
   Table,
   TableBody,
@@ -390,21 +391,19 @@ const OrganizationLocation = () => {
                   setSelected={setContinent}
                 />
               </div>
-              <TextField
-                label={
-                  <FormattedMessage
-                    id="shortname"
-                    defaultMessage="Short Name"
-                  />
-                }
-                className="pb-0"
-                variant="outlined"
-                required
-                value={shortName}
-                onChange={(e) => setShortName(e.target.value)}
-                fullWidth
-                style={{ padding: "6px 0 15px" }}
-              />
+              <div className="!w-[46%]">
+                <p>Short Name:</p>
+                <TextField
+                  label={"short name *"}
+                  className="pb-0"
+                  variant="outlined"
+                  required
+                  size="small"
+                  value={shortName}
+                  onChange={(e) => setShortName(e.target.value)}
+                  fullWidth
+                />
+              </div>
             </div>
             <div
               style={{
