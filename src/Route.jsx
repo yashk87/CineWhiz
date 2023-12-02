@@ -10,7 +10,6 @@ import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
-import EmpTemplate from "./pages/Employee/EmpTemplate/EmpTemplate";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
@@ -24,7 +23,6 @@ import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHol
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
-import EmailSetting from "./pages/SetupPage/EmailSetting";
 import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
@@ -33,6 +31,8 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import EmailSetting from "./pages/SetupPage/EmailSetting";
+import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 const App = () => {
   // const [user, setUser] = useState("");
 
@@ -90,11 +90,6 @@ const App = () => {
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
-      <Route
-        exact
-        path="/organisation/edit-employee"
-        element={<EmpTemplate />}
-      />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route exact path="/setup/leave-types/:id" element={<LeaveTypes />} />
@@ -110,6 +105,11 @@ const App = () => {
         exact
         path="/setup/salary-input-selection/:id"
         element={<SalaryInput />}
+      />
+      <Route
+        exact
+        path="/setup/employee-code-genreation/:id"
+        element={<EmployeeCodeGenerator />}
       />
       <Route exact path="/setup/email-setting" element={<EmailSetting />} />
 

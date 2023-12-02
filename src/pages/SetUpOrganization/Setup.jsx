@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   AddLocationAltOutlined,
+  BadgeOutlined,
   BeachAccessOutlined,
   EventAvailableOutlined,
   ManageAccountsOutlined,
@@ -12,9 +13,6 @@ import {
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { jwtDecode } from "jwt-decode";
-import { useEffect } from "react";
-import { useState } from "react";
-
 const Setup = ({ children }) => {
   const location = useLocation();
   const { id } = useParams("");
@@ -92,6 +90,15 @@ const Setup = ({ children }) => {
         ["Super-Admin", "HR"].includes(role)
       ),
     },
+    {
+      label: "Generate Employee code",
+      icon: BadgeOutlined,
+      href: `/setup/employee-code-genreation/${id}`,
+      active: location.pathname === `/setup/employee-code-genreation/${id}`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "HR"].includes(role)
+      ),
+    },
   ];
 
   return (
@@ -116,8 +123,10 @@ const Setup = ({ children }) => {
               <Link
                 to={item.href}
                 key={id}
-                className={`group ${item.active && "bg-sky-100 !text-blue-500"}
-                ${!item.isVisible && "!hidden"}
+                className={`group ${!item.isVisible && "hidden"} ${
+                  item.active && "bg-sky-100 !text-blue-500"
+                }
+                
                   hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
               >
                 <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />
