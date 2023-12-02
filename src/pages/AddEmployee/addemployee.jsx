@@ -23,6 +23,7 @@ import Chip from "@mui/material/Chip";
 import { Checkbox, ListItemText } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Tooltip from "@mui/material/Tooltip";
 import { useQuery } from "react-query";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -40,9 +41,11 @@ const AddEmployee = () => {
   const authToken = cookies["aeigs"];
   const { id } = useParams();
   const [userId, setUserId] = useState(null);
+
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
+
       if (decodedToken && decodedToken.user._id) {
         setUserId(decodedToken.user._id);
       } else {
@@ -52,6 +55,7 @@ const AddEmployee = () => {
       console.error("Failed to decode the token:", error);
     }
   }, [authToken]);
+
   const {
     first_name,
     setFirstName,
@@ -108,6 +112,9 @@ const AddEmployee = () => {
   const handleRadioChange = (event) => {
     setGender(event.target.value);
   };
+  const handleMgrEmpId = (event) => {
+    setMgrEmpId(event.target.value);
+  };
 
   const handleSalaryStructure = (event) => {
     setSalaryStructure(event.target.value);
@@ -116,7 +123,7 @@ const AddEmployee = () => {
   const fetchAvailableDesignation = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/designation/get-designation`
+        `${process.env.REACT_APP_API}/route/designation/create`
       );
 
       setAvailableDesignation(response.data.designations);
@@ -128,6 +135,7 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailableDesignation();
+    // eslint-disable-next-line
   }, []);
 
   const { data: salaryInput } = useQuery(["empType"], async () => {
@@ -162,6 +170,7 @@ const AddEmployee = () => {
   };
   useEffect(() => {
     fetchAvailableLocation();
+    // eslint-disable-next-line
   }, []);
 
   const [availabelEmpTypes, setAvailableEmpTypes] = useState([]);
@@ -183,6 +192,7 @@ const AddEmployee = () => {
   };
   useEffect(() => {
     fetchAvailabeEmpTypes();
+    // eslint-disable-next-line
   }, []);
 
   const [profile, setProfile] = React.useState([]);
@@ -214,7 +224,6 @@ const AddEmployee = () => {
           if (filteredProfiles.length > 0) {
             setAvailableProfiles(filteredProfiles);
           } else {
-            console.log(availableProfiles);
             handleAlert(
               true,
               "error",
@@ -272,7 +281,31 @@ const AddEmployee = () => {
 
   useEffect(() => {
     fetchAvailbleInputField();
+    // eslint-disable-next-line
   }, [id]);
+
+  const [availableMgrId, setAvailableMgrId] = useState([]);
+  const fetchAvailabeMgrId = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/employee/get-manager`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      setAvailableMgrId(response.data.manager);
+    } catch (error) {
+      console.error(error);
+      handleAlert(true, "error", "Failed to fetch Available Manager Id");
+    }
+  };
+  useEffect(() => {
+    fetchAvailabeMgrId();
+    // eslint-disable-next-line
+  }, []);
 
   const [dynamicFields, setDynamicFields] = useState({
     shifts_allocation: "",
@@ -349,7 +382,8 @@ const AddEmployee = () => {
   };
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
+  const staticTitle =
+    "This form is used to add relavant information of employee ";
   return (
     <>
       <div
@@ -364,7 +398,9 @@ const AddEmployee = () => {
         <div className="content-center  flex justify-center my-0 p-0 bg-[#F8F8F8]">
           <div className="w-[700px] shadow-lg rounded-lg border py-3 px-8">
             <div className="flex items-center justify-center gap-4">
-              <Button className="text-center">Add Employee</Button>
+              <Tooltip title={`${staticTitle}`}>
+                <Button>Add Employee</Button>
+              </Tooltip>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-wrap gap-6">
@@ -396,10 +432,6 @@ const AddEmployee = () => {
                       }}
                       error={!!firstNameError}
                       helperText={firstNameError}
-                      fullWidth
-                      margin="normal"
-                      required
-                      sx={{ flexBasis: "45%", marginBottom: "16px" }}
                     />
                   </FormControl>
                 </div>
@@ -566,18 +598,26 @@ const AddEmployee = () => {
                 </div>
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="text"
-                      label="Manager Employee ID"
-                      name="mgrempid"
-                      id="mgrempid"
+                    <Select
                       value={mgrempid}
-                      onChange={(e) => setMgrEmpId(e.target.value)}
-                      fullWidth
-                      margin="normal"
-                      required
-                    />
+                      onChange={handleMgrEmpId}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Manager Id" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Select Manager Id
+                      </MenuItem>
+                      {availableMgrId.map((manager) => (
+                        <MenuItem
+                          key={manager._id}
+                          value={manager.managerId ? manager.managerId._id : ""}
+                        >
+                          {manager.managerId
+                            ? manager.managerId._id
+                            : "No Manager ID"}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </div>
               </div>

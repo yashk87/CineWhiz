@@ -50,6 +50,8 @@ const NavItems = ({ toggleDrawer }) => {
       console.error("Failed to decode the token:", error);
     }
   }, [token]);
+  const decodedToken = jwtDecode(token);
+  const id = decodedToken.user.organizationId;
 
   function formatRoles(userRole) {
     if (userRole.length === 1) {
@@ -376,7 +378,7 @@ const NavItems = ({ toggleDrawer }) => {
                 <ListItem disablePadding>
                   <Link
                     onClick={() => toggleDrawer()}
-                    to="#"
+                    to={`/organisation/${id}/add-employee`}
                     className="w-full"
                   >
                     <ListItemButton className="!p-2 !rounded-lg w-full">
@@ -389,7 +391,7 @@ const NavItems = ({ toggleDrawer }) => {
                         }}
                         style={{ fontSize: "10px" }}
                         className="text-white text-sm"
-                        primary={"Add Employee"}
+                        primary={"Onboarding"}
                       />
                     </ListItemButton>
                   </Link>
@@ -418,7 +420,7 @@ const NavItems = ({ toggleDrawer }) => {
                 <ListItem disablePadding>
                   <Link
                     onClick={() => toggleDrawer()}
-                    to="#"
+                    to="/del-employee"
                     className="w-full"
                   >
                     <ListItemButton className="!p-2 !rounded-lg w-full">
@@ -431,7 +433,7 @@ const NavItems = ({ toggleDrawer }) => {
                         }}
                         style={{ fontSize: "10px" }}
                         className="text-white text-sm"
-                        primary={"Delete Employee"}
+                        primary={"Offboarding"}
                       />
                     </ListItemButton>
                   </Link>
