@@ -270,7 +270,7 @@ const OrganizationLocation = () => {
     <Setup>
       <IntlProvider locale="en">
         <Container>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between px-4 py-2">
             <Typography
               variant="h4"
               gutterBottom
