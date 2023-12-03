@@ -47,7 +47,7 @@ jobs:
       - name: 🧪 Test artifact download
         run: |
           ls -R
-          cat .env
+    
           
 
 # Advantages:
