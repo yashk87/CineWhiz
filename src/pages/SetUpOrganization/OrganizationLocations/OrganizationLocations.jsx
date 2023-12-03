@@ -24,6 +24,7 @@ import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import Selector from "./selector";
+import Setup from "../Setup";
 
 const OrganizationLocation = () => {
   const { cookies } = useContext(UseContext);
@@ -266,96 +267,98 @@ const OrganizationLocation = () => {
   };
 
   return (
-    <IntlProvider locale="en">
-      <Container>
-        <Typography
-          variant="h4"
-          gutterBottom
-          color={"primary"}
-          fontWeight={800}
-          fontSize={20}
-          className="text-2xl pt-5"
-        >
-          <FormattedMessage
-            id="organizationLocations"
-            defaultMessage="Organization Locations"
-          />
-        </Typography>
+    <Setup>
+      <IntlProvider locale="en">
+        <Container>
+          <div className="flex items-center justify-between px-4 py-2">
+            <Typography
+              variant="h4"
+              gutterBottom
+              color={"primary"}
+              fontWeight={800}
+              fontSize={20}
+              className="text-2xl"
+            >
+              <FormattedMessage
+                id="organizationLocations"
+                defaultMessage="Organization Locations"
+              />
+            </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpen}
-          style={{ marginBottom: "16px" }}
-        >
-          <FormattedMessage id="addLocation" defaultMessage="Add Location" />
-        </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleOpen}
+            >
+              <FormattedMessage id="addLocation" defaultMessage="Add Location" />
+            </Button>
+          </div>
 
-        {locationList.length === 0 ? (
-          <Typography variant="body1">No Locations Added</Typography>
-        ) : (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <FormattedMessage id="continent" defaultMessage="Continent" />
-                </TableCell>
-                <TableCell>
-                  <FormattedMessage id="country" defaultMessage="Country" />
-                </TableCell>
-                <TableCell>
-                  <FormattedMessage id="state" defaultMessage="State" />
-                </TableCell>
-                <TableCell>
-                  <FormattedMessage
-                    id="shortname"
-                    defaultMessage="Short Name"
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormattedMessage id="address" defaultMessage="Address" />
-                </TableCell>
-                <TableCell>
-                  <FormattedMessage id="actions" defaultMessage="Actions" />
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {locationList
-                .sort((a, b) => {
-                  if (a.continent !== b.continent) {
-                    return a.continent.localeCompare(b.continent);
-                  }
-                  return a.country.localeCompare(b.country);
-                })
-                .map((location, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{location.continent}</TableCell>
-                    <TableCell>{location.country}</TableCell>
-                    <TableCell>{location.state}</TableCell>
-                    <TableCell>{location.shortName}</TableCell>
-                    <TableCell>
-                      {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={() => handleEditLocation(index)}
-                        aria-label="edit"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteLocation(index)}
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        )}
+          {locationList.length === 0 ? (
+            <Typography variant="body1">No Locations Added</Typography>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <FormattedMessage id="continent" defaultMessage="Continent" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="country" defaultMessage="Country" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="state" defaultMessage="State" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage
+                      id="shortname"
+                      defaultMessage="Short Name"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="address" defaultMessage="Address" />
+                  </TableCell>
+                  <TableCell>
+                    <FormattedMessage id="actions" defaultMessage="Actions" />
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {locationList
+                  .sort((a, b) => {
+                    if (a.continent !== b.continent) {
+                      return a.continent.localeCompare(b.continent);
+                    }
+                    return a.country.localeCompare(b.country);
+                  })
+                  .map((location, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{location.continent}</TableCell>
+                      <TableCell>{location.country}</TableCell>
+                      <TableCell>{location.state}</TableCell>
+                      <TableCell>{location.shortName}</TableCell>
+                      <TableCell>
+                        {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleEditLocation(index)}
+                          aria-label="edit"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDeleteLocation(index)}
+                          aria-label="delete"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          )}
 
         <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
           <DialogTitle>
@@ -396,7 +399,6 @@ const OrganizationLocation = () => {
                   label={"short name *"}
                   className="pb-0"
                   variant="outlined"
-                  required
                   size="small"
                   value={shortName}
                   onChange={(e) => setShortName(e.target.value)}
@@ -516,6 +518,7 @@ const OrganizationLocation = () => {
         </Dialog>
       </Container>
     </IntlProvider>
+    </Setup>
   );
 };
 
