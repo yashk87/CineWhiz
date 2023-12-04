@@ -34,6 +34,7 @@ const Home = () => {
     } catch (error) {
       console.error("Failed to decode the token:", error);
     }
+    // eslint-disable-next-line
   }, [token]);
 
   useEffect(() => {
@@ -105,7 +106,6 @@ const Home = () => {
 
   return (
     <div className="p-8 bg-white h-screen">
-      <div className="absolute top-0 right-[50%] pattern"></div>
       {/* <TextCycler />
       <Divider /> */}
       {/* <Org /> */}
@@ -119,7 +119,7 @@ const Home = () => {
                     Welcome to AGIES {userRole?.first_name}{" "}
                     {userRole?.last_name}
                   </h1>
-                  <h2 className="text-xl mb-4 font-semibold">
+                  <h2 className="text-2xl mb-4 font-semibold">
                     Unleashing Organizational Excellence
                   </h2>
 

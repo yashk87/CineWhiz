@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
 import {
-  Container,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  TextField,
-  FormControlLabel,
   Checkbox,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  IconButton,
+  TextField,
   Typography,
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
-import axios from 'axios';
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import Setup from '../SetUpOrganization/Setup';
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import axios from "axios";
+import Setup from "../SetUpOrganization/Setup";
 
 const Designation = () => {
   const [click, setClick] = useState(false);
@@ -34,7 +34,8 @@ const Designation = () => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [designationToDelete, setDesignationToDelete] = useState(null);
   const [trackedId, setTrackedId] = useState("");
-  const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] = useState(false);
+  const [showUpdateConfirmationDialog, setShowUpdateConfirmationDialog] =
+    useState(false);
 
   const handleClick = (id) => {
     setDesignationError("");
@@ -48,9 +49,10 @@ const Designation = () => {
     setCounter(1);
     setEnterDesignationId(false);
 
-    axios.get(`http://localhost:4000/route/designation/create/${id}`)
+    axios
+      .get(`http://localhost:4000/route/designation/create/${id}`)
       .then((response) => {
-        setTrackedId(id)
+        setTrackedId(id);
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
         setPrefixRequired(response.data.designation.prefixRequired || false);
@@ -71,13 +73,14 @@ const Designation = () => {
     setCounter(1);
     setEditMode(true);
     setEnterDesignationId(false);
-    setTrackedId(id)
+    setTrackedId(id);
 
-    axios.get(`http://localhost:4000/route/designation/create/${id}`)
+    axios
+      .get(`http://localhost:4000/route/designation/create/${id}`)
       .then((response) => {
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
-        setEnterDesignationId(true)
+        setEnterDesignationId(true);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -100,7 +103,8 @@ const Designation = () => {
     } else {
       generateDesignationIds();
 
-      axios.post("http://localhost:4000/route/designation/create", data)
+      axios
+        .post("http://localhost:4000/route/designation/create", data)
         .then((response) => {
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
@@ -119,14 +123,18 @@ const Designation = () => {
 
     const patchData = {
       designationName,
-      designationId
+      designationId,
     };
-    axios.patch(`http://localhost:4000/route/designation/create/${trackedId}`, patchData)
+    axios
+      .patch(
+        `http://localhost:4000/route/designation/create/${trackedId}`,
+        patchData
+      )
       .then((response) => {
         console.log("Designation updated successfully:", response.data);
         fetchDesignations();
         handleClick();
-        setClick(false)
+        setClick(false);
       })
       .catch((error) => {
         console.error("Error updating designation:", error);
@@ -150,7 +158,7 @@ const Designation = () => {
         let designationId = "";
         const prefix = getPrefixFromName(designationName, prefixLength);
         designationId += prefix;
-        designationId += counter.toString().padStart(numCharacters, '0');
+        designationId += counter.toString().padStart(numCharacters, "0");
         generatedIds = designationId;
         setDesignationId(generatedIds);
         setCounter((prevCounter) => prevCounter + 1);
@@ -160,7 +168,7 @@ const Designation = () => {
 
   const handleDesignationIdChange = (e) => {
     const input = e.target.value;
-    const charactersOnly = input.replace(/\d/g, '');
+    const charactersOnly = input.replace(/\d/g, "");
 
     if (charactersOnly.length <= numCharacters) {
       setDesignationId(input);
@@ -174,7 +182,10 @@ const Designation = () => {
 
   const handleConfirmDelete = () => {
     if (designationToDelete) {
-      axios.delete(`http://localhost:4000/route/designation/create/${designationToDelete}`)
+      axios
+        .delete(
+          `http://localhost:4000/route/designation/create/${designationToDelete}`
+        )
         .then(() => {
           console.log("Designation deleted successfully");
           fetchDesignations();
@@ -195,7 +206,8 @@ const Designation = () => {
   };
 
   const fetchDesignations = () => {
-    axios.get("http://localhost:4000/route/designation/create")
+    axios
+      .get("http://localhost:4000/route/designation/create")
       .then((response) => {
         setDesignation(response.data.designations);
       })
@@ -219,183 +231,275 @@ const Designation = () => {
 
   return (
     <>
-     <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
+      <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
         <Setup>
-
-
-        {/* <div className='right-4 top-[8rem]'>
+          {/* <div className='right-4 top-[8rem]'>
 
       </div> */}
 
-      <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>{editMode ? "Edit Designation" : "Add Designation"}</DialogTitle>
-        <DialogContent>
-          <TextField
-            style={{ marginTop: "1rem", marginBottom: "1rem" }}
-            required
-            name="name"
-            size="small"
-            className="w-full"
-            label="Designation Name"
-            type="text"
-            value={designationName}
-            onChange={(e) => setDesignationName(e.target.value)}
-            error={designationError !== ""}
-            helperText={designationError}
-          />
+          <Dialog open={click} onClose={handleClose} maxWidth="sm" fullWidth>
+            <DialogTitle>
+              {editMode ? "Edit Designation" : "Add Designation"}
+            </DialogTitle>
+            <DialogContent>
+              <TextField
+                style={{ marginTop: "1rem", marginBottom: "1rem" }}
+                required
+                name="name"
+                size="small"
+                className="w-full"
+                label="Designation Name"
+                type="text"
+                value={designationName}
+                onChange={(e) => setDesignationName(e.target.value)}
+                error={designationError !== ""}
+                helperText={designationError}
+              />
 
-          {designationIdRequired && (
-            <>
-              {prefixRequired && (
+              {designationIdRequired && (
+                <>
+                  {prefixRequired && (
+                    <TextField
+                      style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                      required
+                      name="prefixLength"
+                      size="small"
+                      className="w-full"
+                      label="Prefix Length"
+                      type="number"
+                      value={prefixLength}
+                      onChange={(e) => setPrefixLength(e.target.value)}
+                      inputProps={{ min: "1", max: "6" }}
+                    />
+                  )}
+                </>
+              )}
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={enterDesignationId}
+                    onChange={() => setEnterDesignationId(!enterDesignationId)}
+                  />
+                }
+                label="Prefix Required"
+              />
+              {enterDesignationId && (
+                <>
+                  <p className="font-extrabold">
+                    Note 1: Please provide the length of prefix characters
+                    below.
+                  </p>
+                  <p className="font-extrabold">
+                    Note 2: If the number of characters is 0, only numeric
+                    values are accepted.
+                  </p>
+                </>
+              )}
+              {!enterDesignationId && (
+                <p className="font-extrabold">
+                  Note : you can add numbers by default
+                </p>
+              )}
+
+              {enterDesignationId && (
                 <TextField
-                  style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                  style={{ marginTop: "1rem" }}
                   required
-                  name="prefixLength"
+                  name="numCharacters"
                   size="small"
                   className="w-full"
-                  label="Prefix Length"
+                  label="no of Characters"
                   type="number"
-                  value={prefixLength}
-                  onChange={(e) => setPrefixLength(e.target.value)}
-                  inputProps={{ min: "1", max: "6" }}
+                  value={numCharacters}
+                  onChange={(e) => setNumCharacters(e.target.value)}
                 />
               )}
-            </>
-          )}
 
+              <TextField
+                style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                required
+                name="designationId"
+                size="small"
+                className="w-full"
+                label="Designation ID"
+                type="text"
+                value={designationId}
+                onChange={handleDesignationIdChange}
+                error={designationError !== ""}
+                helperText={designationError}
+              />
+              {!designationId}
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={handleClose}>
+                Cancel
+              </Button>
+              <Button color="error" onClick={handleAddDesignation}>
+                {editMode ? "Update" : "Add"}
+              </Button>
+            </DialogActions>
+          </Dialog>
 
+          <Dialog
+            open={showConfirmationDialog}
+            onClose={handleCloseConfirmationDialog}
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle>Confirmation</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Are you sure you want to delete this designation?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={handleCloseConfirmationDialog}>
+                Cancel
+              </Button>
+              <Button color="error" onClick={handleConfirmDelete}>
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
 
-          <FormControlLabel
-            control={<Checkbox checked={enterDesignationId} onChange={() => setEnterDesignationId(!enterDesignationId)} />}
-            label="Prefix Required"
-          />
-          {enterDesignationId && (<><p className='font-extrabold'>Note 1: Please provide the length of prefix characters below.</p>
-          <p className='font-extrabold'>Note 2: If the number of characters is 0, only numeric values are accepted.</p></>)
-          }
-          {!enterDesignationId && <p className='font-extrabold'>Note : you can add numbers by default</p>}
+          <Dialog
+            open={showUpdateConfirmationDialog}
+            onClose={() => setShowUpdateConfirmationDialog(false)}
+            maxWidth="sm"
+            fullWidth
+          >
+            <DialogTitle>Confirmation</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Are you sure you want to update this designation?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+                onClick={() => setShowUpdateConfirmationDialog(false)}
+              >
+                Cancel
+              </Button>
+              <Button color="error" onClick={handleUpdateConfirmation}>
+                Update
+              </Button>
+            </DialogActions>
+          </Dialog>
 
-          {enterDesignationId && (
-            <TextField
-              style={{ marginTop: "1rem" }}
-              required
-              name="numCharacters"
-              size="small"
-              className="w-full"
-              label="no of Characters"
-              type="number"
-              value={numCharacters}
-              onChange={(e) => setNumCharacters(e.target.value)}
-            />
-          )}
-
-
-          <TextField
-            style={{ marginBottom: "1rem", marginTop: "1rem" }}
-            required
-            name="designationId"
-            size="small"
-            className="w-full"
-            label="Designation ID"
-            type="text"
-            value={designationId}
-            onChange={handleDesignationIdChange}
-            error={designationError !== ""}
-            helperText={designationError}
-          />
-          {!designationId}
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button color="error" onClick={handleAddDesignation}>
-            {editMode ? "Update" : "Add"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={showConfirmationDialog} onClose={handleCloseConfirmationDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>Confirmation</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to delete this designation?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={handleCloseConfirmationDialog}>
-            Cancel
-          </Button>
-          <Button color="error" onClick={handleConfirmDelete}>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog open={showUpdateConfirmationDialog} onClose={() => setShowUpdateConfirmationDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Confirmation</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to update this designation?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button color="primary" onClick={() => setShowUpdateConfirmationDialog(false)}>
-            Cancel
-          </Button>
-          <Button color="error" onClick={handleUpdateConfirmation}>
-            Update
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-     <Container className="relative gap-5 flex flex-col items-center h-fit" style={{borderRadius: "10px", maxWidth: "100%", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"}}>
-
-      <div className='flex justify-between w-full my-2 m-0'>
-      <h1 style={{fontSize:"2rem"}}>Add Designation</h1>
-     <Button onClick={handleClick} className='flex justify-end items-center' variant='contained' color='info'>
-          Add Designation
-        </Button>
-        </div>
-     <div className='py-2' style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "2px solid rgb(177, 177, 177)", width: "100%", marginTop:"1rem", borderTop:"2px solid rgb(177, 177, 177)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "11rem", width: "100%" }}>
-              <h1>Sr No</h1>
-                <h4 style={{ margin: 0, color: "black" }}>
-                  Designation Name
-                </h4>
-                <div style={{ display: "flex", gap: "10px", marginLeft: "auto" }}>
-                 <h1>Edit</h1>
+          <Container
+            className="relative gap-5 flex flex-col items-center h-fit"
+            style={{
+              borderRadius: "10px",
+              maxWidth: "100%",
+              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            }}
+          >
+            <div className="flex justify-between w-full my-2 m-0">
+              <h1 style={{ fontSize: "2rem" }}>Add Designation</h1>
+              <Button
+                onClick={handleClick}
+                className="flex justify-end items-center"
+                variant="contained"
+                color="info"
+              >
+                Add Designation
+              </Button>
+            </div>
+            <div
+              className="py-2"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderBottom: "2px solid rgb(177, 177, 177)",
+                width: "100%",
+                marginTop: "1rem",
+                borderTop: "2px solid rgb(177, 177, 177)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "11rem",
+                  width: "100%",
+                }}
+              >
+                <h1>Sr No</h1>
+                <h4 style={{ margin: 0, color: "black" }}>Designation Name</h4>
+                <div
+                  style={{ display: "flex", gap: "10px", marginLeft: "auto" }}
+                >
+                  <h1>Edit</h1>
                   <h1>Delete</h1>
                 </div>
               </div>
             </div>
-        {designation.length === 0 && (<h1 className='text-center'>no designations right now</h1>)}
-        {designation && Array.isArray(designation) ? (
-          designation.map((data, index) => (
-            <div key={data._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: index < designation.length - 1 ? "2px solid rgb(177, 177, 177)" : "none", width: "100%" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "12.7rem", width: "100%" }}>
-              <h1>{index+1}</h1>
-                <h4 style={{ margin: 0, color: "black" }}>
-                  {data.designationName}
-                </h4>
-                <div style={{ display: "flex", gap: "10px", marginLeft: "auto" }}>
-                  <IconButton color="primary" aria-label="edit" onClick={() => handleClickEdit(data._id)}>
-                    <EditOutlinedIcon />
-                  </IconButton>
-                  <IconButton color="error" aria-label="delete" onClick={() => handleDeleteDesignation(data._id)}>
-                    <DeleteOutlineIcon />
-                  </IconButton>
+            {designation.length === 0 && (
+              <h1 className="text-center">no designations right now</h1>
+            )}
+            {designation && Array.isArray(designation) ? (
+              designation.map((data, index) => (
+                <div
+                  key={data._id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    borderBottom:
+                      index < designation.length - 1
+                        ? "2px solid rgb(177, 177, 177)"
+                        : "none",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12.7rem",
+                      width: "100%",
+                    }}
+                  >
+                    <h1>{index + 1}</h1>
+                    <h4 style={{ margin: 0, color: "black" }}>
+                      {data.designationName}
+                    </h4>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        marginLeft: "auto",
+                      }}
+                    >
+                      <IconButton
+                        color="primary"
+                        aria-label="edit"
+                        onClick={() => handleClickEdit(data._id)}
+                      >
+                        <EditOutlinedIcon />
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        aria-label="delete"
+                        onClick={() => handleDeleteDesignation(data._id)}
+                      >
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
-      </Container>
-      </Setup>
-        </section>
+              ))
+            ) : (
+              <p>Loading...</p>
+            )}
+          </Container>
+        </Setup>
+      </section>
     </>
   );
 };
 
 export default Designation;
-
-
-
-
