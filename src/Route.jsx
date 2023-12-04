@@ -16,6 +16,7 @@ import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
 import SingleOrganization from "./pages/Organization/SingleOrganization";
 import AddRoles from "./pages/Roles/AddRoles";
+import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
 import LeaveTypes from "./pages/SetUpOrganization/LeaveComponents/LeaveTypes";
 import OrganizationLocation from "./pages/SetUpOrganization/OrganizationLocations/OrganizationLocations";
@@ -23,6 +24,7 @@ import PublicHoliday from "./pages/SetUpOrganization/PublicHolidayPage/PublicHol
 import SalaryInput from "./pages/SetUpOrganization/SaleryInput/SalaryInput";
 import Setup from "./pages/SetUpOrganization/Setup";
 import DeleteDepartment from "./pages/SetupPage/DepartmentDeletion";
+import EmailSetting from "./pages/SetupPage/EmailSetting";
 import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
@@ -31,8 +33,8 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import EmailSetting from "./pages/SetupPage/EmailSetting";
-import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
+import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+
 const App = () => {
   // const [user, setUser] = useState("");
 
@@ -87,7 +89,8 @@ const App = () => {
       />
       <Route
         exact
-        path="/organisation/:id/add-employee"
+        path="
+        "
         element={<AddEmployee />}
       />
 
@@ -121,6 +124,11 @@ const App = () => {
         exact
         path="/setup/:id/public-holidays"
         element={<PublicHoliday />}
+      />
+      <Route
+        exact
+        path="/terms-and-conditions"
+        element={<TermsAndConditionsPage />}
       />
     </Routes>
   );

@@ -26,17 +26,22 @@ import SkeletonForLeaveTypes from "../LeaveComponents/components/skeleton-for-le
 import Setup from "../Setup";
 
 const SalaryInput = () => {
-  const [open, setOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [salaryInputId, setempTypeId] = useState(null);
   const { id } = useParams;
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
 
+  const [open, setOpen] = React.useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [salaryInputId, setempTypeId] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  // Handle PopOver
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openPop = Boolean(anchorEl) && selectedTemplate !== null;
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
+  const Popid = openPop ? "simple-popover" : undefined;
   const handleOpen = () => {
     setOpen(true);
     setempTypeId(null);
@@ -54,9 +59,6 @@ const SalaryInput = () => {
     setempTypeId(salaryInputId);
   };
 
-  // Handle PopOver
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handlePopClick = (event, template) => {
     setAnchorEl(event.currentTarget);
     setSelectedTemplate(template);
@@ -67,10 +69,6 @@ const SalaryInput = () => {
     // setSelectedTemplate(null);
   };
 
-  const openPop = Boolean(anchorEl) && selectedTemplate !== null;
-  const Popid = openPop ? "simple-popover" : undefined;
-
-  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   // Delete Query
   const handleDeleteConfirmation = (id) => {
     setDeleteConfirmation(id);
@@ -85,6 +83,7 @@ const SalaryInput = () => {
     handleCloseConfirmation();
   };
 
+  // Delete Query
   const deleteMutation = useMutation(
     (id) =>
       axios.delete(`${process.env.REACT_APP_API}/route/salary-template/${id}`, {
@@ -272,8 +271,8 @@ const SalaryInput = () => {
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the Salary Template after deleting Salary
-            Template it will not retrived.
+            Please confirm your decision to delete this salary template, as this
+            action cannot be undone
           </p>
         </DialogContent>
         <DialogActions>
