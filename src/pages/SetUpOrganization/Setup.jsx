@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
   AddLocationAltOutlined,
-  BadgeOutlined,
   BeachAccessOutlined,
   EventAvailableOutlined,
   ManageAccountsOutlined,
@@ -10,6 +9,7 @@ import {
   SettingsOutlined,
   West,
 } from "@mui/icons-material";
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { jwtDecode } from "jwt-decode";
@@ -75,6 +75,13 @@ const Setup = ({ children }) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
+      label: "Add Input Field For Form",
+      icon: AddLocationAltOutlined,
+      href: `/add-inputfield/${id}`,
+      active: location.pathname === `/add-inputfield/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
       label: "Employement type",
       icon: ManageAccountsOutlined,
       href: `/setup/employement-types/${id}`,
@@ -91,20 +98,13 @@ const Setup = ({ children }) => {
       ),
     },
     {
-      label: "Generate Employee code",
-      icon: BadgeOutlined,
-      href: `/setup/employee-code-genreation/${id}`,
-      active: location.pathname === `/setup/employee-code-genreation/${id}`,
+      label: "Add Designation",
+      icon: BadgeOutlinedIcon,
+      href: `/set-designation`,
+      active: location.pathname === `/set-designation`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
-    },
-    {
-      label: "Form Input Field selection",
-      icon: PriceChangeOutlined,
-      href: `/add-inputfield/${id}`,
-      active: location.pathname === `/add-inputfield/${id}`,
-      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
   ];
 
@@ -133,7 +133,7 @@ const Setup = ({ children }) => {
                 className={`group ${!item.isVisible && "hidden"} ${
                   item.active && "bg-sky-100 !text-blue-500"
                 }
-                
+
                   hover:bg-sky-100 transition-all  flex w-full items-center text-gray-700   gap-4 px-4 py-3 cursor-pointer `}
               >
                 <item.icon className="!text-2xl  group-hover:!text-blue-500 !font-thin " />

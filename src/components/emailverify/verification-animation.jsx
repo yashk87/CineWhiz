@@ -13,7 +13,7 @@ const AnimationComponent = () => {
     const verifyEmailUrl = async () => {
       console.log("Helo");
       try {
-        const url = `http://localhost:4000/route/employee/verify/${param.token}`;
+        const url = `${process.env.REACT_APP_API}/route/employee/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log(data);
         setValidUrl(true);

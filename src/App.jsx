@@ -7,8 +7,6 @@ import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
 
-// mulitple screen size xs,sm,md,lg,xl
-
 function App() {
   return (
     <>
