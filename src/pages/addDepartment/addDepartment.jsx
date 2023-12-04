@@ -51,7 +51,7 @@ const Department = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/route/location/getOrganizationLocations", {
+      .get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
         headers: {
           Authorization: authToken,
         },
@@ -86,7 +86,7 @@ const Department = () => {
     try {
       console.log(formValues);
       await axios.post(
-        "http://localhost:4000/route/department/create",
+        `${process.env.REACT_APP_API}route/department/create`,
         formValues,
         {
           headers: {

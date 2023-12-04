@@ -64,7 +64,7 @@ const OrganizationLocation = () => {
     const fetchLocationList = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/route/location/getOrganizationLocations",
+          `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
           {
             headers: {
               Authorization: authToken,
@@ -127,7 +127,7 @@ const OrganizationLocation = () => {
     };
     try {
       await axios.post(
-        "http://localhost:4000/route/location/addOrganizationLocations",
+        `${process.env.REACT_APP_API}/route/location/addOrganizationLocations`,
         newLocation,
         {
           headers: {
@@ -137,7 +137,7 @@ const OrganizationLocation = () => {
       );
 
       const response = await axios.get(
-        "http://localhost:4000/route/location/getOrganizationLocations",
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
         {
           headers: {
             Authorization: authToken,
@@ -203,7 +203,7 @@ const OrganizationLocation = () => {
     };
     try {
       await axios.put(
-        `http://localhost:4000/route/location/updateOrganizationLocations/${locationList[index]._id}`,
+        `${process.env.REACT_APP_API}/route/location/updateOrganizationLocations/${locationList[index]._id}`,
         newLocation,
         {
           headers: {
@@ -213,7 +213,7 @@ const OrganizationLocation = () => {
       );
 
       const response = await axios.get(
-        "http://localhost:4000/route/location/getOrganizationLocations",
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
         {
           headers: {
             Authorization: authToken,
@@ -232,7 +232,7 @@ const OrganizationLocation = () => {
   const handleDeleteLocation = async (index) => {
     try {
       await axios.delete(
-        `http://localhost:4000/route/location/deleteOrganizationLocations/${locationList[index]._id}`,
+        `${process.env.REACT_APP_API}/route/location/deleteOrganizationLocations/${locationList[index]._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -241,7 +241,7 @@ const OrganizationLocation = () => {
       );
 
       const response = await axios.get(
-        "http://localhost:4000/route/location/getOrganizationLocations",
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
         {
           headers: {
             Authorization: authToken,
