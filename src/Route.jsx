@@ -33,6 +33,8 @@ import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
 import EmailSetting from "./pages/SetupPage/EmailSetting";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
+import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
+
 const App = () => {
   // const [user, setUser] = useState("");
 
@@ -121,6 +123,11 @@ const App = () => {
         exact
         path="/setup/:id/public-holidays"
         element={<PublicHoliday />}
+      />
+      <Route
+        exact
+        path="/terms-and-conditions"
+        element={<TermsAndConditionsPage />}
       />
     </Routes>
   );
