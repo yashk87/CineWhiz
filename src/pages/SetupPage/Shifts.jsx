@@ -314,8 +314,8 @@ const Shifts = () => {
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the shift after deleting shift the shift
-            will not retrived.
+            Please confirm your decision to delete the shift, as this action
+            cannot be undone.
           </p>
         </DialogContent>
         <DialogActions>

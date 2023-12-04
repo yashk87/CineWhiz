@@ -193,8 +193,8 @@ const EmployementTypes = () => {
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the Employment Type after deleting
-            Employment Type it will not retrived.
+            Please confirm your decision to delete this employement type, as
+            this action cannot be undone
           </p>
         </DialogContent>
         <DialogActions>

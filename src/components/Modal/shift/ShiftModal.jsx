@@ -402,14 +402,10 @@ const ShiftModal = ({ handleClose, open, id, shiftId }) => {
               <Button
                 onClick={handleSubmit}
                 variant="contained"
-                color="primary"
+                color="success"
                 disabled={EditShift.isLoading}
               >
-                {EditShift.isLoading ? (
-                  <CircularProgress size={20} />
-                ) : (
-                  "Edit Shift"
-                )}
+                {EditShift.isLoading ? <CircularProgress size={20} /> : "Apply"}
               </Button>
             ) : (
               <Button
