@@ -1,22 +1,22 @@
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import AddIcon from "@mui/icons-material/Add";
 import AddAlertIcon from "@mui/icons-material/AddAlert";
 import CategoryIcon from "@mui/icons-material/Category";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DescriptionIcon from "@mui/icons-material/Description";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import MoneyIcon from "@mui/icons-material/Money";
 import PeopleIcon from "@mui/icons-material/People";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import SettingsIcon from "@mui/icons-material/Settings";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import WorkIcon from "@mui/icons-material/Work";
-import MoneyIcon from "@mui/icons-material/Money";
 import ReceiptIcon from "@mui/icons-material/Receipt";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import DescriptionIcon from "@mui/icons-material/Description";
+import SettingsIcon from "@mui/icons-material/Settings";
+import WorkIcon from "@mui/icons-material/Work";
 import {
   Accordion,
   AccordionDetails,
@@ -335,7 +335,7 @@ const NavItems = ({ toggleDrawer }) => {
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
-                      to="#"
+                      to="/notification"
                       className="w-full"
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
