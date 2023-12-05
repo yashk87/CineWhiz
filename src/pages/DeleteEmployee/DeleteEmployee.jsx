@@ -212,7 +212,7 @@ const DeleteEmployee = () => {
       setConfirmDeleteDialog(true);
     }
   };
-  console.log(excelDataToDelete);
+
   const handleConfirmDeleteExcelData = async () => {
     try {
       // Assuming each item in `excelDataToDelete` contains an `_id` field
