@@ -405,8 +405,8 @@ const DeleteEmployee = () => {
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the Employee after deleting Employee it will
-            not retrived.
+            Please confirm your decision to delete this employee, as this action
+            cannot be undone
           </p>
         </DialogContent>
         <DialogActions>
@@ -439,8 +439,8 @@ const DeleteEmployee = () => {
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the selected employees, and they cannot be
-            retrieved.
+            Please confirm your decision to delete this selected employee, as
+            this action cannot be undone
           </p>
         </DialogContent>
         <DialogActions>
@@ -474,7 +474,8 @@ const DeleteEmployee = () => {
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the employees, and they cannot be retrieved.
+            Please confirm your decision to delete this employee, as this action
+            cannot be undone
           </p>
         </DialogContent>
         <DialogActions>

@@ -130,69 +130,6 @@ const NavItems = ({ toggleDrawer }) => {
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
                         <ListItemIcon className="p-2 !min-w-[25px]">
-                          <AccessTimeIcon className="text-white" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primaryTypographyProps={{
-                            style: { fontSize: 13 },
-                          }}
-                          style={{ fontSize: "10px" }}
-                          className="text-white text-sm"
-                          primary={" Attendance"}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <Link
-                      onClick={() => toggleDrawer()}
-                      to="/leave"
-                      className="w-full"
-                    >
-                      <ListItemButton className="!p-2 !rounded-lg w-full">
-                        <ListItemIcon className="p-2 !min-w-[25px]">
-                          <MoneyIcon className="text-white" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primaryTypographyProps={{
-                            style: { fontSize: 13 },
-                          }}
-                          style={{ fontSize: "10px" }}
-                          className="text-white text-sm"
-                          primary={"Allowance"}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <Link
-                      onClick={() => toggleDrawer()}
-                      to="#"
-                      className="w-full"
-                    >
-                      <ListItemButton className="!p-2 !rounded-lg w-full">
-                        <ListItemIcon className="p-2 !min-w-[25px]">
-                          <WorkIcon className="text-white" />
-                        </ListItemIcon>
-                        <ListItemText
-                          primaryTypographyProps={{
-                            style: { fontSize: 13 },
-                          }}
-                          style={{ fontSize: "10px" }}
-                          className="text-white text-sm"
-                          primary={"Shift Management"}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <Link
-                      onClick={() => toggleDrawer()}
-                      to="#"
-                      className="w-full"
-                    >
-                      <ListItemButton className="!p-2 !rounded-lg w-full">
-                        <ListItemIcon className="p-2 !min-w-[25px]">
                           <SettingsIcon className="text-white" />
                         </ListItemIcon>
                         <ListItemText
@@ -227,6 +164,48 @@ const NavItems = ({ toggleDrawer }) => {
                   >
                     <Typography className="text-white">Payroll</Typography>
                   </AccordionSummary>
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="#"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <AccessTimeIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={" Attendance"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="/leave"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <MoneyIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Allowance"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
@@ -286,6 +265,27 @@ const NavItems = ({ toggleDrawer }) => {
                           style={{ fontSize: "10px" }}
                           className="text-white text-sm"
                           primary={"Form-16"}
+                        />
+                      </ListItemButton>
+                    </Link>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <Link
+                      onClick={() => toggleDrawer()}
+                      to="#"
+                      className="w-full"
+                    >
+                      <ListItemButton className="!p-2 !rounded-lg w-full">
+                        <ListItemIcon className="p-2 !min-w-[25px]">
+                          <WorkIcon className="text-white" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{
+                            style: { fontSize: 13 },
+                          }}
+                          style={{ fontSize: "10px" }}
+                          className="text-white text-sm"
+                          primary={"Shift Management"}
                         />
                       </ListItemButton>
                     </Link>
@@ -491,7 +491,7 @@ const NavItems = ({ toggleDrawer }) => {
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
-                      to="#"
+                      to="/add-department"
                       className="w-full"
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
@@ -533,7 +533,7 @@ const NavItems = ({ toggleDrawer }) => {
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
-                      to="#"
+                      to="/del-department"
                       className="w-full"
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
@@ -602,7 +602,7 @@ const NavItems = ({ toggleDrawer }) => {
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
-                      to="#"
+                      to="/add-organisation"
                       className="w-full"
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
@@ -665,7 +665,7 @@ const NavItems = ({ toggleDrawer }) => {
                   <ListItem disablePadding>
                     <Link
                       onClick={() => toggleDrawer()}
-                      to="#"
+                      to="/organizationList"
                       className="w-full"
                     >
                       <ListItemButton className="!p-2 !rounded-lg w-full">
@@ -700,7 +700,11 @@ const NavItems = ({ toggleDrawer }) => {
           <List sx={{ padding: "0px" }}>
             <ListItem onClick={(e) => e.stopPropagation()}>
               <ListItem disablePadding>
-                <Link onClick={() => toggleDrawer()} to="#" className="w-full">
+                <Link
+                  onClick={() => toggleDrawer()}
+                  to="/leave"
+                  className="w-full"
+                >
                   <ListItemButton className="!p-2 !rounded-lg w-full">
                     <ListItemIcon className="p-2 !min-w-[25px]">
                       <PeopleIcon className="text-white" />
