@@ -51,16 +51,9 @@ export default function SwipeableTemporaryDrawer() {
           >
             <Menu /> {/* Pass Menu component as a child */}
           </IconButton>
-          <Badge
-            badgeContent={
-              <div className=" text-sm rounded-full bg-sky-500 text-white h-4 w-4 box-border flex items-center justify-center">
-                +
-              </div>
-            }
-            color="primary"
-          >
+          <Badge>
             <Typography variant="h6" noWrap component="div">
-              AegisPlus
+              Aegis
             </Typography>
           </Badge>
           <ProfileIcon />

@@ -107,7 +107,7 @@ const LeaveRequisition = () => {
 
   return (
     <>
-      <section className="min-h-screen">
+      <section className="">
         <header className="text-xl pt-6 bg-gray-50 shadow-md font-semibold p-4">
           <Link to={"/"}>
             <WestIcon className="mx-4 !text-xl" />
@@ -203,7 +203,6 @@ const LeaveRequisition = () => {
                     ))}
                     <div className="w-full m-auto flex justify-center my-4">
                       <Button
-                        disabled
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
@@ -216,7 +215,7 @@ const LeaveRequisition = () => {
               </>
             ) : (
               <>
-                <div className="w-full grid justify-center relative gap-4">
+                <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
                   <img
                     src="leave-reaquesation.gif"
                     alt="description of your GIF"

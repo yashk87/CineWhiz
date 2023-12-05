@@ -44,16 +44,9 @@ const AppBarComponent = ({ handleDrawerOpen }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Badge
-          badgeContent={
-            <div className=" text-sm rounded-full text-white box-border flex items-center justify-center">
-              +
-            </div>
-          }
-          color="primary"
-        >
+        <Badge>
           <Typography variant="h6" noWrap component="div">
-            AegisPlus
+            Aegis
           </Typography>
         </Badge>
         <ProfileIcon />

@@ -257,7 +257,7 @@ const AddProfile = () => {
                           /[^a-zA-Z]/.test(enteredFirstName)
                         ) {
                           setFirstNameError(
-                            "First Name must be between 2 and 30 characters and should only contain letters."
+                            "First Name should only contain letters."
                           );
                         } else {
                           setFirstNameError(""); // Clear error message when criteria are met
@@ -267,7 +267,11 @@ const AddProfile = () => {
                       fullWidth
                       margin="normal"
                       error={!!firstNameError}
-                      helperText={firstNameError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {firstNameError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -283,24 +287,27 @@ const AddProfile = () => {
                       onChange={(e) => {
                         const enteredMiddleName = e.target.value;
                         setMiddleName(enteredMiddleName);
-
-                        if (enteredMiddleName.trim() === "") {
-                          // Middle name is empty, no validation required
-                          setMiddleNameError("");
-                        } else if (/[^a-zA-Z]/.test(enteredMiddleName)) {
-                          // Middle name contains characters other than letters
+                        if (
+                          enteredMiddleName.length > 0 &&
+                          (enteredMiddleName.length < 2 ||
+                            enteredMiddleName.length > 30 ||
+                            /[^a-zA-Z]/.test(enteredMiddleName))
+                        ) {
                           setMiddleNameError(
                             "Middle Name should only contain letters."
                           );
                         } else {
-                          // Valid middle name with only letters
-                          setMiddleNameError("");
+                          setMiddleNameError(""); // Clear error message when criteria are met
                         }
                       }}
-                      error={!!middleNameError}
-                      helperText={middleNameError}
                       fullWidth
                       margin="normal"
+                      error={!!middleNameError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {middleNameError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -323,15 +330,17 @@ const AddProfile = () => {
                     enteredLastName.length > 30 ||
                     /[^a-zA-Z]/.test(enteredLastName)
                   ) {
-                    setLastNameError(
-                      "Last Name must be between 2 and 30 characters and should only contain letters."
-                    );
+                    setLastNameError("Last Name  should only contain letters.");
                   } else {
                     setLastNameError(""); // Clear error message when criteria are met
                   }
                 }}
                 error={!!lastNameError}
-                helperText={lastNameError}
+                helperText={
+                  <div style={{ height: "5px", width: "500px" }}>
+                    {lastNameError}
+                  </div>
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -359,7 +368,11 @@ const AddProfile = () => {
                 fullWidth
                 margin="normal"
                 error={!!emailError}
-                helperText={emailError}
+                helperText={
+                  <div style={{ height: "5px", width: "500px" }}>
+                    {emailError}
+                  </div>
+                }
               />
 
               <div className="flex items-center gap-20">
@@ -377,7 +390,11 @@ const AddProfile = () => {
                       fullWidth
                       margin="normal"
                       error={!!passwordError}
-                      helperText={passwordError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {passwordError}
+                        </div>
+                      }
                       InputProps={{
                         inputProps: {
                           pattern: passwordRegex.source,
@@ -402,7 +419,11 @@ const AddProfile = () => {
                       fullWidth
                       margin="normal"
                       error={!!confirmPasswordError}
-                      helperText={confirmPasswordError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {confirmPasswordError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
