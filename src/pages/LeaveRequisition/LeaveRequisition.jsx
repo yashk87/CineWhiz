@@ -203,7 +203,6 @@ const LeaveRequisition = () => {
                     ))}
                     <div className="w-full m-auto flex justify-center my-4">
                       <Button
-                        disabled
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
