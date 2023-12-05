@@ -89,8 +89,7 @@ const App = () => {
       />
       <Route
         exact
-        path="
-        "
+        path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
 

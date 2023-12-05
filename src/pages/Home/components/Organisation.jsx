@@ -1,7 +1,6 @@
 import { Button, Card, CardContent, Typography } from "@mui/material";
 import React from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Organisation = ({ item }) => {
   const navigate = useNavigate();
   const handleCreateProfile = () => {
@@ -14,17 +13,13 @@ const Organisation = ({ item }) => {
       className=" hover:shadow-lg !transition-all  h-max    !w-[320px]"
       sx={{ overflow: "visible" }}
     >
-      <Link
-        to={`/organisation/${item._id}`}
-        className=" cursor-pointerhover:scale-95 scroll-smooth transition-all"
-      >
+      <div className=" cursor-pointer  scroll-smooth transition-all">
         <CardContent>
           <Typography
             color={"#1D6EB7"}
             gutterBottom
             variant="h6"
             component="div"
-            className="hover:underline"
           >
             {item.name}
           </Typography>
@@ -32,7 +27,7 @@ const Organisation = ({ item }) => {
             Description : {item.description}
           </Typography>
         </CardContent>
-      </Link>
+      </div>
 
       <div className="space-x-4 p-2 pb-6">
         <Link to={`/setup/add-roles/${item._id}`}>
