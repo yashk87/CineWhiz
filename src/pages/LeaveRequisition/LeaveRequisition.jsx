@@ -203,6 +203,7 @@ const LeaveRequisition = () => {
                     ))}
                     <div className="w-full m-auto flex justify-center my-4">
                       <Button
+                        disabled
                         type="submit"
                         variant="contained"
                         className="font-bold m-auto w-fit"
@@ -214,7 +215,29 @@ const LeaveRequisition = () => {
                 </form>
               </>
             ) : (
-              "Select Leaves"
+              <>
+                <div className="w-full grid justify-center relative gap-4">
+                  <img
+                    src="leave-reaquesation.gif"
+                    alt="description of your GIF"
+                    className="mt-2"
+                    width="700"
+                    height="700"
+                  ></img>
+                  <Button
+                    disabled={isLoading}
+                    onClick={() => setCalendarOpen(true)}
+                    variant="text"
+                    size="large"
+                    className="text-center !italic w-fit !m-auto"
+                  >
+                    {" "}
+                    {!isLoading
+                      ? "Apply For Leave"
+                      : "Wait Calendar is Loading"}
+                  </Button>
+                </div>
+              </>
             )}
           </article>
         </div>
