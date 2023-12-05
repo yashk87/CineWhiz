@@ -459,14 +459,18 @@ const AddEmployee = () => {
                           /[^a-zA-Z]/.test(enteredFirstName)
                         ) {
                           setFirstNameError(
-                            "First Name must be between 2 and 30 characters and should only contain letters."
+                            "First Name must only contain letters."
                           );
                         } else {
                           setFirstNameError(""); // Clear error message when criteria are met
                         }
                       }}
                       error={!!firstNameError}
-                      helperText={firstNameError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {firstNameError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -490,14 +494,18 @@ const AddEmployee = () => {
                           /[^a-zA-Z]/.test(enteredLastName)
                         ) {
                           setLastNameError(
-                            "Last Name must be between 2 and 30 characters and should only contain letters."
+                            "Last Name must only contain letters."
                           );
                         } else {
                           setLastNameError(""); // Clear error message when criteria are met
                         }
                       }}
                       error={!!lastNameError}
-                      helperText={lastNameError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {lastNameError}
+                        </div>
+                      }
                       fullWidth
                       margin="normal"
                       required
@@ -528,7 +536,11 @@ const AddEmployee = () => {
                         }
                       }}
                       error={!!emailError}
-                      helperText={emailError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {emailError}
+                        </div>
+                      }
                       fullWidth
                       margin="normal"
                       required
@@ -559,7 +571,11 @@ const AddEmployee = () => {
                       margin="normal"
                       required
                       error={!!companyEmailError}
-                      helperText={companyEmailError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {companyEmailError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -580,7 +596,11 @@ const AddEmployee = () => {
                       fullWidth
                       margin="normal"
                       error={!!passwordError}
-                      helperText={passwordError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {passwordError}
+                        </div>
+                      }
                       InputProps={{
                         inputProps: {
                           pattern: passwordRegex.source,
@@ -605,7 +625,11 @@ const AddEmployee = () => {
                       fullWidth
                       margin="normal"
                       error={!!confirmPasswordError}
-                      helperText={confirmPasswordError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {confirmPasswordError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -918,6 +942,7 @@ const AddEmployee = () => {
                   />
                 ))}
               </div>
+
               <div className="w-full">
                 <FormControl>
                   <FormLabel id="demo-row-radio-buttons-group-label">

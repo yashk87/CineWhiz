@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import AnimationComponent from "./components/emailverify/verification-animation";
 import ForgotPassword from "./components/forgotpassword/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
+import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import About from "./pages/About/About";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
@@ -14,7 +15,7 @@ import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
 import Notification from "./pages/Notification/notification";
-import SingleOrganization from "./pages/Organization/SingleOrganization";
+import OrgList from "./pages/OrgList/OrgList";
 import AddRoles from "./pages/Roles/AddRoles";
 import EmployeeCodeGenerator from "./pages/SetUpOrganization/EmployeeCodeGenerator/EmployeeCodeGenerator";
 import EmployementTypes from "./pages/SetUpOrganization/EmployementType/EmployementTypes";
@@ -33,7 +34,6 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 
 const App = () => {
   // const [user, setUser] = useState("");
@@ -57,6 +57,7 @@ const App = () => {
   return (
     <Routes>
       <Route exact path="/" element={<Home />} />
+      <Route exact path="/organizationList" element={<OrgList />} />
       <Route exact path="/about" element={<About />} />
       <Route exact path="/sign-in" element={<SignIn />} />
       <Route exact path="/sign-up" element={<Signup />} />
@@ -79,7 +80,6 @@ const App = () => {
       <Route exact path="/set-designation" element={<Designation />} />
       <Route exact path="/waiting" element={<WaitMain />} />
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
-      <Route exact path="/organisation/:id" element={<SingleOrganization />} />
       <Route exact path="/userprofile" element={<UserProfile />} />
 
       <Route
@@ -89,8 +89,7 @@ const App = () => {
       />
       <Route
         exact
-        path="
-        "
+        path="/organisation/:id/add-employee"
         element={<AddEmployee />}
       />
 

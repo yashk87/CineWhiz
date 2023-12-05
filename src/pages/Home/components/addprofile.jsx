@@ -257,7 +257,7 @@ const AddProfile = () => {
                           /[^a-zA-Z]/.test(enteredFirstName)
                         ) {
                           setFirstNameError(
-                            "First Name must be between 2 and 30 characters and should only contain letters."
+                            "First Name must only contain letters."
                           );
                         } else {
                           setFirstNameError(""); // Clear error message when criteria are met
