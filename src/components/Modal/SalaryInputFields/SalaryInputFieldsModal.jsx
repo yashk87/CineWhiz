@@ -514,11 +514,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                           )}
                         />
 
-                        {errors.salaryStructures[index]?.salaryComponent && (
-                          <p className="text-red-500">
-                            *{errors.salaryStructures[index].salaryComponent}
-                          </p>
-                        )}
+                        <p className="text-red-500 h-1">
+                          {errors.salaryStructures[index]?.salaryComponent &&
+                            `*${errors.salaryStructures[index].salaryComponent}`}
+                        </p>
                       </td>
 
                       <td className="w-[35%] !mx-4">
@@ -546,11 +545,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                             </MenuItem>
                           </Select>
                         </FormControl>
-                        {errors.salaryStructures[index]?.manuallyInput && (
-                          <p className="text-red-500">
-                            *{errors.salaryStructures[index].manuallyInput}
-                          </p>
-                        )}
+                        <p className="text-red-500 h-1">
+                          {errors.salaryStructures[index]?.manuallyInput &&
+                            ` *${errors.salaryStructures[index].manuallyInput}`}
+                        </p>
                       </td>
 
                       <td className="w-[35%]">
@@ -575,11 +573,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                             }
                           />
                         </FormControl>
-                        {errors.salaryStructures[index]?.calculation && (
-                          <p className="text-red-500">
-                            *{errors.salaryStructures[index].calculation}
-                          </p>
-                        )}
+                        <p className="text-red-500 h-1">
+                          {errors.salaryStructures[index]?.calculation &&
+                            `*${errors.salaryStructures[index].calculation}`}
+                        </p>
                       </td>
 
                       <td className="w-[10%]">
