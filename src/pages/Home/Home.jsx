@@ -11,7 +11,7 @@ const Home = () => {
   const redirect = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const token = cookies["aeigs"];
+  // const token = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
 
   const { data, isLoading } = useQuery(["orgData"], async () => {
