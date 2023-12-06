@@ -34,6 +34,8 @@ const DeleteEmployee = () => {
     useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
+
+  // fetch employee
   const fetchAvailableEmployee = async () => {
     try {
       const response = await axios.get(
@@ -47,7 +49,6 @@ const DeleteEmployee = () => {
 
       setAvailableEmployee(response.data.employeeData);
     } catch (error) {
-      console.error(error);
       handleAlert(true, "error", "Failed to fetch Available Employee");
     }
   };
@@ -83,19 +84,16 @@ const DeleteEmployee = () => {
       },
     }
   );
+
   // Delete Query for deleting Multiple Employee
   const handleEmployeeSelection = (id) => {
     const selectedIndex = selectedEmployees.indexOf(id);
     let newSelected = [];
-
     if (selectedIndex === -1) {
-      // If the employee is not already selected, add it to the selectedEmployees array
       newSelected = [...selectedEmployees, id];
     } else {
-      // If the employee is already selected, remove it from the selectedEmployees array
       newSelected = selectedEmployees.filter((employeeId) => employeeId !== id);
     }
-
     setSelectedEmployees(newSelected);
   };
 
@@ -113,25 +111,21 @@ const DeleteEmployee = () => {
   // Handle confirmation of deleting multiple employees
   const confirmDeleteMultiple = async () => {
     try {
-      // Make a request to delete multiple employees using selectedEmployee array
       const response = await axios.delete(
         `${process.env.REACT_APP_API}/route/employee/delete-multiple`,
         {
           headers: {
             Authorization: authToken,
           },
-          data: { ids: selectedEmployees }, // Send selected employee IDs to delete
+          data: { ids: selectedEmployees },
         }
       );
       console.log(response);
-      // Handle success message or any further action upon successful deletion
       queryClient.invalidateQueries("employee");
       handleAlert(true, "success", "Employees deleted successfully");
     } catch (error) {
-      console.error(error);
       handleAlert(true, "error", "Failed to delete employees");
     } finally {
-      // Close the confirmation dialog
       setDeleteMultiEmpConfirmation(false);
     }
   };
@@ -186,39 +180,11 @@ const DeleteEmployee = () => {
       console.error("Error generating Excel:", error);
     }
   };
-  // // Function to read Excel file data
-  // const readExcelFile = (file) => {
-  //   const fileReader = new FileReader();
-  //   fileReader.onload = (event) => {
-  //     const data = event.target.result;
-  //     const workbook = XLSX.read(data, { type: "binary" });
-  //     const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
-  //     const worksheet = workbook.Sheets[sheetName];
-  //     const excelData = XLSX.utils.sheet_to_json(worksheet);
-  //     console.log("Excel Data:", excelData); // Do something with the read data
-  //     setExcelDataToDelete(excelData);
-  //   };
-  //   fileReader.readAsBinaryString(file);
-  // };
-  // Function to handle file upload
-  // const handleFileUpload = (event) => {
-  //   const file = event.target.files[0];
-  //   console.log(file);
-  //   readExcelFile(file);
-  // };
-  // Function to handle delete button click
-  // const handleDeleteExcelData = () => {
-  //   if (excelDataToDelete) {
-  //     setConfirmDeleteDialog(true);
-  //   }
-  // };
-
+  // delete query for deleting multiple employee from excel
   const handleDeleteFromExcel = async () => {
     try {
       const fileInput = document.getElementById("fileInput");
       const file = fileInput.files[0];
-      console.log(file);
-
       if (!file) {
         console.error("Please upload an Excel file.");
         setAppAlert({
@@ -238,7 +204,6 @@ const DeleteEmployee = () => {
           const deleteColumnIndex = XLSX.utils.decode_range(ws["!ref"]).e.c;
 
           if (deleteColumnIndex === undefined) {
-            console.error("Delete column not found in the Excel sheet.");
             setAppAlert({
               alert: true,
               type: "error",
@@ -246,8 +211,8 @@ const DeleteEmployee = () => {
             });
             return;
           }
-          const employeesToDelete = [];
 
+          const employeesToDelete = [];
           for (
             let row = 1;
             row <= XLSX.utils.decode_range(ws["!ref"]).e.r;
@@ -255,17 +220,16 @@ const DeleteEmployee = () => {
           ) {
             const deleteCommand =
               ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
-
             if (
               deleteCommand &&
               deleteCommand.v &&
               deleteCommand.v.toLowerCase() === "delete"
             ) {
               const employeeIdToDelete =
-                ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v;
+                ws[XLSX.utils.encode_cell({ r: row, c: 0 })].v;
 
               const employeeToDelete = availableEmployee.find(
-                (employee) => employee._id === employeeIdToDelete
+                (emp) => emp._id === employeeIdToDelete
               );
               if (employeeToDelete) {
                 employeesToDelete.push(employeeToDelete);
@@ -282,6 +246,34 @@ const DeleteEmployee = () => {
             setShowConfirmationExcel(false);
             return;
           }
+
+          for (const employee of employeesToDelete) {
+            try {
+              await axios.delete(
+                `${process.env.REACT_APP_API}/route/employee/delete/${employee._id}`,
+                { headers: { Authorization: authToken } }
+              );
+
+              setAvailableEmployee((prevEmployees) =>
+                prevEmployees.filter((emp) => emp._id !== employee._id)
+              );
+
+              setAppAlert({
+                alert: true,
+                type: "success",
+                msg: "Employee deleted from the Excel sheet!",
+              });
+            } catch (error) {
+              console.error("Error deleting employee:", error);
+              setAppAlert({
+                alert: true,
+                type: "error",
+                msg: "Failed to delete employee from Excel. Please try again.",
+              });
+            }
+          }
+
+          setShowConfirmationExcel(false);
         } catch (error) {
           console.error("Error processing Excel data:", error);
           setAppAlert({
@@ -292,6 +284,8 @@ const DeleteEmployee = () => {
           setShowConfirmationExcel(false);
         }
       };
+
+      reader.readAsArrayBuffer(file);
     } catch (error) {
       console.error("Error handling Excel delete:", error);
       setAppAlert({
