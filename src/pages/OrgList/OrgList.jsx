@@ -11,6 +11,7 @@ import TextCycler from "../Home/components/cyclic-text";
 const OrgList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+
   const { data, isLoading } = useQuery(["orgData"], async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/organization/get`,

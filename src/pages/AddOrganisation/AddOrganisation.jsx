@@ -67,7 +67,6 @@ function AddOrganisation() {
           ...prev,
           logo: resp.data.secure_url,
         }));
-
       });
   };
 
@@ -148,13 +147,11 @@ function AddOrganisation() {
         handleAlert(true, "error", "Invalid authorization");
       }
 
-
       handleAlert(true, "success", "Organization created successfully");
     } catch (error) {
+      console.log(error);
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.message);
-
-
     }
     setInputData({
       name: "",
@@ -388,76 +385,53 @@ function AddOrganisation() {
 
 export default AddOrganisation;
 
-
-
 <Container
-      className="relative top-5 flex items-center"
-      style={{ border: "1px solid rgb(177, 177, 177)", width: "30vw" }}
-    >
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h4 style={{ marginRight: "10px", color: "rgb(177, 0, 177)" }}>
-          CEO
-          </h4>
-          <div>
-            <IconButton color="primary" aria-label="edit">
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              color="error"
-              aria-label="delete"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <h4 style={{ marginRight: "10px", color: "rgb(177, 0, 177)" }}>
-          Engineer
-          </h4>
-          <div>
-            <IconButton color="primary" aria-label="edit">
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              color="error"
-              aria-label="delete"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        </div>
-      {/* Delete Confirmation Dialog */}
-      <Dialog
-
-
-      >
-        <DialogTitle>Are you sure?</DialogTitle>
-        <DialogContent>
-          <p>This action cannot be undone.</p>
-        </DialogContent>
-        <DialogActions>
-          <Button  color="primary">
-            Cancel
-          </Button>
-          <Button
-
-            color="error"
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+  className="relative top-5 flex items-center"
+  style={{ border: "1px solid rgb(177, 177, 177)", width: "30vw" }}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    }}
+  >
+    <h4 style={{ marginRight: "10px", color: "rgb(177, 0, 177)" }}>CEO</h4>
+    <div>
+      <IconButton color="primary" aria-label="edit">
+        <EditIcon />
+      </IconButton>
+      <IconButton color="error" aria-label="delete">
+        <DeleteIcon />
+      </IconButton>
+    </div>
+  </div>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    }}
+  >
+    <h4 style={{ marginRight: "10px", color: "rgb(177, 0, 177)" }}>Engineer</h4>
+    <div>
+      <IconButton color="primary" aria-label="edit">
+        <EditIcon />
+      </IconButton>
+      <IconButton color="error" aria-label="delete">
+        <DeleteIcon />
+      </IconButton>
+    </div>
+  </div>
+  {/* Delete Confirmation Dialog */}
+  <Dialog>
+    <DialogTitle>Are you sure?</DialogTitle>
+    <DialogContent>
+      <p>This action cannot be undone.</p>
+    </DialogContent>
+    <DialogActions>
+      <Button color="primary">Cancel</Button>
+      <Button color="error">Delete</Button>
+    </DialogActions>
+  </Dialog>
+</Container>;
