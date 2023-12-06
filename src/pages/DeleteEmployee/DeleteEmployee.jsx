@@ -12,12 +12,12 @@ import {
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
 import { Menu, MenuItem } from "@mui/material";
 import * as XLSX from "xlsx";
+import { GetApp, Publish } from "@mui/icons-material";
 
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
@@ -331,25 +331,44 @@ const DeleteEmployee = () => {
                 />
               </div>
               <div>
-                <IconButton onClick={handleMenuClick}>
-                  <DeleteForeverIcon />
-                </IconButton>
+                <Button
+                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                  variant="contained"
+                  onClick={handleMenuClick}
+                >
+                  Bulk Delete
+                </Button>
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={generateExcel}>Generate Excel </MenuItem>
-                  <MenuItem>
-                    <input
-                      type="file"
-                      accept=".xlsx, .xls"
-                      id="fileInput"
-                      className="w-full rounded"
-                    />
+                  <MenuItem onClick={generateExcel}>
+                    <GetApp style={{ color: "blue", marginRight: "20px" }} />{" "}
+                    Generate Excel
                   </MenuItem>
+                  <MenuItem>
+                    <label
+                      htmlFor="fileInput"
+                      className="flex items-center gap-2"
+                    >
+                      <Publish
+                        style={{ color: "green", marginRight: "15px" }}
+                      />
+                      <span>Choose File</span>
+                      <input
+                        type="file"
+                        accept=".xlsx, .xls"
+                        id="fileInput"
+                        className="w-full rounded opacity-0 absolute inset-0"
+                        style={{ zIndex: -1 }}
+                      />
+                    </label>
+                  </MenuItem>
+
                   <MenuItem onClick={() => setShowConfirmationExcel(true)}>
-                    Delete
+                    <Delete style={{ color: "red", marginRight: "25px" }} />
+                    <span>Delete</span>
                   </MenuItem>
                 </Menu>
               </div>
