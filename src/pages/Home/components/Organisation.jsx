@@ -6,6 +6,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Menu, MenuItem } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
 import {
   Dialog,
   DialogActions,
@@ -13,9 +14,15 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Warning } from "@mui/icons-material";
+import { useContext } from "react";
+import { UseContext } from "../../../State/UseState/UseContext";
+import { TestContext } from "../../../State/Function/Main";
 const Organisation = ({ item }) => {
-  const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const { handleAlert } = useContext(TestContext);
+  const { cookies } = useContext(UseContext);
+  const authToken = cookies["aeigs"];
 
   const navigate = useNavigate();
   const handleCreateProfile = () => {
@@ -24,15 +31,42 @@ const Organisation = ({ item }) => {
     });
   };
 
-  const handleClick = (e, currentItem) => {
+  const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
-    // Additional logic if needed when clicking the MoreVertIcon
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  // Delete Query for deleting single Organization
+  const handleDeleteConfirmation = (id) => {
+    console.log(id);
+    setDeleteConfirmation(id);
+  };
+  const handleCloseConfirmation = () => {
+    setDeleteConfirmation(null);
+  };
+  // delete query for deleting Single Organization
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_API}/route/organization/delete/${id}`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log(response);
+      handleAlert(true, "success", "Employees deleted successfully");
+    } catch (error) {
+      console.log(error);
+      handleAlert(true, "error", "Failed to delete employees");
+    } finally {
+      handleCloseConfirmation();
+      setAnchorEl(null);
+    }
+  };
   return (
     <>
       <Card
@@ -65,7 +99,7 @@ const Organisation = ({ item }) => {
                   <EditIcon style={{ color: "green", marginRight: "10px" }} />
                   <span>Update</span>
                 </MenuItem>
-                <MenuItem onClick={() => setShowConfirmationExcel(true)}>
+                <MenuItem onClick={() => handleDeleteConfirmation(item._id)}>
                   <Delete style={{ color: "red", marginRight: "10px" }} />
                   <span>Delete</span>
                 </MenuItem>
@@ -94,8 +128,8 @@ const Organisation = ({ item }) => {
       </Card>
 
       <Dialog
-        open={showConfirmationExcel}
-        onClose={() => setShowConfirmationExcel(false)}
+        open={deleteConfirmation !== null}
+        onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
           <Warning color="error" /> “ All information in this orgnisation will
@@ -112,11 +146,16 @@ const Organisation = ({ item }) => {
             variant="outlined"
             color="primary"
             size="small"
-            onClick={() => setShowConfirmationExcel(false)}
+            onClick={handleCloseConfirmation}
           >
             Cancel
           </Button>
-          <Button variant="contained" size="small" color="error">
+          <Button
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={() => handleDelete(deleteConfirmation)}
+          >
             Delete
           </Button>
         </DialogActions>
