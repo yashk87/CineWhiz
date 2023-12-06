@@ -47,6 +47,7 @@
     "react-icons": "^4.11.0",
     "react-intl": "^6.5.5",
     "react-multi-carousel": "^2.8.4",
+    "react-paginate": "^8.2.0",
     "react-phone-input-2": "^2.15.1",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.18.0",

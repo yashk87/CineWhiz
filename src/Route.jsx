@@ -34,7 +34,7 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-
+import EmployeeList from "./pages/EmployeeList/EmployeeList";
 const App = () => {
   // const [user, setUser] = useState("");
 
@@ -129,6 +129,7 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+      <Route exact path="/employee-list" element={<EmployeeList />} />
     </Routes>
   );
 };
