@@ -28,6 +28,9 @@ const DeleteEmployee = () => {
   const [deptSearch, setDeptSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [numbers, setNumbers] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [deleteMultiEmpConfirmation, setDeleteMultiEmpConfirmation] =
@@ -35,11 +38,10 @@ const DeleteEmployee = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
 
-  // fetch employee
-  const fetchAvailableEmployee = async () => {
+  const fetchAvailableEmployee = async (page) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-employee`,
+        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee?page=${page}`,
         {
           headers: {
             Authorization: authToken,
@@ -47,15 +49,41 @@ const DeleteEmployee = () => {
         }
       );
 
-      setAvailableEmployee(response.data.employeeData);
+      setAvailableEmployee(response.data.employees);
+      setCurrentPage(page);
+      setTotalPages(response.data.totalPages || 1);
+      // Generate an array of page numbers
+      const numbersArray = Array.from(
+        { length: response.data.totalPages || 1 },
+        (_, index) => index + 1
+      );
+      setNumbers(numbersArray);
     } catch (error) {
-      handleAlert(true, "error", "Failed to fetch Available Employee");
+      console.log(error);
+      handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
+
   useEffect(() => {
-    fetchAvailableEmployee();
-    // eslint-disable-next-line
-  }, []);
+    fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
+  const prePage = () => {
+    if (currentPage !== 1) {
+      fetchAvailableEmployee(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== totalPages) {
+      fetchAvailableEmployee(currentPage + 1);
+    }
+  };
+
+  const changePage = (id) => {
+    fetchAvailableEmployee(id);
+  };
 
   // Delete Query for deleting single Employee
   const handleDeleteConfirmation = (id) => {
@@ -469,6 +497,88 @@ const DeleteEmployee = () => {
                     ))}
                 </tbody>
               </table>
+              <nav
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "30px",
+                  marginBottom: "20px",
+                }}
+              >
+                <ul
+                  style={{ display: "inline-block", marginRight: "5px" }}
+                  className="pagination"
+                >
+                  <li
+                    style={{ display: "inline-block", marginRight: "5px" }}
+                    className="page-item"
+                  >
+                    <button
+                      style={{
+                        color: "#007bff",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      className="page-link"
+                      onClick={prePage}
+                    >
+                      Prev
+                    </button>
+                  </li>
+                  {/* Map through page numbers and generate pagination */}
+                  {numbers.map((n, i) => (
+                    <li
+                      key={i}
+                      className={`page-item ${
+                        currentPage === n ? "active" : ""
+                      }`}
+                      style={{
+                        display: "inline-block",
+                        marginRight: "5px",
+                      }}
+                    >
+                      <a
+                        href={`#${n}`}
+                        style={{
+                          color: currentPage === n ? "#fff" : "#007bff",
+                          backgroundColor:
+                            currentPage === n ? "#007bff" : "transparent",
+                          padding: "8px 12px",
+                          border: "1px solid #007bff",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                          transition: "all 0.3s ease",
+                        }}
+                        className="page-link"
+                        onClick={() => changePage(n)}
+                      >
+                        {n}
+                      </a>
+                    </li>
+                  ))}
+                  <li style={{ display: "inline-block" }} className="page-item">
+                    <button
+                      style={{
+                        color: "#007bff",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      className="page-link"
+                      onClick={nextPage}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </article>
         </Setup>
@@ -479,12 +589,13 @@ const DeleteEmployee = () => {
         onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete this Employee?
+          <Warning color="error" /> “All information of employee will be
+          deleted. Are you sure you want to delete it?”
         </DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this employee, as this action
-            cannot be undone
+            cannot be retrived
           </p>
         </DialogContent>
         <DialogActions>
@@ -513,12 +624,13 @@ const DeleteEmployee = () => {
         onClose={() => setDeleteMultiEmpConfirmation(false)}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete selected employees?
+          <Warning color="error" /> “All information of employees will be
+          deleted. Are you sure you want to delete it?”
         </DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this selected employee, as
-            this action cannot be undone
+            this action cannot be retrived
           </p>
         </DialogContent>
         <DialogActions>
@@ -547,13 +659,13 @@ const DeleteEmployee = () => {
         onClose={() => setShowConfirmationExcel(false)}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete employee from excel
-          sheet?
+          <Warning color="error" /> “All information of employees will be
+          deleted. Are you sure you want to delete it?”
         </DialogTitle>
         <DialogContent>
           <p>
             Please confirm your decision to delete this employee, as this action
-            cannot be undone
+            cannot be retrived
           </p>
         </DialogContent>
         <DialogActions>
