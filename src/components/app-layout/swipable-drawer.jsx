@@ -5,8 +5,8 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import * as React from "react";
 import { useCallback } from "react"; // Import useCallback
 import { useLocation } from "react-router-dom";
-import ProfileIcon from "../../profieicon/profileIcon";
-import NavItems from "./nav-items";
+import ProfileIcon from "../profieicon/profileIcon";
+import TestNavItems from "./components/test-nav-items";
 
 export default function SwipeableTemporaryDrawer() {
   const [open, setOpen] = React.useState(false);
@@ -24,8 +24,8 @@ export default function SwipeableTemporaryDrawer() {
       onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
     >
-      {/* <TestNavItems toggleDrawer={toggleDrawer} /> */}
-      <NavItems toggleDrawer={toggleDrawer} />
+      <TestNavItems toggleDrawer={toggleDrawer} />
+      {/* <NavItems toggleDrawer={toggleDrawer} /> */}
     </Box>
   );
 

@@ -1,34 +1,200 @@
 import {
   AccessTime,
   AddAlert,
+  Business,
   Category,
-  EventNote,
-  ExpandMore,
+  CircleNotifications,
+  Description,
+  Edit,
+  Event,
+  Groups,
   ListAlt,
   MonetizationOn,
-  Report,
+  NotificationsActive,
+  Payment,
+  PeopleAlt,
+  PersonAdd,
+  PersonRemove,
   Settings,
+  TrendingUp,
 } from "@mui/icons-material";
-import {
-  Accordion,
-  AccordionSummary,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
-
 import { jwtDecode } from "jwt-decode";
+
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
+import NavAccordian from "./accordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const { cookies } = useContext(UseContext);
   const [userRoutes, setuserRoutes] = useState(null);
   const token = cookies["aeigs"];
+  const params = useMatch("/organisation/:id");
+  const params2 = useMatch("/organisation/:id/department/:departmentId");
+  const [navItems, setNavItems] = useState({
+    "Self Help": {
+      open: true,
+      icon: <Category className="text-white" />,
+      routes: [
+        {
+          key: "attendance",
+          link: "/leave",
+          icon: <AccessTime className="text-white" />,
+          text: "Attendance",
+        },
+        {
+          key: "accountSettings",
+          link: "/account",
+          icon: <Settings className="text-white" />,
+          text: "Account Settings",
+        },
+      ],
+    },
+    Notification: {
+      open: false,
+      icon: <NotificationsActive className="text-white" />,
+      routes: [
+        {
+          key: "createNotification",
+          link: "/create-notification",
+          icon: <AddAlert className="text-white" />,
+          text: "Create Notification",
+        },
+        {
+          key: "listNotification",
+          link: "/list-notification",
+          icon: <CircleNotifications className="text-white" />,
+          text: "List Notification",
+        },
+      ],
+    },
+    "Pay-roll": {
+      open: false,
+      icon: <Payment className="text-white" />,
+      routes: [
+        {
+          key: "allowance",
+          link: "/allowance",
+          icon: <MonetizationOn className="text-white" />,
+          text: "Allowance",
+        },
+        {
+          key: "payslip",
+          link: "/payslip",
+          icon: <ListAlt className="text-white" />,
+          text: "Pay Slip",
+        },
+        {
+          key: "icomeTax",
+          link: "/income-tax",
+          icon: <TrendingUp className="text-white" />,
+          text: "Income Tax",
+        },
+        {
+          key: "form-16",
+          link: "/form-16",
+          icon: <Description className="text-white" />,
+          text: "Form-16",
+        },
+        {
+          key: "shiftManagement",
+          link: "/shift-manage",
+          icon: <Event className="text-white" />,
+          text: "Shift Management",
+        },
+      ],
+    },
+    Employee: {
+      open: false,
+      icon: <PeopleAlt className="text-white" />,
+      routes: [
+        {
+          key: "onboarding",
+          link: "/employee-add",
+          icon: <PersonAdd className="text-white" />,
+          text: "Onboarding",
+        },
+        {
+          key: "updateEmployee",
+          link: "/employee-update",
+          icon: <Edit className="text-white" />,
+          text: "Update Employee",
+        },
+        {
+          key: "offboarding",
+          link: "/employee-offboarding",
+          icon: <PersonRemove className="text-white" />,
+          text: "Offboarding",
+        },
+        {
+          key: "employeeList",
+          link: "/employee-list",
+          icon: <Groups className="text-white" />,
+          text: "Employee List",
+        },
+      ],
+    },
+    Department: {
+      open: false,
+      icon: <Business className="text-white" />,
+      routes: [
+        {
+          key: "addDepartment",
+          link: "/department-add",
+          icon: <AddAlert className="text-white" />,
+          text: "Add Department",
+        },
+        {
+          key: "updateDepartment",
+          link: "/department-update",
+          icon: <ListAlt className="text-white" />,
+          text: "Update Department",
+        },
+        {
+          key: "deleteDepartment",
+          link: "/department-delete",
+          icon: <ListAlt className="text-white" />,
+          text: "Delete Department",
+        },
+        {
+          key: "departmentList",
+          link: "/department-list",
+          icon: <ListAlt className="text-white" />,
+          text: "Department List",
+        },
+      ],
+    },
+    Organisation: {
+      open: false,
+      icon: <MonetizationOn className="text-white" />,
+      routes: [
+        {
+          key: "addOrganisation",
+          link: "/organisation-add",
+          icon: <AddAlert className="text-white" />,
+          text: "Add Organisation",
+        },
+        {
+          key: "updateOrganisation",
+          link: "/organisation-update",
+          icon: <ListAlt className="text-white" />,
+          text: "Update Organisation",
+        },
+        {
+          key: "deleteOrganisation",
+          link: "/organisation-delete",
+          icon: <ListAlt className="text-white" />,
+          text: "Delete Organisation",
+        },
+        {
+          key: "organisationList",
+          link: "/department-list",
+          icon: <ListAlt className="text-white" />,
+          text: "Organisation List",
+        },
+      ],
+    },
+  });
 
   useEffect(() => {
     try {
@@ -41,107 +207,74 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   }, [token]);
 
-  const roleSpecificItems = {
-    "Self Help": {
-      icon: <Category className="text-white" />, // Replace YourSelfHelpIcon with the actual icon component
-      routes: [
-        {
-          key: "attendance",
-          link: "/your-attendance",
-          icon: <AccessTime className="text-white" />,
-          text: "Your Attendance",
-        },
-        {
-          key: "leave",
-          link: "/apply-for-leave",
-          icon: <EventNote className="text-white" />, // Replace with the actual icon you want for leave
-          text: "Apply For Leave",
-        },
-        {
-          key: "accountSettings",
-          link: "/account-settings",
-          icon: <Settings className="text-white" />,
-          text: "Account Settings",
-        },
-        {
-          key: "complaint",
-          link: "/apply-for-complaint",
-          icon: <Report className="text-white" />,
-          text: "Apply For Complaint",
-        },
-      ],
-    },
-    Notification: {
-      icon: <MonetizationOn className="text-white" />, // Replace YourNotificationIcon with the actual icon component
-      routes: [
-        {
-          key: "createNotification",
-          link: "/create-notification",
-          icon: <AddAlert className="text-white" />,
-          text: "Create Notification",
-        },
-        {
-          key: "listNotification",
-          link: "/list-notification",
-          icon: <ListAlt className="text-white" />,
-          text: "List Notification",
-        },
-      ],
-    },
-  };
-
   return (
     <>
-      {Object.keys(roleSpecificItems).map((role) => {
-        const { icon, routes } = roleSpecificItems[role];
+      {Object.keys(navItems).map((role) => {
+        const { icon, routes } = navItems[role];
+
+        // Check if on root or organisation page
+        const isOrganisationAndIdNotDefined =
+          role === "Organisation" && (!params || params.params?.id === null);
+
+        // Check if on a specific department page
+        const isDepartmentAndDepartmentIdNotDefined =
+          role === "Department" &&
+          (!params2 ||
+            params2.params?.id === null ||
+            params2.params?.departmentId === null);
+
+        // Show Organisation navbar when on organisation page, not on root
+        if (role === "Organisation") {
+          if (params && params.params && params.params.id !== undefined) {
+            return (
+              <NavAccordian
+                key={role}
+                role={role}
+                icon={icon}
+                routes={routes}
+                toggleDrawer={toggleDrawer}
+                valueBoolean={navItems[role].open}
+              />
+            );
+          } else {
+            // If on root, do not show Organisation navbar
+            return null;
+          }
+        }
+
+        // Show Department navbar when on a specific department page
+        if (role === "Department") {
+          if (
+            params2 &&
+            params2.params &&
+            params2.params.id !== undefined &&
+            params2.params.departmentId !== undefined
+          ) {
+            return (
+              <NavAccordian
+                key={role}
+                role={role}
+                icon={icon}
+                routes={routes}
+                toggleDrawer={toggleDrawer}
+                valueBoolean={navItems[role].open}
+              />
+            );
+          } else {
+            // If not on a specific department page, do not show Department navbar
+            return null;
+          }
+        }
 
         return (
-          <List key={role}>
-            <ListItem onClick={(e) => e.stopPropagation()}>
-              <Accordion
-                expanded={role === "Self Help" ? true : undefined}
-                className="w-full !shadow-none border-[#0093d6] border-none !m-0"
-                style={{ background: "rgb(14, 165, 233)" }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMore className="text-white" />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  className="flex gap-2 !m-0"
-                >
-                  <ListItemIcon className="p-2 !min-w-[25px]">
-                    {icon}
-                  </ListItemIcon>
-                  <Typography className="text-white flex items-center">
-                    {role}
-                  </Typography>
-                </AccordionSummary>
-                {routes.map((route) => (
-                  <ListItem disablePadding key={route.key}>
-                    <Link
-                      onClick={() => toggleDrawer()}
-                      to={route.link}
-                      className="w-full"
-                    >
-                      <ListItemButton className="!p-2 !rounded-lg w-full">
-                        <ListItemIcon className="p-2 !min-w-[25px]">
-                          {route.icon}
-                        </ListItemIcon>
-                        <ListItemText
-                          primaryTypographyProps={{
-                            style: { fontSize: 13 },
-                          }}
-                          style={{ fontSize: "10px" }}
-                          className="text-white text-sm"
-                          primary={route.text}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </ListItem>
-                ))}
-              </Accordion>
-            </ListItem>
-          </List>
+          <NavAccordian
+            key={role}
+            role={role}
+            icon={icon}
+            routes={routes}
+            toggleDrawer={toggleDrawer}
+            valueBoolean={navItems[role].open}
+          />
         );
       })}
     </>

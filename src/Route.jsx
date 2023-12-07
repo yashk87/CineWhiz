@@ -34,6 +34,8 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
+import SingleDepartment from "./pages/single-department/single-department";
+import SigleOrganisaiton from "./pages/single-orgnisation/single-organisation";
 
 const App = () => {
   // const [user, setUser] = useState("");
@@ -82,15 +84,16 @@ const App = () => {
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/userprofile" element={<UserProfile />} />
 
-      <Route
-        exact
-        path="/organisation/:id/add-profile"
-        element={<AddProfile />}
-      />
+      <Route exact path="/organisation/:id" element={<SigleOrganisaiton />} />
       <Route
         exact
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
+      />
+      <Route
+        exact
+        path="/organisation/:id/add-profile"
+        element={<AddProfile />}
       />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
@@ -128,6 +131,12 @@ const App = () => {
         exact
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
+      />
+
+      <Route
+        exact
+        path="/organisation/:id/department/:departmentId"
+        element={<SingleDepartment />}
       />
     </Routes>
   );
