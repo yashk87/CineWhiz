@@ -11,6 +11,7 @@ import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
+import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
@@ -34,7 +35,9 @@ import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
-import EmployeeList from "./pages/EmployeeList/EmployeeList";
+import SingleDepartment from "./pages/single-department/single-department";
+import SigleOrganisaiton from "./pages/single-orgnisation/single-organisation";
+
 const App = () => {
   // const [user, setUser] = useState("");
 
@@ -82,15 +85,16 @@ const App = () => {
       <Route exact path="/reset-password/:token" element={<ResetPassword />} />
       <Route exact path="/userprofile" element={<UserProfile />} />
 
-      <Route
-        exact
-        path="/organisation/:id/add-profile"
-        element={<AddProfile />}
-      />
+      <Route exact path="/organisation/:id" element={<SigleOrganisaiton />} />
       <Route
         exact
         path="/organisation/:id/add-employee"
         element={<AddEmployee />}
+      />
+      <Route
+        exact
+        path="/organisation/:id/add-profile"
+        element={<AddProfile />}
       />
 
       <Route exact path="/setup/add-roles/:id" element={<AddRoles />} />
@@ -130,6 +134,12 @@ const App = () => {
         element={<TermsAndConditionsPage />}
       />
       <Route exact path="/employee-list" element={<EmployeeList />} />
+
+      <Route
+        exact
+        path="/organisation/:id/department/:departmentId"
+        element={<SingleDepartment />}
+      />
     </Routes>
   );
 };

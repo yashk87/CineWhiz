@@ -31,7 +31,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { UseContext } from "../../../State/UseState/UseContext";
+import { UseContext } from "../../State/UseState/UseContext";
 
 const NavItems = ({ toggleDrawer }) => {
   const [userRole, setUserRole] = useState(null);
@@ -82,7 +82,7 @@ const NavItems = ({ toggleDrawer }) => {
         userRole.includes("Delegate Accoutant") ||
         userRole.includes("Delegate Super Admin") ? (
           <List>
-            <ListItem onClick={(e) => e.stopPropagation()}>
+            <ListItem components={"div"} onClick={(e) => e.stopPropagation()}>
               <Accordion
                 expanded={true}
                 className="w-full !shadow-none border-[#0093d6] "
