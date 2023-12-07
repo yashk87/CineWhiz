@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Setup from "../SetUpOrganization/Setup";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import ReactPaginate from "react-paginate";
+
 const EmployeeList = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
@@ -14,27 +14,58 @@ const EmployeeList = () => {
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchAvailableEmployee = async () => {
+  const [numbers, setNumbers] = useState([]);
+
+  const fetchAvailableEmployee = async (page) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-employee`,
+        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee?page=${page}`,
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-      setAvailableEmployee(response.data.employeeData);
+
+      setAvailableEmployee(response.data.employees);
+      setCurrentPage(page);
+      setTotalPages(response.data.totalPages || 1);
+      // Generate an array of page numbers
+      const numbersArray = Array.from(
+        { length: response.data.totalPages || 1 },
+        (_, index) => index + 1
+      );
+      setNumbers(numbersArray);
     } catch (error) {
       console.log(error);
       handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
+
   useEffect(() => {
-    fetchAvailableEmployee();
-    // eslint-disable-next-line
-  }, []);
+    fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
+  const prePage = () => {
+    if (currentPage !== 1) {
+      fetchAvailableEmployee(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== totalPages) {
+      fetchAvailableEmployee(currentPage + 1);
+    }
+  };
+
+  const changePage = (id) => {
+    fetchAvailableEmployee(id);
+  };
+
   return (
     <>
       <section className="bg-gray-50 min-h-screen w-full">
@@ -125,7 +156,6 @@ const EmployeeList = () => {
                           ))
                       );
                     })
-
                     .map((item, id) => (
                       <tr className="!font-medium border-b" key={id}>
                         <td className="!text-left pl-8 py-3">{id + 1}</td>
@@ -139,7 +169,6 @@ const EmployeeList = () => {
                         </td>
                         <td className="py-3">{item.deptname}</td>
                         <td className="py-3">{item.phone_number}</td>
-
                         <td className="whitespace-nowrap px-6 py-2">
                           <IconButton>
                             <EditIcon className="!text-xl" color="error" />
@@ -149,6 +178,88 @@ const EmployeeList = () => {
                     ))}
                 </tbody>
               </table>
+              <nav
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "30px",
+                  marginBottom: "20px",
+                }}
+              >
+                <ul
+                  style={{ display: "inline-block", marginRight: "5px" }}
+                  className="pagination"
+                >
+                  <li
+                    style={{ display: "inline-block", marginRight: "5px" }}
+                    className="page-item"
+                  >
+                    <button
+                      style={{
+                        color: "#007bff",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      className="page-link"
+                      onClick={prePage}
+                    >
+                      Prev
+                    </button>
+                  </li>
+                  {/* Map through page numbers and generate pagination */}
+                  {numbers.map((n, i) => (
+                    <li
+                      key={i}
+                      className={`page-item ${
+                        currentPage === n ? "active" : ""
+                      }`}
+                      style={{
+                        display: "inline-block",
+                        marginRight: "5px",
+                      }}
+                    >
+                      <a
+                        href={`#${n}`}
+                        style={{
+                          color: currentPage === n ? "#fff" : "#007bff",
+                          backgroundColor:
+                            currentPage === n ? "#007bff" : "transparent",
+                          padding: "8px 12px",
+                          border: "1px solid #007bff",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                          transition: "all 0.3s ease",
+                        }}
+                        className="page-link"
+                        onClick={() => changePage(n)}
+                      >
+                        {n}
+                      </a>
+                    </li>
+                  ))}
+                  <li style={{ display: "inline-block" }} className="page-item">
+                    <button
+                      style={{
+                        color: "#007bff",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      className="page-link"
+                      onClick={nextPage}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </article>
         </Setup>
