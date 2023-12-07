@@ -11,7 +11,8 @@ import TextCycler from "../Home/components/cyclic-text";
 const OrgList = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-  const { data } = useQuery(["orgData"], async () => {
+
+  const { data, isLoading } = useQuery(["orgData"], async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/route/organization/get`,
       {
@@ -72,19 +73,21 @@ const OrgList = () => {
         List of Organization
       </Typography>
 
-      <Carousel
-        swipeable={false}
-        draggable={false}
-        customRightArrow={<CustomRightArrow />}
-        customLeftArrow={<CustomLeftArrow />}
-        responsive={dotsresponsive}
-      >
-        {data?.organizations.map((item, index) => (
-          <div className="h-max py-4" key={index}>
-            <Organisation item={item} />
-          </div>
-        ))}
-      </Carousel>
+      {!isLoading && (
+        <Carousel
+          swipeable={false}
+          draggable={false}
+          customRightArrow={<CustomRightArrow />}
+          customLeftArrow={<CustomLeftArrow />}
+          responsive={dotsresponsive}
+        >
+          {data?.organizations?.map((item, index) => (
+            <div className="h-max py-4" key={index}>
+              <Organisation item={item} />
+            </div>
+          ))}
+        </Carousel>
+      )}
     </div>
   );
 };

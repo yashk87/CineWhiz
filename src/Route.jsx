@@ -11,6 +11,7 @@ import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
+import EmployeeList from "./pages/EmployeeList/EmployeeList";
 import Home from "./pages/Home/Home";
 import AddProfile from "./pages/Home/components/addprofile";
 import LeaveRequisitiion from "./pages/LeaveRequisition/LeaveRequisition";
@@ -132,6 +133,7 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
+      <Route exact path="/employee-list" element={<EmployeeList />} />
 
       <Route
         exact

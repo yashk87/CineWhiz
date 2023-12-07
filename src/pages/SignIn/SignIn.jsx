@@ -110,11 +110,14 @@ const SignIn = () => {
           </div>
         </form>
         <div className="md:w-1/2 md:flex hidden p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-around">
-          <img
-            src="Argan_new_logo.png"
-            alt="My Img"
-            className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white"
-          />
+          <div className="flex flex-col items-center justify-center gap-2">
+            <img
+              src="aeigs-log-final.svg"
+              alt="My Img"
+              className="w-36 before:bottom-0 h-36 object-cover  rounded-lg p-6 bg-white"
+            />
+            <h1 className="text-white text-2xl mb-6">AEGIS</h1>
+          </div>
           <Link to="/sign-up">
             <Button
               variant="contained"
