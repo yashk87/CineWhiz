@@ -130,7 +130,7 @@ function AddOrganisation() {
     e.preventDefault();
     try {
       const result = await axios.post(
-        `${REACT_APP_API}/route/organization/create`,
+        `${process.env.REACT_APP_API}/route/organization/create`,
         inputdata,
         {
           headers: {
