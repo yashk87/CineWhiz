@@ -255,22 +255,22 @@ const AddEmployee = () => {
         }
       );
 
-      if (response.data && response.data.roles) {
-        if (response.data.roles.length > 0) {
-          const filteredProfiles = response.data.roles.filter((role) => {
-            return role.isActive;
-          });
+      if (response.data && Array.isArray(response.data.roles)) {
+        const filteredProfiles = response.data.roles.filter(
+          (role) => role && role.isActive
+        );
 
-          if (filteredProfiles.length > 0) {
-            setAvailableProfiles(filteredProfiles);
-          } else {
-            handleAlert(
-              true,
-              "error",
-              "No active profiles available. Please add active profiles for your organization."
-            );
-          }
+        if (filteredProfiles.length > 0) {
+          setAvailableProfiles(filteredProfiles);
+        } else {
+          handleAlert(
+            true,
+            "error",
+            "No active profiles available. Please add active profiles for your organization."
+          );
         }
+      } else {
+        handleAlert(true, "error", "Invalid data received from the server");
       }
     } catch (error) {
       console.error(error);
