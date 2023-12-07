@@ -27,7 +27,6 @@ import NavAccordian from "./accordian";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const { cookies } = useContext(UseContext);
-  const [userRoutes, setuserRoutes] = useState(null);
   const token = cookies["aeigs"];
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
@@ -195,12 +194,12 @@ const TestNavItems = ({ toggleDrawer }) => {
       ],
     },
   });
+  console.log(`🚀 ~ file: test-nav-items.jsx:197 ~ setNavItems:`, setNavItems);
 
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(token);
       if (decodedToken && decodedToken.user.profile) {
-        setuserRoutes(decodedToken.user.profile);
       }
     } catch (error) {
       console.error("Failed to decode the token:", error);
@@ -213,15 +212,15 @@ const TestNavItems = ({ toggleDrawer }) => {
         const { icon, routes } = navItems[role];
 
         // Check if on root or organisation page
-        const isOrganisationAndIdNotDefined =
-          role === "Organisation" && (!params || params.params?.id === null);
+        // const isOrganisationAndIdNotDefined =
+        //   role === "Organisation" && (!params || params.params?.id === null);
 
-        // Check if on a specific department page
-        const isDepartmentAndDepartmentIdNotDefined =
-          role === "Department" &&
-          (!params2 ||
-            params2.params?.id === null ||
-            params2.params?.departmentId === null);
+        // // Check if on a specific department page
+        // const isDepartmentAndDepartmentIdNotDefined =
+        //   role === "Department" &&
+        //   (!params2 ||
+        //     params2.params?.id === null ||
+        //     params2.params?.departmentId === null);
 
         // Show Organisation navbar when on organisation page, not on root
         if (role === "Organisation") {
