@@ -8,7 +8,6 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import TermsAndConditionsPage from "./components/termscondition/termsconditonpage";
 import AddEmployee from "./pages/AddEmployee/addemployee";
 import AddOrganisation from "./pages/AddOrganisation/AddOrganisation";
-import AddRole from "./pages/AddRole/AddRole";
 import Application from "./pages/Application/Application";
 import DeleteEmployee from "./pages/DeleteEmployee/DeleteEmployee";
 import Designation from "./pages/Designation/Designation";
@@ -32,7 +31,6 @@ import Shifts from "./pages/SetupPage/Shifts";
 import Inputfield from "./pages/SetupPage/inputfield";
 import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
-import MyCalendar from "./pages/Test/test2";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
 import Department from "./pages/addDepartment/addDepartment";
@@ -49,27 +47,25 @@ const App = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/waiting" element={<WaitMain />} />
       <Route path="/verify/:token/" element={<AnimationComponent />} />
-      <Route path="/add-organisation" element={<AddOrganisation />} />
-
-      <Route path="/add-department" element={<Department />} />
-      <Route path="/del-department" element={<DeleteDepartment />} />
-      <Route path="/del-employee" element={<DeleteEmployee />} />
-      <Route path="/menu" element={<MyCalendar />} />
-      <Route path="/add-role" element={<AddRole />} />
-      <Route path="/add-inputfield/:id" element={<Inputfield />} />
-      <Route path="/set-shifts/:id" element={<Shifts />} />
-      <Route path="/set-designation" element={<Designation />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+      <Route path="/add-organisation" element={<AddOrganisation />} />
+      <Route path="/add-department" element={<Department />} />
+      <Route path="/del-employee" element={<DeleteEmployee />} />
+      <Route path="/set-designation" element={<Designation />} />
       <Route path="/userprofile" element={<UserProfile />} />
 
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
       <Route path="/organisation/:id/add-employee" element={<AddEmployee />} />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
 
+      <Route path="/setup/:id" element={<Setup />} />
       <Route
         path="/setup/add-organization-locations/:id"
         element={<OrganizationLocations />}
       />
+      <Route path="/set-shifts/:id" element={<Shifts />} />
+      <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route path="/setup/leave-types/:id" element={<LeaveTypes />} />
       <Route path="/setup/set-shifts/:id" element={<Shifts />} />
@@ -86,13 +82,12 @@ const App = () => {
         path="/setup/employee-code-genreation/:id"
         element={<EmployeeCodeGenerator />}
       />
+      <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
       <Route path="/setup/email-setting" element={<EmailSetting />} />
 
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
-      <Route path="/setup/:id" element={<Setup />} />
       <Route path="/leave" element={<LeaveRequisition />} />
-      <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
       <Route
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
@@ -102,6 +97,11 @@ const App = () => {
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}
+      />
+      {/* Removable component */}
+      <Route
+        path="/del-department-by-location"
+        element={<DeleteDepartment />}
       />
     </Routes>
   );
