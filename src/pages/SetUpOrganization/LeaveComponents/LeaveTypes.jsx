@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
+import { useParams } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import CreteLeaveTypeModal from "../../../components/Modal/LeaveTypeModal/create-leve-type-modal";
 import Setup from "../Setup";
@@ -14,6 +15,7 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   const authToken = cookies["aeigs"];
   const [confirmOpen, setConfirmOpen] = useState(false);
   const queryClient = useQueryClient();
+  const params = useParams();
 
   const { data, isLoading } = useQuery(
     "leaveTypes",
@@ -24,8 +26,9 @@ const LeaveTypes = ({ open, handleClose, id }) => {
           Authorization: authToken,
         },
       };
-      const response = await axios.get(
+      const response = await axios.post(
         `${process.env.REACT_APP_API}/route/leave-types-details/get`,
+        { organisationId: params.id },
         config
       );
       return response.data.data;
@@ -44,6 +47,10 @@ const LeaveTypes = ({ open, handleClose, id }) => {
     setConfirmOpen(true);
   };
 
+  console.log(
+    `🚀 ~ file: LeaveTypes.jsx:113 ~ data?.length > 0:`,
+    data?.length === 0
+  );
   return (
     <section className="bg-gray-50 min-h-screen w-full">
       <Setup>
@@ -106,6 +113,13 @@ const LeaveTypes = ({ open, handleClose, id }) => {
               )}
             </tbody>
           </table>
+          {data?.length === 0 ? (
+            <p className="w-full m-auto font-bold text-center">
+              No leave types available create one.
+            </p>
+          ) : (
+            ""
+          )}
         </div>
       </Setup>
       <CreteLeaveTypeModal
