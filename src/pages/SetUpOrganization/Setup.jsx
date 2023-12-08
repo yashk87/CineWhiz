@@ -1,4 +1,3 @@
-import React, { useContext, useState, useEffect } from "react";
 import {
   AddLocationAltOutlined,
   BeachAccessOutlined,
@@ -10,9 +9,10 @@ import {
   West,
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import { jwtDecode } from "jwt-decode";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import { jwtDecode } from "jwt-decode";
 const Setup = ({ children }) => {
   const location = useLocation();
   const { id } = useParams("");
@@ -47,8 +47,8 @@ const Setup = ({ children }) => {
     {
       label: "Leave Types",
       icon: BeachAccessOutlined,
-      href: `/setup/leave-types/${id}`,
-      active: location.pathname === `/setup/leave-types/${id}`,
+      href: `/organisation/${id}/setup/leave-types`,
+      active: location.pathname === `/organisation/${id}/setup/leave-types`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 

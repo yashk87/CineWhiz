@@ -32,10 +32,6 @@ const TestNavItems = ({ toggleDrawer }) => {
   const params2 = useMatch("/organisation/:id/department/:departmentId");
   const params3 = useLocation();
 
-  console.log(
-    `🚀 ~ file: test-nav-items.jsx:34 ~ params3:`,
-    params3.pathname.includes("organisation")
-  );
   const [navItems, setNavItems] = useState({
     "Self Help": {
       open: true,

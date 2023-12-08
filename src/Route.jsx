@@ -48,7 +48,6 @@ const App = () => {
       <Route path="/waiting" element={<WaitMain />} />
       <Route path="/verify/:token/" element={<AnimationComponent />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
-
       <Route path="/add-organisation" element={<AddOrganisation />} />
       <Route path="/add-department" element={<Department />} />
       <Route path="/del-employee" element={<DeleteEmployee />} />
