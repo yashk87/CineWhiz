@@ -108,14 +108,14 @@ const AddRoles = () => {
     // Update the state with the transformed roles
     if (data) {
       const transformedRoles = data.roles.map((role) => ({
-        placeholder: role.roleName, // Adjust this mapping based on your actual data
-        label: role.roleName, // Assuming label is also derived from roleName
-        isApprover: role.isApprover,
-        isActive: role.isActive,
+        placeholder: role?.roleName, // Adjust this mapping based on your actual data
+        label: role?.roleName, // Assuming label is also derived from roleName
+        isApprover: role?.isApprover,
+        isActive: role?.isActive,
       }));
       setRoles(transformedRoles);
     }
-  }, [data]);
+  }, [data?.roles]);
 
   const [roles, setRoles] = useState(initialRoles);
 
