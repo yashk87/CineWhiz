@@ -48,7 +48,7 @@ const Designation = () => {
     setCounter(1);
     setEnterDesignationId(false);
 
-    axios.get(`http://localhost:4000/route/designation/create/${id}`)
+    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
       .then((response) => {
         setTrackedId(id)
         setDesignationName(response.data.designation.designationName);
@@ -73,7 +73,7 @@ const Designation = () => {
     setEnterDesignationId(false);
     setTrackedId(id)
 
-    axios.get(`http://localhost:4000/route/designation/create/${id}`)
+    axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
       .then((response) => {
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
@@ -100,7 +100,7 @@ const Designation = () => {
     } else {
       generateDesignationIds();
 
-      axios.post("http://localhost:4000/route/designation/create", data)
+      axios.post(`${process.env.REACT_APP_API}/route/designation/create`, data)
         .then((response) => {
           console.log("Designation added successfully:", response.data);
           fetchDesignations();
@@ -121,7 +121,7 @@ const Designation = () => {
       designationName,
       designationId
     };
-    axios.patch(`http://localhost:4000/route/designation/create/${trackedId}`, patchData)
+    axios.patch(`${process.env.REACT_APP_API}/route/designation/create/${trackedId}`, patchData)
       .then((response) => {
         console.log("Designation updated successfully:", response.data);
         fetchDesignations();
@@ -174,7 +174,7 @@ const Designation = () => {
 
   const handleConfirmDelete = () => {
     if (designationToDelete) {
-      axios.delete(`http://localhost:4000/route/designation/create/${designationToDelete}`)
+      axios.delete(`${process.env.REACT_APP_API}/route/designation/create/${designationToDelete}`)
         .then(() => {
           console.log("Designation deleted successfully");
           fetchDesignations();
@@ -195,7 +195,7 @@ const Designation = () => {
   };
 
   const fetchDesignations = () => {
-    axios.get("http://localhost:4000/route/designation/create")
+    axios.get(`${process.env.REACT_APP_API}/route/designation/create`)
       .then((response) => {
         setDesignation(response.data.designations);
       })

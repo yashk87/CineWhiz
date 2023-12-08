@@ -74,10 +74,10 @@ const AddOrganisation = () => {
                 setEmailError(true);
                 if (e.target.value === "") {
                     setEmailError(false)
-                    setEmailLabel("Organisation Email")
+                    setEmailLabel("Organization Email")
                 }
             } else {
-                setEmailLabel("Organisation Email");
+                setEmailLabel("Organization Email");
                 setEmailError(false);
             }
         }
@@ -86,7 +86,7 @@ const AddOrganisation = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await axios.post("http://localhost:4000/route/organization/create", inputdata);
+            const result = await axios.post(`${process.env.REACT_APP_API}/route/organization/create`, inputdata);
             console.log(result);
 
             handleAlert(true, "success", "Organization created successfully");
