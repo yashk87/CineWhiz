@@ -173,7 +173,6 @@ const AddProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const user = {
         first_name,
@@ -190,32 +189,64 @@ const AddProfile = () => {
         organizationId: id,
         creatorId: userId,
       };
-      console.log(user);
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/employee/create-profile`,
-        user,
+      // Check if the selected profile exists
+      const checkProfileResponse = await axios.post(
+        `${process.env.REACT_APP_API}/route/employee/check-profile-exists`,
+        { profile },
         {
           headers: {
             Authorization: authToken,
           },
         }
       );
-      console.log(response.data.employeesWithProfiles);
-      if (response.data.employeesWithProfiles > 0) {
+
+      if (
+        checkProfileResponse.status === 200 &&
+        checkProfileResponse.data.profileExist
+      ) {
         const createProfileConfirmation = window.confirm(
-          "Employees with similar profiles exist. Do you want to create another profile?"
+          `${profile} profile already exists. Do you want to create it again?`
         );
 
-        if (!createProfileConfirmation) {
-          return; // User canceled profile creation
-        }
-      }
+        if (createProfileConfirmation) {
+          // Proceed with profile creation
+          const response = await axios.post(
+            `${process.env.REACT_APP_API}/route/employee/create-profile`,
+            user,
+            {
+              headers: {
+                Authorization: authToken,
+              },
+            }
+          );
 
-      if (response.data.success) {
-        handleAlert(true, "error", "Invalid authorization");
+          if (response.status === 201) {
+            handleAlert(true, "success", response.data.message);
+          } else {
+            handleAlert(true, "error", "Profile creation failed.");
+          }
+        } else {
+          // User declined creating the profile again
+          handleAlert(true, "info", "Profile creation canceled.");
+        }
       } else {
-        handleAlert(true, "success", response.data.message);
+        // Profile does not exist, proceed with creation
+        const response = await axios.post(
+          `${process.env.REACT_APP_API}/route/employee/create-profile`,
+          user,
+          {
+            headers: {
+              Authorization: authToken,
+            },
+          }
+        );
+
+        if (response.status === 201) {
+          handleAlert(true, "success", response.data.message);
+        } else {
+          handleAlert(true, "error", "Profile creation failed.");
+        }
       }
     } catch (error) {
       handleAlert(
