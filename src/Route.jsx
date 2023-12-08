@@ -52,7 +52,6 @@ const App = () => {
       <Route path="/add-organisation" element={<AddOrganisation />} />
       <Route path="/add-department" element={<Department />} />
       <Route path="/del-employee" element={<DeleteEmployee />} />
-      <Route path="/set-designation" element={<Designation />} />
       <Route path="/userprofile" element={<UserProfile />} />
 
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
@@ -64,10 +63,14 @@ const App = () => {
         path="/setup/add-organization-locations/:id"
         element={<OrganizationLocations />}
       />
+      <Route path="/set-designation" element={<Designation />} />
       <Route path="/set-shifts/:id" element={<Shifts />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route path="/setup/add-roles/:id" element={<AddRoles />} />
-      <Route path="/setup/leave-types/:id" element={<LeaveTypes />} />
+      <Route
+        path="/organisation/:organisationId/setup/leave-types"
+        element={<LeaveTypes />}
+      />
       <Route path="/setup/set-shifts/:id" element={<Shifts />} />
       <Route
         path="/setup/employement-types/:id"
