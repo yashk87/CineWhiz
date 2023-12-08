@@ -58,10 +58,10 @@ const Organisation = ({ item }) => {
         }
       );
       console.log(response);
-      handleAlert(true, "success", "Employees deleted successfully");
+      handleAlert(true, "success", "Organization deleted successfully");
     } catch (error) {
       console.log(error);
-      handleAlert(true, "error", "Failed to delete employees");
+      handleAlert(true, "error", "Failed to delete Organization    ");
     } finally {
       handleCloseConfirmation();
       setAnchorEl(null);
