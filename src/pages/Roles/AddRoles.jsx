@@ -106,7 +106,7 @@ const AddRoles = () => {
 
   useEffect(() => {
     // Update the state with the transformed roles
-    if (data) {
+    if (data?.roles) {
       const transformedRoles = data.roles.map((role) => ({
         placeholder: role?.roleName, // Adjust this mapping based on your actual data
         label: role?.roleName, // Assuming label is also derived from roleName
