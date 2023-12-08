@@ -1,12 +1,6 @@
 import { IconButton, TextField } from "@mui/material";
 import axios from "axios";
-import {
-  BorderColor,
-  Delete,
-  MoreHoriz,
-  PriceChangeOutlined,
-  Warning,
-} from "@mui/icons-material";
+import { BorderColor } from "@mui/icons-material";
 import React, { useContext, useEffect, useState } from "react";
 import Setup from "../SetUpOrganization/Setup";
 import { TestContext } from "../../State/Function/Main";

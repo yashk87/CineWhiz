@@ -1,4 +1,3 @@
-import CloseIcon from "@mui/icons-material/Close";
 import { Box, Modal } from "@mui/material";
 import React from "react";
 const style = {
