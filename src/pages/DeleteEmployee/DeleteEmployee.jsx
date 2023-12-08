@@ -12,33 +12,36 @@ import {
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 import Setup from "../SetUpOrganization/Setup";
 import { Menu, MenuItem } from "@mui/material";
 import * as XLSX from "xlsx";
+import { GetApp, Publish } from "@mui/icons-material";
 
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
-  const { cookies } = useContext(UseContext);
+  const { setAppAlert, cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
   const [nameSearch, setNameSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [numbers, setNumbers] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [deleteMultiEmpConfirmation, setDeleteMultiEmpConfirmation] =
     useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
-  const [excelDataToDelete, setExcelDataToDelete] = useState(null);
-  const fetchAvailableEmployee = async () => {
+  const [showConfirmationExcel, setShowConfirmationExcel] = useState(false);
+
+  const fetchAvailableEmployee = async (page) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employee/get-employee`,
+        `${process.env.REACT_APP_API}/route/employee/get-paginated-emloyee?page=${page}`,
         {
           headers: {
             Authorization: authToken,
@@ -46,16 +49,41 @@ const DeleteEmployee = () => {
         }
       );
 
-      setAvailableEmployee(response.data.employeeData);
+      setAvailableEmployee(response.data.employees);
+      setCurrentPage(page);
+      setTotalPages(response.data.totalPages || 1);
+      // Generate an array of page numbers
+      const numbersArray = Array.from(
+        { length: response.data.totalPages || 1 },
+        (_, index) => index + 1
+      );
+      setNumbers(numbersArray);
     } catch (error) {
-      console.error(error);
-      handleAlert(true, "error", "Failed to fetch Available Employee");
+      console.log(error);
+      handleAlert(true, "error", "Failed to Fetch Employee");
     }
   };
+
   useEffect(() => {
-    fetchAvailableEmployee();
-    // eslint-disable-next-line
-  }, []);
+    fetchAvailableEmployee(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
+  const prePage = () => {
+    if (currentPage !== 1) {
+      fetchAvailableEmployee(currentPage - 1);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== totalPages) {
+      fetchAvailableEmployee(currentPage + 1);
+    }
+  };
+
+  const changePage = (id) => {
+    fetchAvailableEmployee(id);
+  };
 
   // Delete Query for deleting single Employee
   const handleDeleteConfirmation = (id) => {
@@ -84,19 +112,16 @@ const DeleteEmployee = () => {
       },
     }
   );
+
   // Delete Query for deleting Multiple Employee
   const handleEmployeeSelection = (id) => {
     const selectedIndex = selectedEmployees.indexOf(id);
     let newSelected = [];
-
     if (selectedIndex === -1) {
-      // If the employee is not already selected, add it to the selectedEmployees array
       newSelected = [...selectedEmployees, id];
     } else {
-      // If the employee is already selected, remove it from the selectedEmployees array
       newSelected = selectedEmployees.filter((employeeId) => employeeId !== id);
     }
-
     setSelectedEmployees(newSelected);
   };
 
@@ -114,25 +139,21 @@ const DeleteEmployee = () => {
   // Handle confirmation of deleting multiple employees
   const confirmDeleteMultiple = async () => {
     try {
-      // Make a request to delete multiple employees using selectedEmployee array
       const response = await axios.delete(
         `${process.env.REACT_APP_API}/route/employee/delete-multiple`,
         {
           headers: {
             Authorization: authToken,
           },
-          data: { ids: selectedEmployees }, // Send selected employee IDs to delete
+          data: { ids: selectedEmployees },
         }
       );
       console.log(response);
-      // Handle success message or any further action upon successful deletion
       queryClient.invalidateQueries("employee");
       handleAlert(true, "success", "Employees deleted successfully");
     } catch (error) {
-      console.error(error);
       handleAlert(true, "error", "Failed to delete employees");
     } finally {
-      // Close the confirmation dialog
       setDeleteMultiEmpConfirmation(false);
     }
   };
@@ -142,6 +163,7 @@ const DeleteEmployee = () => {
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   // generate excel sheet
   const generateExcel = () => {
     try {
@@ -179,64 +201,127 @@ const DeleteEmployee = () => {
         { wch: 35 }, // Profile
       ];
       ws["!cols"] = columnWidths;
-      XLSX.utils.book_append_sheet(wb, ws, "Employees");
+      XLSX.utils.book_append_sheet(wb, ws, "EmployeeSheet");
       // Save workbook to a file
-      XLSX.writeFile(wb, "employee_data.xlsx");
+      XLSX.writeFile(wb, "EmployeeDataTemplate.xlsx");
     } catch (error) {
       console.error("Error generating Excel:", error);
     }
   };
-  // Function to read Excel file data
-  const readExcelFile = (file) => {
-    const fileReader = new FileReader();
-    fileReader.onload = (event) => {
-      const data = event.target.result;
-      const workbook = XLSX.read(data, { type: "binary" });
-      const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
-      const worksheet = workbook.Sheets[sheetName];
-      const excelData = XLSX.utils.sheet_to_json(worksheet);
-      console.log("Excel Data:", excelData); // Do something with the read data
-      setExcelDataToDelete(excelData);
-    };
-    fileReader.readAsBinaryString(file);
-  };
-  // Function to handle file upload
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    console.log(file);
-    readExcelFile(file);
-  };
-  // Function to handle delete button click
-  const handleDeleteExcelData = () => {
-    if (excelDataToDelete) {
-      setConfirmDeleteDialog(true);
-    }
-  };
-  console.log(excelDataToDelete);
-  const handleConfirmDeleteExcelData = async () => {
+  // delete query for deleting multiple employee from excel
+  const handleDeleteFromExcel = async () => {
     try {
-      // Assuming each item in `excelDataToDelete` contains an `_id` field
-      const idsToDelete = excelDataToDelete.map((item) => item._id);
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+      if (!file) {
+        console.error("Please upload an Excel file.");
+        setAppAlert({
+          alert: true,
+          type: "error",
+          msg: "Please upload an Excel file.",
+        });
+        return;
+      }
 
-      // Make an API call to delete the employees with the collected IDs
-      const response = await axios.delete(
-        `${process.env.REACT_APP_API}/route/employee/delete-multiple`,
-        {
-          headers: {
-            Authorization: authToken,
-          },
-          data: { ids: idsToDelete },
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const ws = workbook.Sheets["EmployeeSheet"];
+          const deleteColumnIndex = XLSX.utils.decode_range(ws["!ref"]).e.c;
+
+          if (deleteColumnIndex === undefined) {
+            setAppAlert({
+              alert: true,
+              type: "error",
+              msg: "Delete column not found in the Excel sheet.",
+            });
+            return;
+          }
+
+          const employeesToDelete = [];
+          for (
+            let row = 1;
+            row <= XLSX.utils.decode_range(ws["!ref"]).e.r;
+            row++
+          ) {
+            const deleteCommand =
+              ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
+            if (
+              deleteCommand &&
+              deleteCommand.v &&
+              deleteCommand.v.toLowerCase() === "delete"
+            ) {
+              const employeeIdToDelete =
+                ws[XLSX.utils.encode_cell({ r: row, c: 0 })].v;
+
+              const employeeToDelete = availableEmployee.find(
+                (emp) => emp._id === employeeIdToDelete
+              );
+              if (employeeToDelete) {
+                employeesToDelete.push(employeeToDelete);
+              }
+            }
+          }
+
+          if (employeesToDelete.length === 0) {
+            setAppAlert({
+              alert: true,
+              type: "error",
+              msg: "Failed to delete employee from Excel. Please try again.",
+            });
+            setShowConfirmationExcel(false);
+            return;
+          }
+
+          for (const employee of employeesToDelete) {
+            try {
+              await axios.delete(
+                `${process.env.REACT_APP_API}/route/employee/delete/${employee._id}`,
+                { headers: { Authorization: authToken } }
+              );
+
+              setAvailableEmployee((prevEmployees) =>
+                prevEmployees.filter((emp) => emp._id !== employee._id)
+              );
+
+              setAppAlert({
+                alert: true,
+                type: "success",
+                msg: "Employee deleted from the Excel sheet!",
+              });
+            } catch (error) {
+              console.error("Error deleting employee:", error);
+              setAppAlert({
+                alert: true,
+                type: "error",
+                msg: "Failed to delete employee from Excel. Please try again.",
+              });
+            }
+          }
+
+          setShowConfirmationExcel(false);
+        } catch (error) {
+          console.error("Error processing Excel data:", error);
+          setAppAlert({
+            alert: true,
+            type: "error",
+            msg: "Error processing Excel data.",
+          });
+          setShowConfirmationExcel(false);
         }
-      );
+      };
 
-      // If deletion is successful, log the response and reset the state
-      console.log("Deleted Employees:", response);
-      setConfirmDeleteDialog(false);
-      setExcelDataToDelete(null);
-      handleAlert(true, "success", "Employees deleted successfully");
+      reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error("Error deleting employees:", error);
-      handleAlert(true, "error", "Failed to delete employees");
+      console.error("Error handling Excel delete:", error);
+      setAppAlert({
+        alert: true,
+        type: "error",
+        msg: "Error handling Excel delete.",
+      });
+      setShowConfirmationExcel(false);
     }
   };
 
@@ -274,24 +359,45 @@ const DeleteEmployee = () => {
                 />
               </div>
               <div>
-                <IconButton onClick={handleMenuClick}>
-                  <DeleteForeverIcon />
-                </IconButton>
+                <Button
+                  className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                  variant="contained"
+                  onClick={handleMenuClick}
+                >
+                  Bulk Delete
+                </Button>
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={generateExcel}>Generate Excel </MenuItem>
-                  <MenuItem>
-                    {" "}
-                    <input
-                      type="file"
-                      accept=".xlsx, .xls"
-                      onChange={handleFileUpload}
-                    />
+                  <MenuItem onClick={generateExcel}>
+                    <GetApp style={{ color: "blue", marginRight: "20px" }} />{" "}
+                    Generate Excel
                   </MenuItem>
-                  <MenuItem onClick={handleDeleteExcelData}>Delete</MenuItem>
+                  <MenuItem>
+                    <label
+                      htmlFor="fileInput"
+                      className="flex items-center gap-2"
+                    >
+                      <Publish
+                        style={{ color: "green", marginRight: "15px" }}
+                      />
+                      <span>Choose File</span>
+                      <input
+                        type="file"
+                        accept=".xlsx, .xls"
+                        id="fileInput"
+                        className="w-full rounded opacity-0 absolute inset-0"
+                        style={{ zIndex: -1 }}
+                      />
+                    </label>
+                  </MenuItem>
+
+                  <MenuItem onClick={() => setShowConfirmationExcel(true)}>
+                    <Delete style={{ color: "red", marginRight: "25px" }} />
+                    <span>Delete</span>
+                  </MenuItem>
                 </Menu>
               </div>
 
@@ -391,6 +497,88 @@ const DeleteEmployee = () => {
                     ))}
                 </tbody>
               </table>
+              <nav
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "30px",
+                  marginBottom: "20px",
+                }}
+              >
+                <ul
+                  style={{ display: "inline-block", marginRight: "5px" }}
+                  className="pagination"
+                >
+                  <li
+                    style={{ display: "inline-block", marginRight: "5px" }}
+                    className="page-item"
+                  >
+                    <button
+                      style={{
+                        color: "#007bff",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      className="page-link"
+                      onClick={prePage}
+                    >
+                      Prev
+                    </button>
+                  </li>
+                  {/* Map through page numbers and generate pagination */}
+                  {numbers.map((n, i) => (
+                    <li
+                      key={i}
+                      className={`page-item ${
+                        currentPage === n ? "active" : ""
+                      }`}
+                      style={{
+                        display: "inline-block",
+                        marginRight: "5px",
+                      }}
+                    >
+                      <a
+                        href={`#${n}`}
+                        style={{
+                          color: currentPage === n ? "#fff" : "#007bff",
+                          backgroundColor:
+                            currentPage === n ? "#007bff" : "transparent",
+                          padding: "8px 12px",
+                          border: "1px solid #007bff",
+                          textDecoration: "none",
+                          borderRadius: "4px",
+                          transition: "all 0.3s ease",
+                        }}
+                        className="page-link"
+                        onClick={() => changePage(n)}
+                      >
+                        {n}
+                      </a>
+                    </li>
+                  ))}
+                  <li style={{ display: "inline-block" }} className="page-item">
+                    <button
+                      style={{
+                        color: "#007bff",
+                        padding: "8px 12px",
+                        border: "1px solid #007bff",
+                        textDecoration: "none",
+                        borderRadius: "4px",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                      }}
+                      className="page-link"
+                      onClick={nextPage}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </article>
         </Setup>
@@ -401,12 +589,13 @@ const DeleteEmployee = () => {
         onClose={handleCloseConfirmation}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete this Employee?
+          <Warning color="error" /> “All information of employee will be
+          deleted. Are you sure you want to delete it?”
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the Employee after deleting Employee it will
-            not retrived.
+            Please confirm your decision to delete this employee, as this action
+            cannot be retrived
           </p>
         </DialogContent>
         <DialogActions>
@@ -435,12 +624,13 @@ const DeleteEmployee = () => {
         onClose={() => setDeleteMultiEmpConfirmation(false)}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete selected employees?
+          <Warning color="error" /> “All information of employees will be
+          deleted. Are you sure you want to delete it?”
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the selected employees, and they cannot be
-            retrieved.
+            Please confirm your decision to delete this selected employee, as
+            this action cannot be retrived
           </p>
         </DialogContent>
         <DialogActions>
@@ -465,21 +655,22 @@ const DeleteEmployee = () => {
 
       {/* This Dialogue for delting Multiple Employe from excel sheet*/}
       <Dialog
-        open={confirmDeleteDialog}
-        onClose={() => setConfirmDeleteDialog(false)}
+        open={showConfirmationExcel}
+        onClose={() => setShowConfirmationExcel(false)}
       >
         <DialogTitle color={"error"}>
-          <Warning color="error" /> Are you sure to delete employee from excel
-          sheet?
+          <Warning color="error" /> “All information of employees will be
+          deleted. Are you sure you want to delete it?”
         </DialogTitle>
         <DialogContent>
           <p>
-            This action will delete the employees, and they cannot be retrieved.
+            Please confirm your decision to delete this employee, as this action
+            cannot be retrived
           </p>
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => setConfirmDeleteDialog(false)}
+            onClick={() => setShowConfirmationExcel(false)}
             variant="outlined"
             color="primary"
             size="small"
@@ -489,7 +680,7 @@ const DeleteEmployee = () => {
           <Button
             variant="contained"
             size="small"
-            onClick={handleConfirmDeleteExcelData}
+            onClick={handleDeleteFromExcel}
             color="error"
           >
             Delete

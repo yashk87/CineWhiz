@@ -62,8 +62,12 @@ const DepartmentDeletion = () => {
         headers: { Authorization: authToken },
       });
 
-      const location = response.data.find((obj) => obj.shortName === event.target.value);
-      const singleDept = departments.filter((dept) => dept.departmentLocation === location._id);
+      const location = response.data.find(
+        (obj) => obj.shortName === event.target.value
+      );
+      const singleDept = departments.filter(
+        (dept) => dept.departmentLocation === location._id
+      );
       setFilteredDepartments(singleDept);
     } catch (error) {
       console.error("Error fetching location data:", error);
@@ -165,27 +169,39 @@ const DepartmentDeletion = () => {
 
           const departmentsToDelete = [];
 
-          for (let row = 1; row <= XLSX.utils.decode_range(ws["!ref"]).e.r; row++) {
-            const deleteCommand = ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
+          for (
+            let row = 1;
+            row <= XLSX.utils.decode_range(ws["!ref"]).e.r;
+            row++
+          ) {
+            const deleteCommand =
+              ws[XLSX.utils.encode_cell({ r: row, c: deleteColumnIndex })];
 
-            if (deleteCommand && deleteCommand.v && deleteCommand.v.toLowerCase() === "delete") {
-              const departmentIdToDelete = ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v;
-              const departmentToDelete = departments.find((dept) => dept._id === departmentIdToDelete);
+            if (
+              deleteCommand &&
+              deleteCommand.v &&
+              deleteCommand.v.toLowerCase() === "delete"
+            ) {
+              const departmentIdToDelete =
+                ws[XLSX.utils.encode_cell({ r: row, c: 1 })].v;
+              const departmentToDelete = departments.find(
+                (dept) => dept._id === departmentIdToDelete
+              );
 
               if (departmentToDelete) {
                 departmentsToDelete.push(departmentToDelete);
               }
             }
           }
-          if(departmentsToDelete.length === 0){
+          if (departmentsToDelete.length === 0) {
             setAppAlert({
               alert: true,
               type: "error",
               msg: "Failed to delete department from Excel. Please try again.",
-            })
-            setShowConfirmationExcel(false)
-            setSelectedLocation("")
-            return
+            });
+            setShowConfirmationExcel(false);
+            setSelectedLocation("");
+            return;
           }
 
           for (const department of departmentsToDelete) {
@@ -365,10 +381,7 @@ const DepartmentDeletion = () => {
       </div>
 
       {/* Confirmation Dialog */}
-      <Dialog
-        open={showConfirmation}
-        onClose={() => handleConfirmation(false)}
-      >
+      <Dialog open={showConfirmation} onClose={() => handleConfirmation(false)}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <Typography>
@@ -384,7 +397,10 @@ const DepartmentDeletion = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={showConfirmationExcel} onClose={() => handleConfirmation(false)}>
+      <Dialog
+        open={showConfirmationExcel}
+        onClose={() => handleConfirmation(false)}
+      >
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <Typography>
@@ -392,7 +408,10 @@ const DepartmentDeletion = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowConfirmationExcel(false)} color="primary">
+          <Button
+            onClick={() => setShowConfirmationExcel(false)}
+            color="primary"
+          >
             Cancel
           </Button>
           <Button onClick={handleDeleteFromExcel} color="primary">

@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import TermsCondition from "../../components/termscondition/termsCondition";
@@ -13,78 +13,86 @@ const Signup = () => {
   const {
     firstName,
     setFirstName,
-    middalName,
-    setMiddalName,
     lastName,
     setLastName,
     email,
     setEmail,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    passwordMatchError,
-    setPasswordMatchError,
     firstNameError,
     setFirstNameError,
     lastNameError,
     setLastNameError,
-    passwordError,
-    setPasswordError,
     emailError,
     setEmailError,
     orgnizationName,
     setOrganizationName,
   } = useSignupFormStore();
 
+  const [middleName, setMiddleName] = useState("");
+  const [middleNameError, setMiddleNameError] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const handlePasswordChange = (enteredPassword) => {
+    setPassword(enteredPassword);
+    if (!enteredPassword) {
+      setPasswordError("Password is required");
+    } else if (!enteredPassword.match(passwordRegex)) {
+      setPasswordError(
+        "Password must contain at least one number, one special character, and be at least 8 characters long"
+      );
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const handleConfirmPasswordChange = (enteredConfirmPassword) => {
+    setConfirmPassword(enteredConfirmPassword);
+    if (!enteredConfirmPassword) {
+      setConfirmPasswordError("Confirm Password is required");
+    } else if (enteredConfirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    const validDomain =
+      email.endsWith(".com") || email.endsWith(".net") || email.endsWith(".in");
+    return emailRegex.test(email) && validDomain && email.includes("@");
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
     const user = {
       first_name: firstName,
-      middle_name: middalName,
+      middle_name: middleName,
       last_name: lastName,
       email,
       password,
     };
     try {
-      console.log(process.env.REACT_APP_API);
-
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create`,
         user
       );
-      console.log(`🚀 ~ response:`, response);
-
       handleAlert(true, "success", response.data.message);
-
       // Redirect to a waiting page after successful signup
       router("/waiting"); // Redirect to a waiting page
 
       window.location.reload();
     } catch (error) {
-      console.error("API error:", error.response);
       handleAlert(
         true,
         "error",
         error.response.data.message || "Failed to sign up. Please try again."
       );
     }
-  };
-  const handleConfirmPasswordChange = (e) => {
-    const confirmedPassword = e.target.value;
-    setConfirmPassword(confirmedPassword);
-    if (password !== confirmedPassword) {
-      setPasswordMatchError("Passwords do not match");
-    } else {
-      setPasswordMatchError("");
-    }
-  };
-  const isValidEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    return emailRegex.test(email);
   };
 
   return (
@@ -106,8 +114,9 @@ const Signup = () => {
                 onChange={(e) => {
                   const enteredFirstName = e.target.value;
                   setFirstName(enteredFirstName);
-
-                  if (
+                  if (!enteredFirstName.trim()) {
+                    setFirstNameError("First Name is required");
+                  } else if (
                     enteredFirstName.length < 2 ||
                     enteredFirstName.length > 30 ||
                     /[^a-zA-Z]/.test(enteredFirstName)
@@ -116,7 +125,7 @@ const Signup = () => {
                       "First Name must be between 2 and 30 characters and should only contain letters."
                     );
                   } else {
-                    setFirstNameError("");
+                    setFirstNameError(""); // Clear error message when criteria are met
                   }
                 }}
                 required
@@ -129,13 +138,31 @@ const Signup = () => {
               <TextField
                 size="small"
                 type="text"
-                label="Middal Name"
-                name="middalName"
-                id="middalName"
-                value={middalName}
-                onChange={(e) => setMiddalName(e.target.value)}
+                label="Middle Name"
+                name="middleName"
+                id="middleName"
+                value={middleName}
+                onChange={(e) => {
+                  const enteredMiddleName = e.target.value;
+                  setMiddleName(enteredMiddleName);
+
+                  if (enteredMiddleName.trim() === "") {
+                    // Middle name is empty, no validation required
+                    setMiddleNameError("");
+                  } else if (/[^a-zA-Z]/.test(enteredMiddleName)) {
+                    // Middle name contains characters other than letters
+                    setMiddleNameError(
+                      "Middle Name should only contain letters."
+                    );
+                  } else {
+                    // Valid middle name with only letters
+                    setMiddleNameError("");
+                  }
+                }}
                 fullWidth
                 margin="normal"
+                error={!!middleNameError}
+                helperText={middleNameError}
               />
               <TextField
                 size="small"
@@ -147,16 +174,18 @@ const Signup = () => {
                 onChange={(e) => {
                   const enteredLastName = e.target.value;
                   setLastName(enteredLastName);
-                  if (
+                  if (!enteredLastName.trim()) {
+                    setLastNameError("Last Name is required");
+                  } else if (
                     enteredLastName.length < 2 ||
                     enteredLastName.length > 30 ||
                     /[^a-zA-Z]/.test(enteredLastName)
                   ) {
                     setLastNameError(
-                      "Last Name must be between 2 and 30 characters and should only contain letters"
+                      "Last Name must be between 2 and 30 characters and should only contain letters."
                     );
                   } else {
-                    setLastNameError("");
+                    setLastNameError(""); // Clear error message when criteria are met
                   }
                 }}
                 error={!!lastNameError}
@@ -176,11 +205,12 @@ const Signup = () => {
                 onChange={(e) => {
                   const enteredEmail = e.target.value;
                   setEmail(enteredEmail);
-
-                  if (!isValidEmail(enteredEmail)) {
-                    setEmailError("Invalid email format");
+                  if (!enteredEmail.trim()) {
+                    setEmailError("Email is required");
+                  } else if (!isValidEmail(enteredEmail)) {
+                    setEmailError("Invalid Email Format");
                   } else {
-                    setEmailError("");
+                    setEmailError(""); // Clear error message when criteria are met
                   }
                 }}
                 required
@@ -197,16 +227,7 @@ const Signup = () => {
                 name="password"
                 id="password"
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (!e.target.value.match(passwordRegex)) {
-                    setPasswordError(
-                      "Password must contain at least one number , special character.and and min length is 8"
-                    );
-                  } else {
-                    setPasswordError("");
-                  }
-                }}
+                onChange={(e) => handlePasswordChange(e.target.value)}
                 required
                 fullWidth
                 margin="normal"
@@ -218,7 +239,6 @@ const Signup = () => {
                   },
                 }}
               />
-
               <TextField
                 size="small"
                 type="password"
@@ -226,17 +246,18 @@ const Signup = () => {
                 name="confirmPassword"
                 id="confirmPassword"
                 value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
+                onChange={(e) => handleConfirmPasswordChange(e.target.value)}
                 required
                 fullWidth
-                helperText={passwordMatchError}
-                error={Boolean(passwordMatchError)}
                 margin="normal"
+                error={!!confirmPasswordError}
+                helperText={confirmPasswordError}
               />
+
               <TextField
                 size="small"
-                type="password"
-                label="Organization Namw"
+                type="text"
+                label="Organization Name"
                 name="orgnizationName"
                 id="orgnizationName"
                 value={orgnizationName}
@@ -265,11 +286,14 @@ const Signup = () => {
           </form>
         </div>
         <div className="w-full md:w-1/2 p-8 bg-blue-500 rounded-r-lg items-center flex-col justify-center hidden md:flex ">
-          <img
-            src="/argan_logo.png"
-            alt="My Img"
-            className="w-36 h-36 object-cover mb-6 rounded-lg p-6 bg-white m-24"
-          />
+          <div className="flex flex-col items-center justify-center gap-2">
+            <img
+              src="aeigs-log-final.svg"
+              alt="My Img"
+              className="w-36 before:bottom-0 h-36 object-cover  rounded-lg p-6 bg-white"
+            />
+            <h1 className="text-white text-2xl mb-6">AEGIS</h1>
+          </div>
           <Link to="/sign-in">
             <Button
               variant="contained"

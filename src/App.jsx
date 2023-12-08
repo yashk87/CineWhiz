@@ -2,12 +2,10 @@ import Route from "./Route";
 import TestState from "./State/Function/Main";
 import UseEffectState from "./State/UseEffect/UseEffectContext";
 import UseState from "./State/UseState/UseContext";
-import SwipeableTemporaryDrawer from "./components/app-layout/components/swipable-drawer";
+import SwipeableTemporaryDrawer from "./components/app-layout/swipable-drawer";
 import AppAlert from "./utils/AppAlert/AppAlert";
 import AppLoader from "./utils/AppLoader/AppLoader";
 import TopLoadingBar from "./utils/TopLoadingBar/TopLoadingBar";
-
-// mulitple screen size xs,sm,md,lg,xl
 
 function App() {
   return (

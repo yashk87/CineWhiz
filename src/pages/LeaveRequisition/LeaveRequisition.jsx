@@ -107,7 +107,7 @@ const LeaveRequisition = () => {
 
   return (
     <>
-      <section className="min-h-screen">
+      <section className="">
         <header className="text-xl pt-6 bg-gray-50 shadow-md font-semibold p-4">
           <Link to={"/"}>
             <WestIcon className="mx-4 !text-xl" />
@@ -214,7 +214,29 @@ const LeaveRequisition = () => {
                 </form>
               </>
             ) : (
-              "Select Leaves"
+              <>
+                <div className="w-full h-max grid justify-center relative gap-4 !mt-4 space-y-2 bg-white py-3 px-8 shadow-lg rounded-lg">
+                  <img
+                    src="leave-reaquesation.gif"
+                    alt="description of your GIF"
+                    className="mt-2"
+                    width="700"
+                    height="700"
+                  ></img>
+                  <Button
+                    disabled={isLoading}
+                    onClick={() => setCalendarOpen(true)}
+                    variant="text"
+                    size="large"
+                    className="text-center !italic w-fit !m-auto"
+                  >
+                    {" "}
+                    {!isLoading
+                      ? "Apply For Leave"
+                      : "Wait Calendar is Loading"}
+                  </Button>
+                </div>
+              </>
             )}
           </article>
         </div>

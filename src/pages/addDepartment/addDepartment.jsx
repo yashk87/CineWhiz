@@ -51,7 +51,7 @@ const Department = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/route/location/getOrganizationLocations", {
+      .get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
         headers: {
           Authorization: authToken,
         },
@@ -86,7 +86,7 @@ const Department = () => {
     try {
       console.log(formValues);
       await axios.post(
-        "http://localhost:4000/route/department/create",
+        `${process.env.REACT_APP_API}route/department/create`,
         formValues,
         {
           headers: {
@@ -111,14 +111,13 @@ const Department = () => {
         justifyContent: "center",
         padding: "20px 0 0",
         boxSizing: "border-box",
-        minHeight: "100vh",
         overflow: "hidden",
         // overflowY: "auto",
         // height: "100vh"
       }}
     >
       <div className="content-center flex justify-center my-0 p-0 bg-[#F8F8F8]">
-        <div className="w-[500px] shadow-lg rounded-lg border py-3 px-8 grid items-center">
+        <div className="shadow-lg rounded-lg border py-3 px-8 grid items-center">
           <h4 className="text-center mb-2 text-lg font-bold text-blue-500">
             Add Department details
           </h4>

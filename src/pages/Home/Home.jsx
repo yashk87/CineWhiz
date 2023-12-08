@@ -1,23 +1,49 @@
-import EastIcon from "@mui/icons-material/East";
-import WestIcon from "@mui/icons-material/West";
-import { Divider, Typography } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
-import Carousel from "react-multi-carousel";
+import React, { useContext, useEffect } from "react";
+import { FaArrowCircleRight } from "react-icons/fa";
 import "react-multi-carousel/lib/styles.css";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-import Organisation from "./components/Organisation";
-import TextCycler from "./components/cyclic-text";
-
 const Home = () => {
-  const { cookies } = useContext(UseContext);
-  const { handleAlert } = useContext(TestContext);
   const redirect = useNavigate();
-  const [organizationData, setOrganizationData] = useState([]);
-
+  const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  // const token = cookies["aeigs"];
+  const { handleAlert } = useContext(TestContext);
+
+  const { data, isLoading } = useQuery(["orgData"], async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/route/organization/get`,
+      {
+        headers: {
+          Authorization: authToken,
+        },
+      }
+    );
+    return response.data;
+  });
+
+  // const [userRole, setUserRole] = useState();
+
+  // useEffect(() => {
+  //   try {
+  //     if (token) {
+  //       const decodedToken = jwtDecode(authToken);
+  //       if (decodedToken && decodedToken.user) {
+  //         setUserRole(decodedToken.user);
+  //       } else {
+  //         setUserRole("guest");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to decode the token:", error);
+  //   }
+  //   // eslint-disable-next-line
+  // }, [token]);
+
   useEffect(() => {
     if (!authToken) {
       // Redirect to the login page
@@ -26,119 +52,67 @@ const Home = () => {
     }
   }, [redirect, cookies, handleAlert, authToken]);
 
-  const getData = async () => {
-    const data = await axios.get(
-      `${process.env.REACT_APP_API}/route/organization/get`,
-      {
-        headers: {
-          Authorization: authToken,
-        },
-      }
-    );
-
-    setOrganizationData(data.data.organizations);
-  };
-
-  useEffect(() => {
-    getData();
-    // eslint-disable-next-line
-  }, []);
-
-  const dotsresponsive = {
-    desktop: {
-      breakpoint: { max: 3000, min: 1400 },
-      items: 4,
-      slidesToSlide: 1,
-    },
-    tablet: {
-      breakpoint: { max: 1400, min: 1050 },
-      items: 3,
-      slidesToSlide: 1,
-    },
-    mobile: {
-      breakpoint: { max: 1050, min: 500 },
-      items: 2,
-      slidesToSlide: 1,
-    },
-  };
-
-  const CustomRightArrow = ({ onClick }) => {
-    // onMove means if dragging or swiping in progress.
-    return (
-      <button
-        className="p-2 rounded-full border-sky-600 font-bold bg-slate-300 text-sky-600 border absolute right-0"
-        onClick={() => onClick()}
-      >
-        <EastIcon />
-      </button>
-    );
-  };
-
-  const CustomLeftArrow = ({ onClick }) => {
-    return (
-      <button
-        className="p-2 rounded-full text-[2px] border-sky-600 font-bold bg-slate-300 text-sky-600 border absolute left-0"
-        onClick={() => onClick()}
-      >
-        <WestIcon className="h-2 w-4 text-[5px]" />
-      </button>
-    );
-  };
-
   return (
-    <div className="p-8 bg-slate-50 h-screen">
-      <TextCycler />
-      <Divider />
+    <div className="p-8 bg-white h-screen">
+      {/* <TextCycler />
+      <Divider /> */}
       {/* <Org /> */}
+      <div className="w-full  ">
+        <>
+          <div className="flex items-center h-[70vh] justify-center w-full">
+            <div className="md:w-[50%] w-[100%]  md:px-8  xs:px-2 flex justify-end items-end  flex-col">
+              <div>
+                <h1 className="md:text-[2.30rem] xs:text-[1.5rem] font-thin">
+                  Welcome to{" "}
+                  <span className="md:text-[2.30rem] xs:text-[1.5rem]  gradinet font-semibold text-blue-500 ">
+                    AEGIS
+                  </span>{" "}
+                  {/* <span className="font-bold">{userRole?.first_name}</span> */}
+                </h1>
+                <h1 className="md:text-[2.40rem]  xs:text-[1.40rem] sm:text-[1.70rem] !leading-10 sm:text-2xl font-bold  mb-4">
+                  Unleashing
+                  <span className="gradinet font-bold">
+                    {" "}
+                    Organizational Excellence
+                  </span>
+                </h1>
 
-      <div className="w-full  mt-6">
-        <Typography variant="body1" className=" !font-medium !text-2xl">
-          List of Organization
-        </Typography>
+                <p className="md:text-xl xs:text-md mb-8 text-gray-600 md:leading-10 xs:leading-5 ">
+                  Empower your journey by making us your first choice. Elevate
+                  your experience with the{" "}
+                  <span className="!text-bold gradinet">AEGIS</span>, Lets start
+                </p>
 
-        {/* {organizationData.length <= 0 ? (
-          <Card elevation={3} className="p-4 !rounded-md !bg-sky-50">
-            <CardContent>
-              <div className="flex  gap-8">
-                <div className="p-4 w-max h-max rounded-full shadow-lg bg-sky-600 text-white">
-                  <CorporateFareIcon className="!h-8 !w-8" />
-                </div>
-
-                <div className="space-y-2">
-                  <Typography className="!text-3xl !font-semibold">
-                    Create an Organization
-                  </Typography>
-                  <Typography>
-                    Create an organzation first to preview it
-                  </Typography>
+                {isLoading ? (
+                  <Skeleton
+                    variant="rounded"
+                    height={50}
+                    className="w-[35%]"
+                    animation="pulse"
+                  />
+                ) : data?.organizations.length <= 0 ? (
                   <Link to={"/add-organisation"}>
-                    <Button
-                      size="small"
-                      className="!mt-6 !font-bold"
-                      variant="contained"
-                    >
-                      Add Organization
-                    </Button>
+                    <button className=" flex group justify-center  gap-2 items-center rounded-md px-4 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+                      Create your organization{" "}
+                      <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                    </button>
                   </Link>
-                </div>
+                ) : (
+                  <Link to={"/organizationList"}>
+                    <button className=" flex  group justify-center gap-2 items-center rounded-md px-6 py-3 text-md font-semibold text-white bg-blue-500 hover:bg-blue-500 focus-visible:outline-blue-500">
+                      Go to Organization{" "}
+                      <FaArrowCircleRight className="group-hover:translate-x-1 transition-all" />
+                    </button>
+                  </Link>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        ) : ( */}
-        <Carousel
-          swipeable={false}
-          draggable={false}
-          customRightArrow={<CustomRightArrow />}
-          customLeftArrow={<CustomLeftArrow />}
-          responsive={dotsresponsive}
-        >
-          {organizationData.map((item, index) => (
-            <div className="h-max py-4" key={index}>
-              <Organisation item={item} />
             </div>
-          ))}
-        </Carousel>
-        {/* )} */}
+
+            <div className="w-[50%] md:block hidden">
+              <img src="community.gif" className="h-[100%]" alt="none" />
+            </div>
+          </div>
+        </>
       </div>
 
       {/* <Org /> */}

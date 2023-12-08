@@ -23,19 +23,26 @@ import { useLocation, useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
 import useProfileForm from "../../../hooks/useProfileForm";
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 const AddProfile = () => {
   const locations = useLocation();
   const { orgName } = locations.state;
-
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
-
   const [userId, setUserId] = useState(null);
   const { id } = useParams();
   const {
     first_name,
-    middle_name,
     last_name,
     email,
     password,
@@ -48,7 +55,6 @@ const AddProfile = () => {
     passwordError,
     setFirstName,
     setLastName,
-    setMiddalName,
     setEmail,
     setPassword,
     setEmailError,
@@ -61,14 +67,43 @@ const AddProfile = () => {
     joining_date,
     setJoiningDate,
   } = useProfileForm();
+  const [middle_name, setMiddleName] = useState("");
+  const [middleNameError, setMiddleNameError] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    const validDomain =
+      email.endsWith(".com") || email.endsWith(".net") || email.endsWith(".in");
+    return emailRegex.test(email) && validDomain && email.includes("@");
+  };
 
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  const isValidEmail = (email) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    return emailRegex.test(email);
-  };
 
+  const handlePasswordChange = (enteredPassword) => {
+    setPassword(enteredPassword);
+    if (!enteredPassword) {
+      setPasswordError("Password is required");
+    } else if (!enteredPassword.match(passwordRegex)) {
+      setPasswordError(
+        "Password must contain at least one number, one special character, and be at least 8 characters long"
+      );
+    } else {
+      setPasswordError("");
+    }
+  };
+  const handleConfirmPasswordChange = (enteredConfirmPassword) => {
+    setConfirmPassword(enteredConfirmPassword);
+    if (!enteredConfirmPassword) {
+      setConfirmPasswordError("Confirm Password is required");
+    } else if (enteredConfirmPassword !== password) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+    }
+  };
   useEffect(() => {
     try {
       const decodedToken = jwtDecode(authToken);
@@ -87,16 +122,6 @@ const AddProfile = () => {
     setGender(event.target.value);
   };
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
   const [profile, setProfile] = React.useState([]);
   const handleChange = (event) => {
     const {
@@ -106,6 +131,7 @@ const AddProfile = () => {
   };
 
   const [availableProfiles, setAvailableProfiles] = useState([]);
+
   const fetchAvailableProfiles = async () => {
     try {
       const response = await axios.get(
@@ -117,23 +143,22 @@ const AddProfile = () => {
         }
       );
 
-      if (response.data && response.data.roles) {
-        if (response.data.roles.length > 0) {
-          const filteredProfiles = response.data.roles.filter((role) => {
-            return role.isActive;
-          });
+      if (response.data && Array.isArray(response.data.roles)) {
+        const filteredProfiles = response.data.roles.filter(
+          (role) => role && role.isActive
+        );
 
-          if (filteredProfiles.length > 0) {
-            setAvailableProfiles(filteredProfiles);
-          } else {
-            console.log(availableProfiles);
-            handleAlert(
-              true,
-              "error",
-              "No active profiles available. Please add active profiles for your organization."
-            );
-          }
+        if (filteredProfiles.length > 0) {
+          setAvailableProfiles(filteredProfiles);
+        } else {
+          handleAlert(
+            true,
+            "error",
+            "No active profiles available. Please add active profiles for your organization."
+          );
         }
+      } else {
+        handleAlert(true, "error", "Invalid data received from the server");
       }
     } catch (error) {
       console.error(error);
@@ -166,6 +191,7 @@ const AddProfile = () => {
         creatorId: userId,
       };
       console.log(user);
+
       const response = await axios.post(
         `${process.env.REACT_APP_API}/route/employee/create-profile`,
         user,
@@ -175,6 +201,16 @@ const AddProfile = () => {
           },
         }
       );
+      console.log(response.data.employeesWithProfiles);
+      if (response.data.employeesWithProfiles > 0) {
+        const createProfileConfirmation = window.confirm(
+          "Employees with similar profiles exist. Do you want to create another profile?"
+        );
+
+        if (!createProfileConfirmation) {
+          return; // User canceled profile creation
+        }
+      }
 
       if (response.data.success) {
         handleAlert(true, "error", "Invalid authorization");
@@ -224,24 +260,29 @@ const AddProfile = () => {
                       onChange={(e) => {
                         const enteredFirstName = e.target.value;
                         setFirstName(enteredFirstName);
-
-                        if (
+                        if (!enteredFirstName.trim()) {
+                          setFirstNameError("First Name is required");
+                        } else if (
                           enteredFirstName.length < 2 ||
                           enteredFirstName.length > 30 ||
                           /[^a-zA-Z]/.test(enteredFirstName)
                         ) {
                           setFirstNameError(
-                            "First Name must be between 2 and 30 characters and should only contain letters."
+                            "First Name should only contain letters."
                           );
                         } else {
-                          setFirstNameError("");
+                          setFirstNameError(""); // Clear error message when criteria are met
                         }
                       }}
                       required
                       fullWidth
                       margin="normal"
                       error={!!firstNameError}
-                      helperText={firstNameError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {firstNameError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -250,13 +291,34 @@ const AddProfile = () => {
                     <TextField
                       size="small"
                       type="text"
-                      label="Middal Name"
+                      label="Middle Name"
                       name="middle_name"
                       id="middle_name"
                       value={middle_name}
-                      onChange={(e) => setMiddalName(e.target.value)}
+                      onChange={(e) => {
+                        const enteredMiddleName = e.target.value;
+                        setMiddleName(enteredMiddleName);
+                        if (
+                          enteredMiddleName.length > 0 &&
+                          (enteredMiddleName.length < 2 ||
+                            enteredMiddleName.length > 30 ||
+                            /[^a-zA-Z]/.test(enteredMiddleName))
+                        ) {
+                          setMiddleNameError(
+                            "Middle Name should only contain letters."
+                          );
+                        } else {
+                          setMiddleNameError(""); // Clear error message when criteria are met
+                        }
+                      }}
                       fullWidth
                       margin="normal"
+                      error={!!middleNameError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {middleNameError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -272,53 +334,59 @@ const AddProfile = () => {
                 onChange={(e) => {
                   const enteredLastName = e.target.value;
                   setLastName(enteredLastName);
-                  if (
+                  if (!enteredLastName.trim()) {
+                    setLastNameError("Last Name is required");
+                  } else if (
                     enteredLastName.length < 2 ||
                     enteredLastName.length > 30 ||
                     /[^a-zA-Z]/.test(enteredLastName)
                   ) {
-                    setLastNameError(
-                      "Last Name must be between 2 and 30 characters and should only contain letters"
-                    );
+                    setLastNameError("Last Name  should only contain letters.");
                   } else {
-                    setLastNameError("");
+                    setLastNameError(""); // Clear error message when criteria are met
                   }
                 }}
                 error={!!lastNameError}
-                helperText={lastNameError}
+                helperText={
+                  <div style={{ height: "5px", width: "500px" }}>
+                    {lastNameError}
+                  </div>
+                }
                 required
                 fullWidth
                 margin="normal"
               />
 
-              <div className="flex items-center gap-20">
-                <div className="w-full">
-                  <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="email"
-                      label="Email"
-                      name="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => {
-                        const enteredEmail = e.target.value;
-                        setEmail(enteredEmail);
+              <TextField
+                size="small"
+                type="email"
+                label="Email"
+                name="email"
+                id="email"
+                value={email}
+                onChange={(e) => {
+                  const enteredEmail = e.target.value;
+                  setEmail(enteredEmail);
+                  if (!enteredEmail.trim()) {
+                    setEmailError("Email is required");
+                  } else if (!isValidEmail(enteredEmail)) {
+                    setEmailError("Invalid Email Format");
+                  } else {
+                    setEmailError(""); // Clear error message when criteria are met
+                  }
+                }}
+                required
+                fullWidth
+                margin="normal"
+                error={!!emailError}
+                helperText={
+                  <div style={{ height: "5px", width: "500px" }}>
+                    {emailError}
+                  </div>
+                }
+              />
 
-                        if (!isValidEmail(enteredEmail)) {
-                          setEmailError("Invalid email format");
-                        } else {
-                          setEmailError("");
-                        }
-                      }}
-                      required
-                      fullWidth
-                      margin="normal"
-                      error={!!emailError}
-                      helperText={emailError}
-                    />
-                  </FormControl>
-                </div>
+              <div className="flex items-center gap-20">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
                     <TextField
@@ -328,26 +396,45 @@ const AddProfile = () => {
                       name="password"
                       id="password"
                       value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        if (!e.target.value.match(passwordRegex)) {
-                          setPasswordError(
-                            "Password must contain at least one number , special character.and and min length is 8"
-                          );
-                        } else {
-                          setPasswordError("");
-                        }
-                      }}
+                      onChange={(e) => handlePasswordChange(e.target.value)}
                       required
                       fullWidth
                       margin="normal"
                       error={!!passwordError}
-                      helperText={passwordError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {passwordError}
+                        </div>
+                      }
                       InputProps={{
                         inputProps: {
                           pattern: passwordRegex.source,
                         },
                       }}
+                    />
+                  </FormControl>
+                </div>
+                <div className="w-full">
+                  <FormControl sx={{ width: 280 }}>
+                    <TextField
+                      size="small"
+                      type="password"
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      value={confirmPassword}
+                      onChange={(e) =>
+                        handleConfirmPasswordChange(e.target.value)
+                      }
+                      required
+                      fullWidth
+                      margin="normal"
+                      error={!!confirmPasswordError}
+                      helperText={
+                        <div style={{ height: "5px", width: "280px" }}>
+                          {confirmPasswordError}
+                        </div>
+                      }
                     />
                   </FormControl>
                 </div>
@@ -358,7 +445,7 @@ const AddProfile = () => {
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
-                      type="text"
+                      type="number"
                       label="Phone Number"
                       name="phone_number"
                       id="phone_number"
@@ -374,7 +461,7 @@ const AddProfile = () => {
                   <FormControl sx={{ width: 280 }}>
                     <TextField
                       size="small"
-                      type="text"
+                      type="number"
                       label="Emergency Contact"
                       name="emergency_contact"
                       id="emergency_contact"
@@ -389,7 +476,8 @@ const AddProfile = () => {
 
               <TextField
                 size="small"
-                type="text"
+                multiline
+                rows={4} // Adjust the number of rows to fit your design
                 label="Address"
                 name="address"
                 id="address"
@@ -523,8 +611,6 @@ const AddProfile = () => {
                   type="submit"
                   variant="contained"
                   color="primary"
-                  fullWidth={false}
-                  margin="normal"
                 >
                   Submit
                 </Button>

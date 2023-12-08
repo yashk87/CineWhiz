@@ -96,7 +96,6 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
   const [salaryStructures, setSalaryStructures] = useState([
     { salaryComponent: "", manuallyInput: "", calculation: "" },
   ]);
-
   const [errors, setErrors] = useState({
     name: "",
     desc: "",
@@ -157,6 +156,26 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
     setErrors(newErrors);
     return isValid;
   };
+
+  useEffect(() => {
+    if (!open) {
+      setUserInput({
+        name: "",
+        desc: "",
+      });
+      setEmpTypes("");
+      setSalaryStructures([
+        { salaryComponent: "", manuallyInput: "", calculation: "" },
+      ]);
+      setErrors({
+        name: "",
+        desc: "",
+        empTypes: "",
+        salaryStructures: [],
+        salaryLength: "",
+      });
+    }
+  }, [open]);
 
   useEffect(() => {
     if (salaryInput?.SalarTemplates) {
@@ -417,7 +436,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                       Salary Component
                     </th>
                     <th scope="col" className="py-3 ">
-                      Manually input
+                      Manual Input
                     </th>
                     <th scope="col" className="px-6 py-3 ">
                       Calculation
@@ -480,15 +499,25 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                           )}
                           sx={{ width: "90%" }}
                           freeSolo
+                          autoSelect
                           renderInput={(params) => (
-                            <TextField {...params} label="Salary Component" />
+                            <TextField
+                              {...params}
+                              label="Salary Component"
+                              InputProps={{
+                                ...params.InputProps,
+                                endAdornment: !structure.salaryComponent
+                                  ? params.InputProps.endAdornment
+                                  : undefined,
+                              }}
+                            />
                           )}
                         />
-                        {errors.salaryStructures[index]?.salaryComponent && (
-                          <p className="text-red-500">
-                            *{errors.salaryStructures[index].salaryComponent}
-                          </p>
-                        )}
+
+                        <p className="text-red-500 h-1">
+                          {errors.salaryStructures[index]?.salaryComponent &&
+                            `*${errors.salaryStructures[index].salaryComponent}`}
+                        </p>
                       </td>
 
                       <td className="w-[35%] !mx-4">
@@ -516,11 +545,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                             </MenuItem>
                           </Select>
                         </FormControl>
-                        {errors.salaryStructures[index]?.manuallyInput && (
-                          <p className="text-red-500">
-                            *{errors.salaryStructures[index].manuallyInput}
-                          </p>
-                        )}
+                        <p className="text-red-500 h-1">
+                          {errors.salaryStructures[index]?.manuallyInput &&
+                            ` *${errors.salaryStructures[index].manuallyInput}`}
+                        </p>
                       </td>
 
                       <td className="w-[35%]">
@@ -545,11 +573,10 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                             }
                           />
                         </FormControl>
-                        {errors.salaryStructures[index]?.calculation && (
-                          <p className="text-red-500">
-                            *{errors.salaryStructures[index].calculation}
-                          </p>
-                        )}
+                        <p className="text-red-500 h-1">
+                          {errors.salaryStructures[index]?.calculation &&
+                            `*${errors.salaryStructures[index].calculation}`}
+                        </p>
                       </td>
 
                       <td className="w-[10%]">
@@ -598,7 +625,7 @@ const SalaryInputFieldsModal = ({ handleClose, open, id, salaryId }) => {
                 {EditSalaryTemplate.isLoading ? (
                   <CircularProgress size={20} />
                 ) : (
-                  "Edit Employee Types"
+                  "Apply"
                 )}
               </Button>
             ) : (

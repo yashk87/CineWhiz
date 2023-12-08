@@ -9,7 +9,7 @@ import {
   SettingsOutlined,
   West,
 } from "@mui/icons-material";
-import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
 import { jwtDecode } from "jwt-decode";
@@ -75,6 +75,13 @@ const Setup = ({ children }) => {
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
+      label: "Add Input Field For Form",
+      icon: AddLocationAltOutlined,
+      href: `/add-inputfield/${id}`,
+      active: location.pathname === `/add-inputfield/${id}`,
+      isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
+    },
+    {
       label: "Employement type",
       icon: ManageAccountsOutlined,
       href: `/setup/employement-types/${id}`,
@@ -98,7 +105,7 @@ const Setup = ({ children }) => {
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
-    }
+    },
   ];
 
   return (
