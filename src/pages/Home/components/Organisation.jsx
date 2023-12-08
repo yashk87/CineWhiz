@@ -57,11 +57,9 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      console.log(response);
       handleAlert(true, "success", "Organization deleted successfully");
     } catch (error) {
-      console.log(error);
-      handleAlert(true, "error", "Failed to delete Organization    ");
+      handleAlert(true, "error", "Failed to delete Organization");
     } finally {
       handleCloseConfirmation();
       setAnchorEl(null);

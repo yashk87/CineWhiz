@@ -194,7 +194,6 @@ const TestNavItems = ({ toggleDrawer }) => {
       ],
     },
   });
-  console.log(`🚀 ~ file: test-nav-items.jsx:197 ~ setNavItems:`, setNavItems);
 
   useEffect(() => {
     try {
