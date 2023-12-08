@@ -1,18 +1,13 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import { Delete, Edit } from "@mui/icons-material";
+import { Add, AddLocationAltOutlined } from "@mui/icons-material";
 import {
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -54,11 +49,16 @@ const OrganizationLocation = () => {
   const [stateData, setStateData] = useState(
     State.getStatesOfCountry(country?.name)
   );
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
   const [state, setState] = useState(
     State.getStatesOfCountry(country?.isoCode)[0]
   );
   const [open, setOpen] = useState(false);
+
+  const handleDeleteLocationConfirmation = () => {
+    setConfirmOpen(true);
+  };
 
   useEffect(() => {
     const fetchLocationList = async () => {
@@ -72,6 +72,7 @@ const OrganizationLocation = () => {
           }
         );
         setLocationList(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error(error.response.data.message);
       }
@@ -266,259 +267,310 @@ const OrganizationLocation = () => {
     }
   };
 
+  // return (
+  //   <Setup>
+  //   </Setup>
+  // );
   return (
-    <Setup>
-      <IntlProvider locale="en">
-        <Container>
-          <div className="flex items-center justify-between px-4 py-2">
-            <Typography
-              variant="h4"
-              gutterBottom
-              color={"primary"}
-              fontWeight={800}
-              fontSize={20}
-              className="text-2xl"
-            >
-              <FormattedMessage
-                id="organizationLocations"
-                defaultMessage="Organization Locations"
-              />
-            </Typography>
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOpen}
-            >
-              <FormattedMessage id="addLocation" defaultMessage="Add Location" />
-            </Button>
-          </div>
-
-          {locationList.length === 0 ? (
-            <Typography variant="body1">No Locations Added</Typography>
-          ) : (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                    <FormattedMessage id="continent" defaultMessage="Continent" />
-                  </TableCell>
-                  <TableCell>
-                    <FormattedMessage id="country" defaultMessage="Country" />
-                  </TableCell>
-                  <TableCell>
-                    <FormattedMessage id="state" defaultMessage="State" />
-                  </TableCell>
-                  <TableCell>
-                    <FormattedMessage
-                      id="shortname"
-                      defaultMessage="Short Name"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <FormattedMessage id="address" defaultMessage="Address" />
-                  </TableCell>
-                  <TableCell>
-                    <FormattedMessage id="actions" defaultMessage="Actions" />
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {locationList
-                  .sort((a, b) => {
-                    if (a.continent !== b.continent) {
-                      return a.continent.localeCompare(b.continent);
-                    }
-                    return a.country.localeCompare(b.country);
-                  })
-                  .map((location, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{location.continent}</TableCell>
-                      <TableCell>{location.country}</TableCell>
-                      <TableCell>{location.state}</TableCell>
-                      <TableCell>{location.shortName}</TableCell>
-                      <TableCell>
-                        {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
-                      </TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => handleEditLocation(index)}
-                          aria-label="edit"
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleDeleteLocation(index)}
-                          aria-label="delete"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          )}
-
-        <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
-          <DialogTitle>
-            {editIndex !== null ? (
-              <FormattedMessage
-                id="editLocation"
-                defaultMessage="Edit Location"
-              />
-            ) : (
-              <FormattedMessage
-                id="addLocation"
-                defaultMessage="Add Location"
-              />
-            )}
-          </DialogTitle>
-          <DialogContent>
-            <div
-              style={{
-                display: "flex",
-                gap: "8px",
-                marginTop: "8px",
-                marginBottom: "8px",
-              }}
-            >
-              <div>
-                <p>Continent:</p>
-                <Selector
-                  required
-                  key={continent?.name}
-                  data={continents}
-                  selected={continent}
-                  setSelected={setContinent}
-                />
+    <section className="bg-gray-50 min-h-screen w-full">
+      <Setup>
+        <div className="SetupSection w-[80%] h-full bg-white   shadow-xl  rounded-sm">
+          <IntlProvider locale="en">
+            <div className="p-4  border-b-[.5px] border-gray-300 flex items-center justify-between gap-3 w-full">
+              <div className="flex gap-3">
+                {" "}
+                <div className="rounded-full bg-sky-500 h-[30px] w-[30px] flex items-center justify-center">
+                  <AddLocationAltOutlined className="!text-lg text-white" />
+                </div>
+                <h1 className="!text-lg tracking-wide">
+                  Add Organization Location
+                </h1>
               </div>
-              <div className="!w-[46%]">
-                <p>Short Name:</p>
+              <Button
+                className="!bg-[#0ea5e9]"
+                variant="contained"
+                onClick={handleOpen}
+              >
+                <Add />
+                Add location
+              </Button>
+            </div>
+
+            {locationList.length === 0 ? (
+              <Typography variant="body1">No Locations Added</Typography>
+            ) : (
+              <table className="min-w-full bg-white text-left text-sm font-light">
+                <thead className="border-b bg-gray-200 font-medium dark:border-neutral-500">
+                  <tr className="!font-medium">
+                    <th scope="col" className="px-3 py-3 whitespace-nowrap">
+                      Sr No
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Continent
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Country
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      State
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Short Name
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Address
+                    </th>
+                    <th scope="col" className="px-3 py-3 ">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {locationList
+                    .sort((a, b) => {
+                      if (a.continent !== b.continent) {
+                        return a.continent.localeCompare(b.continent);
+                      }
+                      return a.country.localeCompare(b.country);
+                    })
+                    .map((location, index) => (
+                      <tr
+                        key={index}
+                        className={`${
+                          index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                        } border-b dark:border-neutral-500 !font-medium`}
+                      >
+                        <td className="py-2 px-3">{index + 1}</td>
+                        <td className="py-2 px-3">{location.continent}</td>
+                        <td className="py-2 px-3">{location.country}</td>
+                        <td className="py-2 px-3">{location.state}</td>
+                        <td className="py-2 px-3">{location.shortName}</td>
+                        <td className="py-2 px-3">
+                          {`${location.addressLine1} ${location.addressLine2} ${location.pinCode}`}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-2">
+                          <IconButton
+                            onClick={() => handleEditLocation(index)}
+                            aria-label="edit"
+                          >
+                            <Edit className="!text-xl" color="success" />
+                          </IconButton>
+                          <IconButton
+                            onClick={handleDeleteLocationConfirmation}
+                            aria-label="delete"
+                          >
+                            <Delete className="!text-xl" color="error" />
+                          </IconButton>
+                        </td>
+                        <Dialog
+                          open={confirmOpen}
+                          onClose={() => setConfirmOpen(false)}
+                        >
+                          <DialogTitle>Confirm Deletion</DialogTitle>
+                          <DialogContent>
+                            <DialogContentText>
+                              Are you sure you want to delete this location?
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button
+                              onClick={() => setConfirmOpen(false)}
+                              color="primary"
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={() => handleDeleteLocation(index)}
+                              color="primary"
+                            >
+                              Delete
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </tr>
+                    ))}
+                  {/* {isLoading ? (
+                    <SkeletonForLeaveTypes />
+                  ) : (
+                    <>{locationList
+                      .sort((a, b) => {
+                        if (a.continent !== b.continent) {
+                          return a.continent.localeCompare(b.continent);
+                        }
+                        return a.country.localeCompare(b.country);
+                      }).map((location, index) => (
+                          <LeaveTypeEditBox
+                            key={index}
+                            leaveType={location}
+                            index={index}
+                          />
+                        ))}
+                    </>
+                  )} */}
+                </tbody>
+              </table>
+            )}
+
+            <Dialog open={open} onClose={handleClose} onKeyDown={handleKeyDown}>
+              <DialogTitle>
+                {editIndex !== null ? (
+                  <FormattedMessage
+                    id="editLocation"
+                    defaultMessage="Edit Location"
+                  />
+                ) : (
+                  <FormattedMessage
+                    id="addLocation"
+                    defaultMessage="Add Location"
+                  />
+                )}
+              </DialogTitle>
+              <DialogContent>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    marginTop: "8px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <div>
+                    <p>Continent:</p>
+                    <Selector
+                      required
+                      key={continent?.name}
+                      data={continents}
+                      selected={continent}
+                      setSelected={setContinent}
+                    />
+                  </div>
+                  <div className="!w-[46%]">
+                    <p>Short Name:</p>
+                    <TextField
+                      label={"short name *"}
+                      className="pb-0"
+                      variant="outlined"
+                      size="small"
+                      value={shortName}
+                      onChange={(e) => setShortName(e.target.value)}
+                      fullWidth
+                    />
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    marginTop: "8px",
+                    marginBottom: "8px",
+                  }}
+                >
+                  <div>
+                    <p>Country:</p>
+                    <Selector
+                      key={country?.phonecode}
+                      data={Country.getAllCountries()}
+                      selected={country}
+                      setSelected={setCountry}
+                      required
+                    />
+                  </div>
+                  {stateData && (
+                    <div>
+                      <div>State:</div>
+                      <Selector
+                        key={country?.phonecode}
+                        data={stateData}
+                        selected={state}
+                        setSelected={setState}
+                        required
+                      />
+                    </div>
+                  )}
+                </div>
                 <TextField
-                  label={"short name *"}
-                  className="pb-0"
+                  label={<FormattedMessage id="city" defaultMessage="City" />}
                   variant="outlined"
-                  size="small"
-                  value={shortName}
-                  onChange={(e) => setShortName(e.target.value)}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  fullWidth
+                  style={{ marginTop: "8px" }}
+                  required
+                />
+                <TextField
+                  label={
+                    <FormattedMessage
+                      id="pinCode"
+                      defaultMessage="Pin Code/Zip Code"
+                    />
+                  }
+                  variant="outlined"
+                  value={pinCode}
+                  onChange={(e) => setPinCode(e.target.value)}
+                  fullWidth
+                  required
+                  style={{ marginTop: "8px" }}
+                />
+                <TextField
+                  label={
+                    <FormattedMessage
+                      id="addressLine1"
+                      defaultMessage="Address Line 1"
+                    />
+                  }
+                  variant="outlined"
+                  value={addressLine1}
+                  onChange={(e) => setAddressLine1(e.target.value)}
+                  style={{ marginTop: "8px" }}
+                  fullWidth
+                  required
+                />
+                <TextField
+                  label={
+                    <FormattedMessage
+                      id="addressLine2"
+                      defaultMessage="Address Line 2"
+                    />
+                  }
+                  variant="outlined"
+                  value={addressLine2}
+                  onChange={(e) => setAddressLine2(e.target.value)}
+                  style={{ marginTop: "8px" }}
                   fullWidth
                 />
-              </div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                gap: "8px",
-                marginTop: "8px",
-                marginBottom: "8px",
-              }}
-            >
-              <div>
-                <p>Country:</p>
-                <Selector
-                  key={country?.phonecode}
-                  data={Country.getAllCountries()}
-                  selected={country}
-                  setSelected={setCountry}
-                  required
-                />
-              </div>
-              {stateData && (
-                <div>
-                  <div>State:</div>
-                  <Selector
-                    key={country?.phonecode}
-                    data={stateData}
-                    selected={state}
-                    setSelected={setState}
-                    required
-                  />
-                </div>
-              )}
-            </div>
-            <TextField
-              label={<FormattedMessage id="city" defaultMessage="City" />}
-              variant="outlined"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              fullWidth
-              style={{ marginTop: "8px" }}
-              required
-            />
-            <TextField
-              label={
-                <FormattedMessage
-                  id="pinCode"
-                  defaultMessage="Pin Code/Zip Code"
-                />
-              }
-              variant="outlined"
-              value={pinCode}
-              onChange={(e) => setPinCode(e.target.value)}
-              fullWidth
-              required
-              style={{ marginTop: "8px" }}
-            />
-            <TextField
-              label={
-                <FormattedMessage
-                  id="addressLine1"
-                  defaultMessage="Address Line 1"
-                />
-              }
-              variant="outlined"
-              value={addressLine1}
-              onChange={(e) => setAddressLine1(e.target.value)}
-              style={{ marginTop: "8px" }}
-              fullWidth
-              required
-            />
-            <TextField
-              label={
-                <FormattedMessage
-                  id="addressLine2"
-                  defaultMessage="Address Line 2"
-                />
-              }
-              variant="outlined"
-              value={addressLine2}
-              onChange={(e) => setAddressLine2(e.target.value)}
-              style={{ marginTop: "8px" }}
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="secondary">
-              <FormattedMessage id="cancel" defaultMessage="Cancel" />
-            </Button>
-            <Button
-              onClick={() => {
-                if (editIndex !== null) {
-                  handleUpdateLocation(editIndex);
-                } else {
-                  handleAddLocation();
-                }
-              }}
-              color="primary"
-            >
-              {editIndex !== null ? (
-                <FormattedMessage
-                  id="saveChanges"
-                  defaultMessage="Save Changes"
-                />
-              ) : (
-                <FormattedMessage
-                  id="addLocation"
-                  defaultMessage="Add Location"
-                />
-              )}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Container>
-    </IntlProvider>
-    </Setup>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="secondary">
+                  <FormattedMessage id="cancel" defaultMessage="Cancel" />
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (editIndex !== null) {
+                      handleUpdateLocation(editIndex);
+                    } else {
+                      handleAddLocation();
+                    }
+                  }}
+                  color="primary"
+                >
+                  {editIndex !== null ? (
+                    <FormattedMessage
+                      id="saveChanges"
+                      defaultMessage="Save Changes"
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="addLocation"
+                      defaultMessage="Add Location"
+                    />
+                  )}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </IntlProvider>
+        </div>
+      </Setup>
+    </section>
   );
 };
 
