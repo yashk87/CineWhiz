@@ -31,9 +31,7 @@ const DepartmentDeletion = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/route/department/get"
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API}/route/department/get`);
         setDepartments(response.data.department);
       } catch (error) {
         console.error("Error fetching department data:", error);
@@ -45,12 +43,9 @@ const DepartmentDeletion = () => {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/route/location/getOrganizationLocations",
-          {
-            headers: { Authorization: authToken },
-          }
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
+          headers: { Authorization: authToken },
+        });
         setLocations(response.data);
       } catch (error) {
         console.error("Error fetching location data:", error);
@@ -63,12 +58,9 @@ const DepartmentDeletion = () => {
     setSelectedLocation(event.target.value);
 
     try {
-      const response = await axios.get(
-        "http://localhost:4000/route/location/getOrganizationLocations",
-        {
-          headers: { Authorization: authToken },
-        }
-      );
+      const response = await axios.get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
+        headers: { Authorization: authToken },
+      });
 
       const location = response.data.find(
         (obj) => obj.shortName === event.target.value
@@ -88,34 +80,26 @@ const DepartmentDeletion = () => {
         console.error("Please select a department to delete.");
         return;
       }
-      await axios
-        .delete(
-          `http://localhost:4000/route/department/delete/${deptLocationId}`,
-          {
-            headers: { Authorization: authToken },
-          }
-        )
-        .then((response) => {
-          setAppAlert({
-            alert: true,
-            type: "success",
-            msg: "Department deleted successfully!",
-          });
-          setShowConfirmation(false);
-        })
-        .catch((error) => {
-          console.error("Error deleting department:", error);
-          setAppAlert({
-            alert: true,
-            type: "error",
-            msg: "Error deleting department. Please try again.",
-          });
-          setShowConfirmation(false);
+      await axios.delete(`${process.env.REACT_APP_API}/route/department/delete/${deptLocationId}`, {
+        headers: { Authorization: authToken },
+      }).then((response) => {
+        setAppAlert({
+          alert: true,
+          type: 'success',
+          msg: 'Department deleted successfully!',
         });
+        setShowConfirmation(false);
+      }).catch((error) => {
+        console.error("Error deleting department:", error);
+        setAppAlert({
+          alert: true,
+          type: 'error',
+          msg: 'Error deleting department. Please try again.',
+        });
+        setShowConfirmation(false);
+      });
 
-      const response = await axios.get(
-        "http://localhost:4000/route/department/get"
-      );
+      const response = await axios.get(`${process.env.REACT_APP_API}/route/department/get`);
       setDepartments(response.data.department);
       setSelectedLocation("");
       setFilteredDepartments([]);
@@ -222,35 +206,28 @@ const DepartmentDeletion = () => {
 
           for (const department of departmentsToDelete) {
             try {
-              await axios
-                .delete(
-                  `http://localhost:4000/route/department/delete/${department._id}`,
-                  {
-                    headers: { Authorization: authToken },
-                  }
-                )
-                .then((resp) => {
-                  console.log("deleted successfully");
-                  setDepartments((prevDepartments) =>
-                    prevDepartments.filter(
-                      (dept) => dept._id !== department._id
-                    )
-                  );
-                  setAppAlert({
-                    alert: true,
-                    type: "success",
-                    msg: "Departments deleted from the Excel sheet!",
-                  });
-                  setSelectedLocation("");
-                })
-                .catch((error) => {
-                  console.log(error);
-                  setAppAlert({
-                    alert: true,
-                    type: "error",
-                    msg: "Failed to delete department from Excel. Please try again.",
-                  });
+              await axios.delete(`${process.env.REACT_APP_API}/route/department/delete/${department._id}`, {
+                headers: { Authorization: authToken },
+              }).then((resp) => {
+                console.log("deleted successfully");
+                setDepartments((prevDepartments) =>
+                  prevDepartments.filter((dept) => dept._id !== department._id)
+                );
+                setAppAlert({
+                  alert: true,
+                  type: "success",
+                  msg: "Departments deleted from the Excel sheet!",
                 });
+                setSelectedLocation("")
+              }).catch((error) => {
+                console.log(error);
+                setAppAlert({
+                  alert: true,
+                  type: "error",
+                  msg: "Failed to delete department from Excel. Please try again.",
+                });
+              });
+
             } catch (error) {
               console.log(error);
               return;
@@ -288,16 +265,11 @@ const DepartmentDeletion = () => {
 
     if (confirmed) {
       try {
-        await axios.delete(
-          `http://localhost:4000/route/department/delete/${deptLocationId}`,
-          {
-            headers: { Authorization: authToken },
-          }
-        );
+        await axios.delete(`${process.env.REACT_APP_API}/route/department/delete/${deptLocationId}`, {
+          headers: { Authorization: authToken },
+        });
 
-        const response = await axios.get(
-          "http://localhost:4000/route/department/get"
-        );
+        const response = await axios.get(`${process.env.REACT_APP_API}/route/department/get`);
         setDepartments(response.data.department);
         setSelectedLocation("");
         setFilteredDepartments([]);

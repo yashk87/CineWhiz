@@ -60,12 +60,10 @@ const Organisation = ({ item }) => {
           },
         }
       );
-      console.log(response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries(["orgData"]);
     } catch (error) {
-      console.log(error);
-      handleAlert(true, "error", "Failed to delete Organization    ");
+      handleAlert(true, "error", "Failed to delete Organization");
     } finally {
       handleCloseConfirmation();
       setAnchorEl(null);

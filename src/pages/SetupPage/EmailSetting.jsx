@@ -35,7 +35,7 @@ const EmailSetting = () => {
 
         try {
             // Assuming the API call is successful
-            await axios.post('http://localhost:4000/route/email/create', { email });
+            await axios.post(`${process.env.REACT_APP_API}/route/email/create`, { email });
 
             // Show success alert
             setAppAlert({

@@ -155,6 +155,9 @@ const AddEmployee = () => {
   const handleMgrEmpId = (event) => {
     setMgrEmpId(event.target.value);
   };
+  const handleDeptName = (event) => {
+    setDeptName(event.target.value);
+  };
 
   const handleSalaryStructure = (event) => {
     setSalaryStructure(event.target.value);
@@ -232,6 +235,28 @@ const AddEmployee = () => {
   };
   useEffect(() => {
     fetchAvailabeEmpTypes();
+    // eslint-disable-next-line
+  }, []);
+
+  const [availableDepartment, setAvailableDepartment] = useState([]);
+  const fetchAvailabeDepartment = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/route/department/get`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      );
+
+      setAvailableDepartment(response.data.department);
+    } catch (error) {
+      handleAlert(true, "error", "Failed to fetch Department");
+    }
+  };
+  useEffect(() => {
+    fetchAvailabeDepartment();
     // eslint-disable-next-line
   }, []);
 
@@ -346,6 +371,7 @@ const AddEmployee = () => {
     fetchAvailabeMgrId();
     // eslint-disable-next-line
   }, []);
+  console.log(availableMgrId);
 
   const [dynamicFields, setDynamicFields] = useState({
     shifts_allocation: "",
@@ -673,18 +699,21 @@ const AddEmployee = () => {
               <div className="flex items-center gap-20">
                 <div className="w-full">
                   <FormControl sx={{ width: 280 }}>
-                    <TextField
-                      size="small"
-                      type="text"
-                      label="Department name"
-                      name="deptname"
-                      id="deptname"
+                    <Select
                       value={deptname}
-                      onChange={(e) => setDeptName(e.target.value)}
-                      fullWidth
-                      margin="normal"
-                      required
-                    />
+                      onChange={handleDeptName}
+                      displayEmpty
+                      inputProps={{ "aria-label": "Dept Name" }}
+                    >
+                      <MenuItem value="" disabled>
+                        Select Department Name
+                      </MenuItem>
+                      {availableDepartment.map((deptname) => (
+                        <MenuItem key={deptname._id} value={deptname._id}>
+                          {deptname.departmentName}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </div>
                 <div className="w-full">
@@ -704,8 +733,8 @@ const AddEmployee = () => {
                           value={manager.managerId ? manager.managerId._id : ""}
                         >
                           {manager.managerId
-                            ? manager.managerId._id
-                            : "No Manager ID"}
+                            ? `${manager.managerId.first_name} ${manager.managerId.last_name}`
+                            : "No Manager Name"}
                         </MenuItem>
                       ))}
                     </Select>
