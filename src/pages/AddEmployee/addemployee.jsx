@@ -371,7 +371,6 @@ const AddEmployee = () => {
     fetchAvailabeMgrId();
     // eslint-disable-next-line
   }, []);
-  console.log(availableMgrId);
 
   const [dynamicFields, setDynamicFields] = useState({
     shifts_allocation: "",

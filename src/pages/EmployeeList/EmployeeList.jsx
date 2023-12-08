@@ -1,22 +1,29 @@
 import { IconButton, TextField } from "@mui/material";
 import axios from "axios";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  BorderColor,
+  Delete,
+  MoreHoriz,
+  PriceChangeOutlined,
+  Warning,
+} from "@mui/icons-material";
 import React, { useContext, useEffect, useState } from "react";
 import Setup from "../SetUpOrganization/Setup";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
-
+import { useQueryClient } from "react-query";
+import EditModelOpen from "../../components/Modal/EditEmployeeModal/EditEmployeeModel";
 const EmployeeList = () => {
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
+  const queryClient = useQueryClient();
   const [nameSearch, setNameSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
   const [deptSearch, setDeptSearch] = useState("");
   const [availableEmployee, setAvailableEmployee] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [numbers, setNumbers] = useState([]);
 
   const fetchAvailableEmployee = async (page) => {
@@ -64,6 +71,22 @@ const EmployeeList = () => {
 
   const changePage = (id) => {
     fetchAvailableEmployee(id);
+  };
+  // Modal states and function
+  const [open, setOpen] = React.useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [employeeId, setemployeeId] = useState(null);
+
+  const handleEditModalOpen = (empId) => {
+    setEditModalOpen(true);
+    queryClient.invalidateQueries(["employee", empId]);
+    setemployeeId(empId);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setemployeeId(null);
+    setEditModalOpen(false);
   };
 
   return (
@@ -170,8 +193,10 @@ const EmployeeList = () => {
                         <td className="py-3">{item.deptname}</td>
                         <td className="py-3">{item.phone_number}</td>
                         <td className="whitespace-nowrap px-6 py-2">
-                          <IconButton>
-                            <EditIcon className="!text-xl" color="error" />
+                          <IconButton
+                            onClick={() => handleEditModalOpen(item._id)}
+                          >
+                            <BorderColor className="!text-xl" color="success" />
                           </IconButton>
                         </td>
                       </tr>
@@ -264,6 +289,14 @@ const EmployeeList = () => {
           </article>
         </Setup>
       </section>
+
+      {/* edit model */}
+      <EditModelOpen open={open} handleClose={handleClose} />
+      <EditModelOpen
+        handleClose={handleClose}
+        open={editModalOpen}
+        employeeId={employeeId}
+      />
     </>
   );
 };
