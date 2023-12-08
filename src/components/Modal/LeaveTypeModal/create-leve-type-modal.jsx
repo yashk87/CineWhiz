@@ -54,7 +54,7 @@ const CreteLeaveTypeModal = ({ handleClose, open }) => {
     try {
       // Make the PATCH request using axios
       const response = await axios.post(
-        `${process.env.REACT_APP_API}/route/leave-types/${param.id}`,
+        `${process.env.REACT_APP_API}/route/leave-types/${param.organisationId}`,
         data,
         {
           headers: {

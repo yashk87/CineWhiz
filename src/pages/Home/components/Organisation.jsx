@@ -60,6 +60,7 @@ const Organisation = ({ item }) => {
           },
         }
       );
+      console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries(["orgData"]);
     } catch (error) {

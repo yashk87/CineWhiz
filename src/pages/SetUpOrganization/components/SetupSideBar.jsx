@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AddLocationAltOutlined,
   BeachAccessOutlined,
@@ -6,6 +5,7 @@ import {
   PersonAddAlt1Outlined,
   West,
 } from "@mui/icons-material";
+import React from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 
 const SetupSideBar = ({ children }) => {
@@ -22,8 +22,9 @@ const SetupSideBar = ({ children }) => {
     {
       label: "Create Leave Types",
       icon: BeachAccessOutlined,
-      href: `/setup/leave-types/${id}`,
-      active: location.pathname === `/setup/leave-types/${id}`,
+
+      href: `/organisation/${id}/setup/leave-types`,
+      active: location.pathname === `/organisation/${id}/setup/leave-types`,
     },
     {
       label: "Public Holidays",
