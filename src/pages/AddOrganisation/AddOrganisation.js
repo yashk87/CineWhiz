@@ -74,32 +74,32 @@ const AddOrganisation = () => {
       [name]: name === "email" ? value.toLowerCase() : value,
     });
 
-    if (name === "contact_number") {
-      if (!isContactNumberValid(value)) {
-        setNumberLabel("number should be 10 digits only");
-        setContactNumberError(true);
-        if (e.target.value === "") {
-          setNumberLabel("Phone Number");
-          setContactNumberError(false);
+        if (name === 'contact_number') {
+            if (!isContactNumberValid(value)) {
+                setNumberLabel("number should be 10 digits only");
+                setContactNumberError(true);
+                if(e.target.value === ""){
+                    setNumberLabel("Phone Number")
+                    setContactNumberError(false)
+                }
+            } else {
+                setNumberLabel("Phone Number");
+                setContactNumberError(false);
+            }
+        } else if (name === 'email') {
+            if (!isEmailValid(value)) {
+                setEmailLabel("enter valid email");
+                setEmailError(true);
+                if (e.target.value === "") {
+                    setEmailError(false)
+                    setEmailLabel("Organization Email")
+                }
+            } else {
+                setEmailLabel("Organization Email");
+                setEmailError(false);
+            }
         }
-      } else {
-        setNumberLabel("Phone Number");
-        setContactNumberError(false);
-      }
-    } else if (name === "email") {
-      if (!isEmailValid(value)) {
-        setEmailLabel("enter valid email");
-        setEmailError(true);
-        if (e.target.value === "") {
-          setEmailError(false);
-          setEmailLabel("Organisation Email");
-        }
-      } else {
-        setEmailLabel("Organisation Email");
-        setEmailError(false);
-      }
-    }
-  };
+    };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

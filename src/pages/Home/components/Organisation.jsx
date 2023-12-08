@@ -1,25 +1,28 @@
-import { Button, Card, CardContent, Typography } from "@mui/material";
-import React from "react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Menu, MenuItem } from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { Delete, Warning } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
-import axios from "axios";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {
+  Button,
+  Card,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Menu,
+  MenuItem,
+  Typography,
 } from "@mui/material";
-import { Warning } from "@mui/icons-material";
-import { useContext } from "react";
-import { UseContext } from "../../../State/UseState/UseContext";
+import axios from "axios";
+import React, { useContext, useState } from "react";
+import { useQueryClient } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
+import { UseContext } from "../../../State/UseState/UseContext";
 const Organisation = ({ item }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
+  const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
@@ -58,6 +61,7 @@ const Organisation = ({ item }) => {
         }
       );
       handleAlert(true, "success", "Organization deleted successfully");
+      queryClient.invalidateQueries(["orgData"]);
     } catch (error) {
       handleAlert(true, "error", "Failed to delete Organization");
     } finally {
