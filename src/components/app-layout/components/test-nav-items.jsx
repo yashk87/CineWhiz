@@ -22,7 +22,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useMatch } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import NavAccordian from "./accordian";
-import { isWednesday } from "date-fns/esm";
 
 const TestNavItems = ({ toggleDrawer }) => {
   const [orgId, setOrgId] = useState(null);
@@ -36,9 +35,12 @@ const TestNavItems = ({ toggleDrawer }) => {
   console.log(pathname);
   // Update organization ID when URL changes
   useEffect(() => {
-    const id = getOrganizationIdFromPathname(pathname);
-    setOrgId(id);
-  }, [params3?.pathname]);
+    const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
+    if (!hasEmployeeOnboarding) {
+      const id = getOrganizationIdFromPathname(pathname);
+      setOrgId(id);
+    }
+  }, [pathname]);
 
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
@@ -49,8 +51,9 @@ const TestNavItems = ({ toggleDrawer }) => {
     }
   };
 
-  // const decodedToken = token && jwtDecode(token);
-  // const id = decodedToken?.user?.organizationId;
+  const decodedToken = token && jwtDecode(token);
+  const id = decodedToken?.user?.organizationId;
+  console.log(id);
   console.log(orgId, "orgId");
   const [navItems, setNavItems] = useState({
     "Self Help": {
@@ -131,20 +134,20 @@ const TestNavItems = ({ toggleDrawer }) => {
       routes: [
         {
           key: "onboarding",
-          link: `organisation/${orgId}/employee-onboarding`,
+          link: `organisation/${id}/employee-onboarding`,
           icon: <PersonAdd className="text-white" />,
           text: "Onboarding",
         },
 
         {
           key: "offboarding",
-          link: `organisation/${orgId}/employee-offboarding`,
+          link: `organisation/${id}/employee-offboarding`,
           icon: <PersonRemove className="text-white" />,
           text: "Offboarding",
         },
         {
           key: "employeeList",
-          link: `organisation/${orgId}/employee-list`,
+          link: `organisation/${id}/employee-list`,
           icon: <Groups className="text-white" />,
           text: "Employee List",
         },

@@ -59,6 +59,11 @@ const Designation = () => {
 
     axios.get(`${process.env.REACT_APP_API}/route/designation/create/${id}`)
       .then((response) => {
+        const filteredDesignation = response.data.filter((designation) => {
+          return designation.organizationId === organisationId;
+        });
+        setDesignation(filteredDesignation)
+        console.log(filteredDesignation);
         setTrackedId(id);
         setDesignationName(response.data.designation.designationName);
         setDesignationId(response.data.designation.designationId);
