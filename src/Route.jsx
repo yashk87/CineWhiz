@@ -79,6 +79,13 @@ const App = () => {
         element={<AddRoles />}
       />
       <Route
+        path="/organisation/:organisationId/setup/set-designation"
+        element={<Designation />}
+      />
+      <Route path="/set-shifts/:id" element={<Shifts />} />
+      <Route path="/add-inputfield/:id" element={<Inputfield />} />
+      <Route path="/setup/add-roles/:id" element={<AddRoles />} />
+      <Route
         path="/organisation/:organisationId/setup/leave-types"
         element={<LeaveTypes />}
       />
@@ -109,7 +116,11 @@ const App = () => {
         path="/setup/employee-code-genreation/:id"
         element={<EmployeeCodeGenerator />}
       />
-      <Route path="/setup/email-setting" element={<EmailSetting />} />
+      <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
+      <Route
+        path="/organisation/:organisationId/setup/set-email"
+        element={<EmailSetting />}
+      />
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />

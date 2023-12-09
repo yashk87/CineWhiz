@@ -9,6 +9,7 @@ import {
   West,
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { jwtDecode } from "jwt-decode";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
@@ -115,8 +116,17 @@ const Setup = ({ children }) => {
     {
       label: "Add Designation",
       icon: BadgeOutlinedIcon,
-      href: `/set-designation`,
-      active: location.pathname === `/set-designation`,
+      href:`/organisation/${id}/setup/set-designation`,
+      active: location.pathname === `/organisation/${id}/setup/set-designation`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "HR"].includes(role)
+      ),
+    },
+    {
+      label: "Email Setting",
+      icon: EmailOutlinedIcon,
+      href: `/organisation/${id}/setup/set-email`,
+      active: location.pathname === `/organisation/${id}/setup/set-email`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
