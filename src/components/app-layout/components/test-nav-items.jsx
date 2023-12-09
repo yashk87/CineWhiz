@@ -21,7 +21,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation, useMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import NavAccordian from "./accordian";
 
@@ -30,8 +30,8 @@ const TestNavItems = ({ toggleDrawer }) => {
   const token = cookies["aeigs"];
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
-  const params3 = useLocation();
-  console.log(`🚀 ~ file: test-nav-items.jsx:34 ~ params3:`, params3);
+  // const params3 = useLocation();
+  // console.log(`🚀 ~ file: test-nav-items.jsx:34 ~ params3:`, params3);
 
   const [navItems, setNavItems] = useState({
     "Self Help": {
@@ -197,7 +197,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       ],
     },
   });
-  console.log(`🚀 ~ file: test-nav-items.jsx:203 ~ setNavItems:`, setNavItems);
+  // console.log(`🚀 ~ file: test-nav-items.jsx:203 ~ setNavItems:`, setNavItems);
 
   useEffect(() => {
     try {

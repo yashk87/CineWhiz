@@ -27,7 +27,7 @@ const EmployementTypes = () => {
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
   const { handleAlert } = useContext(TestContext);
-  const { id } = useParams;
+  const { organisationId } = useParams();
 
   const [deleteConfirmation, setDeleteConfirmation] = useState(null);
 
@@ -55,7 +55,7 @@ const EmployementTypes = () => {
   // Get Query
   const { data: empList, isLoading } = useQuery("empTypes", async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/employment-types`,
+      `${process.env.REACT_APP_API}/route/employment-types-organisation/${organisationId}`,
       {
         headers: {
           Authorization: authToken,
@@ -176,10 +176,10 @@ const EmployementTypes = () => {
 
       {/* Delete Confirmation Dialog */}
 
-      <EmpTypeModal id={id} open={open} handleClose={handleClose} />
+      <EmpTypeModal id={organisationId} open={open} handleClose={handleClose} />
       <EmpTypeModal
         handleClose={handleClose}
-        id={id}
+        id={organisationId}
         open={editModalOpen}
         empTypeId={empTypeId}
       />
