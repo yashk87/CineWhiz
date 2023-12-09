@@ -43,7 +43,7 @@ const Setup = ({ children }) => {
       icon: PersonAddAlt1Outlined,
       href: `/organisation/${organisationId}/setup/add-roles`,
       active:
-        location.pathname === `organisation/${organisationId}/setup/add-roles`,
+        location.pathname === `/organisation/${organisationId}/setup/add-roles`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {

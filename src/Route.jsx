@@ -108,13 +108,13 @@ const App = () => {
         path="/organization/:organisationId/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
-      <Route path="/setup/:id" element={<Setup />} />
-      <Route path="/set-designation" element={<Designation />} />
-      <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route
-        path="/setup/salary-input-selection/:id"
+        path="/organization/:organisationId/setup/set-salary-input-selection"
         element={<SalaryInput />}
       />
+      <Route path="/setup/:organisationId" element={<Setup />} />
+      <Route path="/set-designation" element={<Designation />} />
+      <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route
         path="/setup/employee-code-genreation/:id"
         element={<EmployeeCodeGenerator />}
