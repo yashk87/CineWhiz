@@ -16,7 +16,6 @@ const LeaveTypes = ({ open, handleClose, id }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const queryClient = useQueryClient();
   const params = useParams();
-  console.log(`🚀 ~ file: LeaveTypes.jsx:19 ~ params:`, params);
 
   const { data, isLoading } = useQuery(
     "leaveTypes",
