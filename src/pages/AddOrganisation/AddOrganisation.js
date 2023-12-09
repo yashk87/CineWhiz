@@ -19,8 +19,10 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
+import { useNavigate } from "react-router-dom";
 
 const AddOrganisation = () => {
+  const navigate = useNavigate();
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const [selectedImage, setSelectedImage] = useState(null);
@@ -74,32 +76,32 @@ const AddOrganisation = () => {
       [name]: name === "email" ? value.toLowerCase() : value,
     });
 
-        if (name === 'contact_number') {
-            if (!isContactNumberValid(value)) {
-                setNumberLabel("number should be 10 digits only");
-                setContactNumberError(true);
-                if(e.target.value === ""){
-                    setNumberLabel("Phone Number")
-                    setContactNumberError(false)
-                }
-            } else {
-                setNumberLabel("Phone Number");
-                setContactNumberError(false);
-            }
-        } else if (name === 'email') {
-            if (!isEmailValid(value)) {
-                setEmailLabel("enter valid email");
-                setEmailError(true);
-                if (e.target.value === "") {
-                    setEmailError(false)
-                    setEmailLabel("Organization Email")
-                }
-            } else {
-                setEmailLabel("Organization Email");
-                setEmailError(false);
-            }
+    if (name === "contact_number") {
+      if (!isContactNumberValid(value)) {
+        setNumberLabel("number should be 10 digits only");
+        setContactNumberError(true);
+        if (e.target.value === "") {
+          setNumberLabel("Phone Number");
+          setContactNumberError(false);
         }
-    };
+      } else {
+        setNumberLabel("Phone Number");
+        setContactNumberError(false);
+      }
+    } else if (name === "email") {
+      if (!isEmailValid(value)) {
+        setEmailLabel("enter valid email");
+        setEmailError(true);
+        if (e.target.value === "") {
+          setEmailError(false);
+          setEmailLabel("Organization Email");
+        }
+      } else {
+        setEmailLabel("Organization Email");
+        setEmailError(false);
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -116,6 +118,7 @@ const AddOrganisation = () => {
       console.log(result);
 
       handleAlert(true, "success", "Organization created successfully");
+      navigate("/");
     } catch (e) {
       console.error(e);
 
