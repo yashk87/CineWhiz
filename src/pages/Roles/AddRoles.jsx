@@ -11,7 +11,7 @@ import Setup from "../SetUpOrganization/Setup";
 import "../../index.css";
 
 const AddRoles = () => {
-  const { id } = useParams("");
+  const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];
@@ -90,7 +90,7 @@ const AddRoles = () => {
   const fetchProfiles = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/profile/role/${id}`,
+        `${process.env.REACT_APP_API}/route/profile/role/${organisationId}`,
         {
           headers: {
             Authorization: authToken,
@@ -156,14 +156,14 @@ const AddRoles = () => {
 
       const newRoles = roles.map((role) => ({
         ...role,
-        organisationId: id,
+        organisationId: organisationId,
       }));
 
       const rolesObject = newRoles.reduce((acc, role) => {
         acc[role.label] = {
           isApprover: role.isApprover,
           isActive: role.isActive,
-          organisationId: id,
+          organisationId: organisationId,
         };
         return acc;
       }, {});
