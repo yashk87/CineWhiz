@@ -29,10 +29,10 @@ const TestNavItems = ({ toggleDrawer }) => {
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
   const params3 = useLocation();
-  console.log(params3, "params3");
+  //console.log(params3, "params3");
 
   const pathname = params3.pathname;
-  console.log(pathname, "pathname");
+  // console.log(pathname, "pathname");
 
   const getOrganizationIdFromPathname = (pathname) => {
     const parts = pathname.split("/"); // Split the pathname by '/'
@@ -46,8 +46,8 @@ const TestNavItems = ({ toggleDrawer }) => {
   };
 
   // Get the organization ID
-  const organisationId = getOrganizationIdFromPathname(pathname);
-
+  const id = getOrganizationIdFromPathname(pathname);
+  // console.log("Organization id", id);
   const [navItems, setNavItems] = useState({
     "Self Help": {
       open: true,
@@ -127,20 +127,20 @@ const TestNavItems = ({ toggleDrawer }) => {
       routes: [
         {
           key: "onboarding",
-          link: `organisation/${organisationId}/employee-onboarding`,
+          link: `/organisation/${id}/employee-onboarding`,
           icon: <PersonAdd className="text-white" />,
           text: "Onboarding",
         },
 
         {
           key: "offboarding",
-          link: `organisation/${organisationId}/employee-offboarding`,
+          link: `/organisation/${id}/employee-offboarding`,
           icon: <PersonRemove className="text-white" />,
           text: "Offboarding",
         },
         {
           key: "employeeList",
-          link: `organisation/${organisationId}/employee-list`,
+          link: `/organisation/${id}/employee-list`,
           icon: <Groups className="text-white" />,
           text: "Employee List",
         },
