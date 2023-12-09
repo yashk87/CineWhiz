@@ -86,13 +86,10 @@ const Setup = ({ children }) => {
     {
       label: "Add Input Field For Form",
       icon: AddLocationAltOutlined,
-<<<<<<< HEAD
-      href: `/organisation/${id}/setup/input-field`,
-      active: location.pathname === `/organisation/${id}/setup/input-field`,
-=======
-      href: `/add-inputfield/${organisationId}`,
-      active: location.pathname === `/add-inputfield/${organisationId}`,
->>>>>>> e1ad8d4530f93cde2eb592511adc4bd220f89db6
+      href: `/organisation/${organisationId}/setup/input-field`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/input-field`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
