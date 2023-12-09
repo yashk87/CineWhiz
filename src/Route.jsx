@@ -33,7 +33,7 @@ import SignIn from "./pages/SignIn/SignIn";
 import Signup from "./pages/SignUp/Signup";
 import UserProfile from "./pages/UserProfile/UserProfile";
 import WaitMain from "./pages/Waiting-comp/waiting-main";
-import Department from "./pages/addDepartment/addDepartment";
+import CreateDepartment from "./pages/addDepartment/addDepartment";
 import SingleDepartment from "./pages/single-department/single-department";
 import SingleOrganisation from "./pages/single-orgnisation/single-organisation";
 
@@ -49,7 +49,10 @@ const App = () => {
       <Route path="/verify/:token/" element={<AnimationComponent />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/add-organisation" element={<AddOrganisation />} />
-      <Route path="/add-department" element={<Department />} />
+      <Route
+        path="/organisation/:organisationId/create-department"
+        element={<CreateDepartment />}
+      />
       <Route path="/userprofile" element={<UserProfile />} />
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
       <Route
@@ -102,7 +105,7 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
-        path="/setup/add-organization-locations/:id"
+        path="/organization/:id/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
       <Route path="/setup/:id" element={<Setup />} />

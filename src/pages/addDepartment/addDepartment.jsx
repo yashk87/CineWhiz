@@ -10,7 +10,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { TestContext } from "../../State/Function/Main";
 import { UseContext } from "../../State/UseState/UseContext";
 
-const Department = () => {
+const CreateDepartment = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
@@ -51,11 +51,14 @@ const Department = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API}/route/location/getOrganizationLocations`, {
-        headers: {
-          Authorization: authToken,
-        },
-      })
+      .get(
+        `${process.env.REACT_APP_API}/route/location/getOrganizationLocations`,
+        {
+          headers: {
+            Authorization: authToken,
+          },
+        }
+      )
       .then((response) => {
         setLocations(response.data);
         console.log("locations are: ", response.data);
@@ -343,4 +346,4 @@ const Department = () => {
   );
 };
 
-export default Department;
+export default CreateDepartment;
