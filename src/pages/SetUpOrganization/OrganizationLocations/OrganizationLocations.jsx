@@ -21,7 +21,7 @@ import { UseContext } from "../../../State/UseState/UseContext";
 import Selector from "./selector";
 import Setup from "../Setup";
 
-const OrganizationLocation = () => {
+const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
@@ -46,6 +46,7 @@ const OrganizationLocation = () => {
   const [shortName, setShortName] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [country, setCountry] = useState(countryData[0]);
+  const [deleteIndex, setDeleteIndex] = useState(null);
   const [stateData, setStateData] = useState(
     State.getStatesOfCountry(country?.name)
   );
@@ -56,8 +57,9 @@ const OrganizationLocation = () => {
   );
   const [open, setOpen] = useState(false);
 
-  const handleDeleteLocationConfirmation = () => {
+  const handleDeleteLocationConfirmation = (index) => {
     setConfirmOpen(true);
+    setDeleteIndex(index);
   };
 
   useEffect(() => {
@@ -71,8 +73,11 @@ const OrganizationLocation = () => {
             },
           }
         );
-        setLocationList(response.data);
-        console.log(response.data);
+        const filteredLocations = response.data.filter((location) => {
+          return location.organizationId === organizationId;
+        });
+        setLocationList(filteredLocations);
+        console.log(filteredLocations);
       } catch (error) {
         console.error(error.response.data.message);
       }
@@ -230,10 +235,10 @@ const OrganizationLocation = () => {
     }
   };
 
-  const handleDeleteLocation = async (index) => {
+  const handleDeleteLocation = async () => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_API}/route/location/deleteOrganizationLocations/${locationList[index]._id}`,
+        `${process.env.REACT_APP_API}/route/location/deleteOrganizationLocations/${locationList[deleteIndex]._id}`,
         {
           headers: {
             Authorization: authToken,
@@ -256,6 +261,7 @@ const OrganizationLocation = () => {
       console.error(error.response.data.message);
       handleAlert(true, "error", error.response.data.error);
     }
+    setConfirmOpen(false);
   };
 
   const handleKeyDown = (event) => {
@@ -356,7 +362,9 @@ const OrganizationLocation = () => {
                             <Edit className="!text-xl" color="success" />
                           </IconButton>
                           <IconButton
-                            onClick={handleDeleteLocationConfirmation}
+                            onClick={() =>
+                              handleDeleteLocationConfirmation(index)
+                            }
                             aria-label="delete"
                           >
                             <Delete className="!text-xl" color="error" />
@@ -574,4 +582,4 @@ const OrganizationLocation = () => {
   );
 };
 
-export default OrganizationLocation;
+export default OrganizationLocations;

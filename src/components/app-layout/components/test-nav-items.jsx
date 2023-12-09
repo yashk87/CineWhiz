@@ -31,23 +31,27 @@ const TestNavItems = ({ toggleDrawer }) => {
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
   const params3 = useLocation();
+  console.log(params3);
   const pathname = params3.pathname;
-
+  console.log(pathname);
   // Update organization ID when URL changes
   useEffect(() => {
     const id = getOrganizationIdFromPathname(pathname);
     setOrgId(id);
-  }, [pathname]);
-  console.log(orgId);
+  }, [params3?.pathname]);
+
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
     const parts = pathname.split("/");
     const orgIndex = parts.indexOf("organisation");
     if (orgIndex !== -1 && parts.length > orgIndex + 1) {
-      return parts[orgIndex + 1];
+      setOrgId(parts[orgIndex + 1]);
     }
-    return null;
   };
+
+  // const decodedToken = token && jwtDecode(token);
+  // const id = decodedToken?.user?.organizationId;
+  console.log(orgId, "orgId");
   const [navItems, setNavItems] = useState({
     "Self Help": {
       open: true,
@@ -152,7 +156,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       routes: [
         {
           key: "addDepartment",
-          link: "/department-add",
+          link: `${params}/department-add`,
           icon: <AddAlert className="text-white" />,
           text: "Add Department",
         },
@@ -207,7 +211,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       ],
     },
   });
-  // console.log(`🚀 ~ file: test-nav-items.jsx:203 ~ setNavItems:`, setNavItems);
+  console.log(`🚀 ~ file: test-nav-items.jsx:203 ~ setNavItems:`, setNavItems);
 
   useEffect(() => {
     try {
