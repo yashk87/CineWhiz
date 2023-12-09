@@ -94,7 +94,7 @@ const App = () => {
         element={<EmployeeCodeGenerator />}
       />
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
-      <Route path="/organisation/:id/setup/set-email" element={<EmailSetting />} />
+      <Route path="/organisation/:organisationId/setup/set-email" element={<EmailSetting />} />
 
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
