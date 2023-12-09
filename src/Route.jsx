@@ -65,7 +65,10 @@ const App = () => {
         element={<EmployeeList />}
       />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
-
+      <Route
+        path="/organisation/:id/setup/input-field"
+        element={<Inputfield />}
+      />
       <Route path="/setup/:id" element={<Setup />} />
       <Route
         path="/setup/add-organization-locations/:id"
@@ -73,7 +76,7 @@ const App = () => {
       />
       <Route path="/set-designation" element={<Designation />} />
       <Route path="/set-shifts/:id" element={<Shifts />} />
-      <Route path="/add-inputfield/:id" element={<Inputfield />} />
+
       <Route path="/setup/add-roles/:id" element={<AddRoles />} />
       <Route
         path="/organisation/:organisationId/setup/leave-types"
