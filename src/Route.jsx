@@ -105,7 +105,7 @@ const App = () => {
         element={<EmployementTypes />}
       />
       <Route
-        path="/setup/add-organization-locations/:id"
+        path="/organization/:id/setup/add-organization-locations"
         element={<OrganizationLocations />}
       />
       <Route path="/setup/:id" element={<Setup />} />
