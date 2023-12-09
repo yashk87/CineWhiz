@@ -37,7 +37,7 @@ const TestNavItems = ({ toggleDrawer }) => {
   // Update organization ID when URL changes
   useEffect(() => {
     const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
-    if (hasEmployeeOnboarding) {
+    if (!hasEmployeeOnboarding) {
       const id = getOrganizationIdFromPathname(pathname);
       setOrgId(id);
     }
