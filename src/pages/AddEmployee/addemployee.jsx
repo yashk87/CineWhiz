@@ -40,6 +40,7 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { id } = useParams();
+  console.log(id);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
