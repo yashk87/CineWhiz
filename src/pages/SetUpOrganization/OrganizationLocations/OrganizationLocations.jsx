@@ -1,5 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
-import { Add, AddLocationAltOutlined } from "@mui/icons-material";
+import { Add, AddLocationAltOutlined, Delete, Edit } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -18,8 +17,8 @@ import { FormattedMessage, IntlProvider } from "react-intl";
 import { useParams } from "react-router-dom";
 import { TestContext } from "../../../State/Function/Main";
 import { UseContext } from "../../../State/UseState/UseContext";
-import Selector from "./selector";
 import Setup from "../Setup";
+import Selector from "./selector";
 
 const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
@@ -84,6 +83,7 @@ const OrganizationLocations = () => {
     };
 
     fetchLocationList();
+    // eslint-disable-next-line
   }, [authToken]);
 
   useEffect(() => {
