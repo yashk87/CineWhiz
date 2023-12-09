@@ -62,7 +62,7 @@ const App = () => {
         path="/setup/add-organization-locations/:id"
         element={<OrganizationLocations />}
       />
-      <Route path="/set-designation" element={<Designation />} />
+      <Route path="/organisation/:organisationId/setup/set-designation" element={<Designation />} />
       <Route path="/set-shifts/:id" element={<Shifts />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route path="/setup/add-roles/:id" element={<AddRoles />} />
@@ -85,7 +85,7 @@ const App = () => {
         element={<EmployeeCodeGenerator />}
       />
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
-      <Route path="/setup/email-setting" element={<EmailSetting />} />
+      <Route path="/organisation/:id/setup/set-email" element={<EmailSetting />} />
 
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />

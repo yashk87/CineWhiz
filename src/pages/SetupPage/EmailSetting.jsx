@@ -1,18 +1,23 @@
 import React, { useState, useContext } from 'react';
 import {
-    Container,
     Typography,
     Button,
     TextField
 } from "@mui/material";
 import axios from 'axios';
+import { useParams } from "react-router-dom";
 import { UseContext } from '../../State/UseState/UseContext'; // Adjust the path based on your project structure
+import Setup from "../SetUpOrganization/Setup";
 
 const EmailSetting = () => {
+    const { id } = useParams();
+    console.log(id);
     const { setAppAlert } = useContext(UseContext); // Use the setAppAlert function from UseContext
 
     const [email, setEmail] = useState('');
+    const [organizationId, setOrganizationId] = useState()
     const [error, setError] = useState('');
+    // setorgId(id)
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -35,7 +40,9 @@ const EmailSetting = () => {
 
         try {
             // Assuming the API call is successful
-            await axios.post(`${process.env.REACT_APP_API}/route/email/create`, { email });
+            setOrganizationId(id)
+            
+            await axios.post(`${process.env.REACT_APP_API}/route/email/create`, { email,organizationId });
 
             // Show success alert
             setAppAlert({
@@ -60,14 +67,16 @@ const EmailSetting = () => {
 
     return (
         <>
-            <Container style={{ width: "500px", boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px", position: "relative", top: "8rem", paddingTop: "1rem" }}>
-                <Typography style={{ fontSize: "1.5rem" }}>Add email</Typography>
+         <section className="bg-gray-50 overflow-hidden min-h-screen w-full">
+        <Setup>
+        <article className="SetupSection bg-white w-[80%] flex gap-5  h-max shadow-md rounded-sm border  items-center">
+                <Typography className='pl-5 py-2' style={{ fontSize: "1.5rem" }}>Add email</Typography>
                 <TextField
                     style={{ marginBottom: "1rem", marginTop: "1rem" }}
                     required
                     name="emailId"
                     size="small"
-                    className="w-full"
+                    className="pl-5 w-[30vw]"
                     label="Email ID"
                     type="text"
                     value={email}
@@ -76,14 +85,15 @@ const EmailSetting = () => {
                     helperText={error}
                 />
                 <Button
-                    style={{ marginBottom: "2rem", marginTop: '0.5rem' }}
                     color='warning'
                     variant='contained'
                     onClick={handleSubmit}
                 >
                     Submit
                 </Button>
-            </Container>
+            </article>
+            </Setup>
+            </section>
         </>
     );
 };
