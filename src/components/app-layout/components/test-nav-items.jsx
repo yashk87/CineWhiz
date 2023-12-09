@@ -5,7 +5,6 @@ import {
   Category,
   CircleNotifications,
   Description,
-  Edit,
   Event,
   Groups,
   ListAlt,
@@ -19,7 +18,6 @@ import {
   TrendingUp,
 } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
-
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useMatch } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
@@ -31,7 +29,24 @@ const TestNavItems = ({ toggleDrawer }) => {
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
   const params3 = useLocation();
-  console.log(`🚀 ~ file: test-nav-items.jsx:34 ~ params3:`, params3);
+  console.log(params3, "params3");
+
+  const pathname = params3.pathname;
+  console.log(pathname, "pathname");
+
+  const getOrganizationIdFromPathname = (pathname) => {
+    const parts = pathname.split("/"); // Split the pathname by '/'
+    console.log(parts);
+    const orgIndex = parts.indexOf("organisation"); // Find the index of 'organisation' in the array
+    console.log(orgIndex);
+    if (orgIndex !== -1 && parts.length > orgIndex + 1) {
+      return parts[orgIndex + 1]; // Return the ID located after 'organisation'
+    }
+    return null; // Return null if the ID is not found
+  };
+
+  // Get the organization ID
+  const organisationId = getOrganizationIdFromPathname(pathname);
 
   const [navItems, setNavItems] = useState({
     "Self Help": {
@@ -112,25 +127,20 @@ const TestNavItems = ({ toggleDrawer }) => {
       routes: [
         {
           key: "onboarding",
-          link: "/employee-add",
+          link: `organisation/${organisationId}/employee-onboarding`,
           icon: <PersonAdd className="text-white" />,
           text: "Onboarding",
         },
-        {
-          key: "updateEmployee",
-          link: "/employee-update",
-          icon: <Edit className="text-white" />,
-          text: "Update Employee",
-        },
+
         {
           key: "offboarding",
-          link: "/employee-offboarding",
+          link: `organisation/${organisationId}/employee-offboarding`,
           icon: <PersonRemove className="text-white" />,
           text: "Offboarding",
         },
         {
           key: "employeeList",
-          link: "/employee-list",
+          link: `organisation/${organisationId}/employee-list`,
           icon: <Groups className="text-white" />,
           text: "Employee List",
         },
