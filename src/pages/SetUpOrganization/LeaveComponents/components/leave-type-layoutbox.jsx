@@ -45,6 +45,7 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
 
       handleAlert(true, "success", response.data.message);
       queryClient.invalidateQueries("leaveTypes");
+      setConfirmOpen(false);
     } catch (error) {
       console.error("Failed to delete leave type:", error);
       handleAlert(
@@ -111,7 +112,12 @@ const LeaveTypeEditBox = ({ leaveType, index }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setConfirmOpen(false)} color="primary">
+          <Button
+            onClick={() => {
+              setConfirmOpen(false);
+            }}
+            color="primary"
+          >
             Cancel
           </Button>
           <Button onClick={handleDeleteType} color="primary">

@@ -48,35 +48,69 @@ const App = () => {
       <Route path="/waiting" element={<WaitMain />} />
       <Route path="/verify/:token/" element={<AnimationComponent />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
-
       <Route path="/add-organisation" element={<AddOrganisation />} />
       <Route
         path="/organisation/:organisationId/create-department"
         element={<CreateDepartment />}
       />
-      <Route path="/del-employee" element={<DeleteEmployee />} />
-      <Route path="/set-designation" element={<Designation />} />
       <Route path="/userprofile" element={<UserProfile />} />
-
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
-      <Route path="/organisation/:id/add-employee" element={<AddEmployee />} />
-      <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
-
-      <Route path="/setup/:id" element={<Setup />} />
       <Route
-        path="/setup/add-organization-locations/:id"
-        element={<OrganizationLocations />}
+        path="/organisation/:id/employee-onboarding"
+        element={<AddEmployee />}
+      />
+      <Route
+        path="/organisation/:id/employee-offboarding"
+        element={<DeleteEmployee />}
+      />
+      <Route
+        path="/organisation/:id/employee-list"
+        element={<EmployeeList />}
+      />
+      <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
+      <Route
+        path="/organisation/:id/setup/input-field"
+        element={<Inputfield />}
+      />{" "}
+      {/* set up routes*/}
+      <Route
+        path="/organisation/:organisationId/setup/set-shifts"
+        element={<Shifts />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/add-roles"
+        element={<AddRoles />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-designation"
+        element={<Designation />}
       />
       <Route path="/set-shifts/:id" element={<Shifts />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route path="/setup/add-roles/:id" element={<AddRoles />} />
-      <Route path="/setup/leave-types/:id" element={<LeaveTypes />} />
-      <Route path="/setup/set-shifts/:id" element={<Shifts />} />
       <Route
-        path="/setup/employement-types/:id"
+        path="/organisation/:organisationId/setup/leave-types"
+        element={<LeaveTypes />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-public-holiday"
+        element={<PublicHoliday />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-shifts"
+        element={<Shifts />}
+      />
+      <Route
+        path="/organisation/:organisationId/setup/set-employement-types"
         element={<EmployementTypes />}
       />
-
+      <Route
+        path="/setup/add-organization-locations/:id"
+        element={<OrganizationLocations />}
+      />
+      <Route path="/setup/:id" element={<Setup />} />
+      <Route path="/set-designation" element={<Designation />} />
+      <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route
         path="/setup/salary-input-selection/:id"
         element={<SalaryInput />}
@@ -86,8 +120,10 @@ const App = () => {
         element={<EmployeeCodeGenerator />}
       />
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
-      <Route path="/setup/email-setting" element={<EmailSetting />} />
-
+      <Route
+        path="/organisation/:organisationId/setup/set-email"
+        element={<EmailSetting />}
+      />
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
@@ -95,8 +131,6 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
-      <Route path="/employee-list" element={<EmployeeList />} />
-
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}

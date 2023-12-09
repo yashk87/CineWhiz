@@ -32,7 +32,7 @@ import ShiftModal from "../../components/Modal/shift/ShiftModal";
 import Setup from "../SetUpOrganization/Setup";
 
 const Shifts = () => {
-  const { id } = useParams("");
+  const { organisationId } = useParams("");
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const queryClient = useQueryClient();
@@ -73,7 +73,7 @@ const Shifts = () => {
 
   const { data, isLoading } = useQuery("shifts", async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API}/route/shifts/${id}`,
+      `${process.env.REACT_APP_API}/route/shifts/${organisationId}`,
       {
         headers: {
           Authorization: authToken,
@@ -295,11 +295,11 @@ const Shifts = () => {
         </Setup>
       </section>
 
-      <ShiftModal id={id} open={open} handleClose={handleClose} />
+      <ShiftModal id={organisationId} open={open} handleClose={handleClose} />
 
       <ShiftModal
         handleClose={handleClose}
-        id={id}
+        id={organisationId}
         open={editModalOpen}
         shiftId={ShiftId}
       />

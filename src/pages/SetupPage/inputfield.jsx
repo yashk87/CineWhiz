@@ -9,6 +9,7 @@ import Setup from "../SetUpOrganization/Setup";
 
 const Inputfield = () => {
   const { id } = useParams("");
+  console.log(id);
   const { cookies } = useContext(UseContext);
   const { handleAlert } = useContext(TestContext);
   const authToken = cookies["aeigs"];

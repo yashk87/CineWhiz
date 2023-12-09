@@ -1,4 +1,3 @@
-import React, { useContext, useState, useEffect } from "react";
 import {
   AddLocationAltOutlined,
   BeachAccessOutlined,
@@ -10,12 +9,14 @@ import {
   West,
 } from "@mui/icons-material";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import { jwtDecode } from "jwt-decode";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { UseContext } from "../../State/UseState/UseContext";
-import { jwtDecode } from "jwt-decode";
 const Setup = ({ children }) => {
   const location = useLocation();
-  const { id } = useParams("");
+  const { organisationId } = useParams("");
 
   const [user, setUser] = useState("");
 
@@ -40,59 +41,74 @@ const Setup = ({ children }) => {
     {
       label: "Add Roles",
       icon: PersonAddAlt1Outlined,
-      href: `/setup/add-roles/${id}`,
-      active: location.pathname === `/setup/add-roles/${id}`,
+      href: `/organisation/${organisationId}/setup/add-roles`,
+      active:
+        location.pathname === `organisation/${organisationId}/setup/add-roles`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Leave Types",
       icon: BeachAccessOutlined,
-      href: `/setup/leave-types/${id}`,
-      active: location.pathname === `/setup/leave-types/${id}`,
+      href: `/organisation/${organisationId}/setup/leave-types`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/leave-types`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
     {
       label: "Shift Types",
       icon: EventAvailableOutlined,
-      href: `/setup/set-shifts/${id}`,
-      active: location.pathname === `/setup/set-shifts/${id}`,
+      href: `/organisation/${organisationId}/setup/set-shifts`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-shifts`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Public Holidays",
       icon: BeachAccessOutlined,
-      href: "/",
-      active: location.pathname === "",
+      href: `/organisation/${organisationId}/setup/set-public-holiday`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-public-holiday`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
 
     {
       label: "Add Location",
       icon: AddLocationAltOutlined,
-      href: `/setup/add-organization-locations/${id}`,
-      active: location.pathname === `/setup/add-organization-locations/${id}`,
+      href: `/setup/add-organization-locations/${organisationId}`,
+      active:
+        location.pathname ===
+        `/setup/add-organization-locations/${organisationId}`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Add Input Field For Form",
       icon: AddLocationAltOutlined,
-      href: `/add-inputfield/${id}`,
-      active: location.pathname === `/add-inputfield/${id}`,
+      href: `/organisation/${organisationId}/setup/input-field`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/input-field`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Employement type",
       icon: ManageAccountsOutlined,
-      href: `/setup/employement-types/${id}`,
-      active: location.pathname === `/setup/employement-types/${id}`,
+      href: `/organisation/${organisationId}/setup/set-employement-types`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-employement-types`,
       isVisible: user?.profile?.some((role) => ["Super-Admin"].includes(role)),
     },
     {
       label: "Salary Input Field selection",
       icon: PriceChangeOutlined,
-      href: `/setup/salary-input-selection/${id}`,
-      active: location.pathname === `/setup/salary-input-selection/${id}`,
+      href: `/organisation/${organisationId}/setup/set-salary-input-selection`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-salary-input-selection`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),
@@ -100,8 +116,20 @@ const Setup = ({ children }) => {
     {
       label: "Add Designation",
       icon: BadgeOutlinedIcon,
-      href: `/set-designation`,
-      active: location.pathname === `/set-designation`,
+      href: `/organisation/${organisationId}/setup/set-designation`,
+      active:
+        location.pathname ===
+        `/organisation/${organisationId}/setup/set-designation`,
+      isVisible: user?.profile?.some((role) =>
+        ["Super-Admin", "HR"].includes(role)
+      ),
+    },
+    {
+      label: "Email Setting",
+      icon: EmailOutlinedIcon,
+      href: `/organisation/${organisationId}/setup/set-email`,
+      active:
+        location.pathname === `/organisation/${organisationId}/setup/set-email`,
       isVisible: user?.profile?.some((role) =>
         ["Super-Admin", "HR"].includes(role)
       ),

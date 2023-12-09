@@ -40,6 +40,7 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { id } = useParams();
+  console.log(id);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -371,7 +372,6 @@ const AddEmployee = () => {
     fetchAvailabeMgrId();
     // eslint-disable-next-line
   }, []);
-  console.log(availableMgrId);
 
   const [dynamicFields, setDynamicFields] = useState({
     shifts_allocation: "",

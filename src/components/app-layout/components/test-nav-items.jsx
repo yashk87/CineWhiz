@@ -5,7 +5,6 @@ import {
   Category,
   CircleNotifications,
   Description,
-  Edit,
   Event,
   Groups,
   ListAlt,
@@ -19,17 +18,36 @@ import {
   TrendingUp,
 } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
-
 import React, { useContext, useEffect, useState } from "react";
-import { useMatch } from "react-router-dom";
+import { useLocation, useMatch } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import NavAccordian from "./accordian";
+import { isWednesday } from "date-fns/esm";
 
 const TestNavItems = ({ toggleDrawer }) => {
+  const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
+  const params3 = useLocation();
+  const pathname = params3.pathname;
+
+  // Update organization ID when URL changes
+  useEffect(() => {
+    const id = getOrganizationIdFromPathname(pathname);
+    setOrgId(id);
+  }, [pathname]);
+  console.log(orgId);
+  // Function to extract organization ID from pathname
+  const getOrganizationIdFromPathname = (pathname) => {
+    const parts = pathname.split("/");
+    const orgIndex = parts.indexOf("organisation");
+    if (orgIndex !== -1 && parts.length > orgIndex + 1) {
+      return parts[orgIndex + 1];
+    }
+    return null;
+  };
   const [navItems, setNavItems] = useState({
     "Self Help": {
       open: true,
@@ -109,25 +127,20 @@ const TestNavItems = ({ toggleDrawer }) => {
       routes: [
         {
           key: "onboarding",
-          link: "/employee-add",
+          link: `organisation/${orgId}/employee-onboarding`,
           icon: <PersonAdd className="text-white" />,
           text: "Onboarding",
         },
-        {
-          key: "updateEmployee",
-          link: "/employee-update",
-          icon: <Edit className="text-white" />,
-          text: "Update Employee",
-        },
+
         {
           key: "offboarding",
-          link: "/employee-offboarding",
+          link: `organisation/${orgId}/employee-offboarding`,
           icon: <PersonRemove className="text-white" />,
           text: "Offboarding",
         },
         {
           key: "employeeList",
-          link: "/employee-list",
+          link: `organisation/${orgId}/employee-list`,
           icon: <Groups className="text-white" />,
           text: "Employee List",
         },
@@ -194,6 +207,7 @@ const TestNavItems = ({ toggleDrawer }) => {
       ],
     },
   });
+  // console.log(`🚀 ~ file: test-nav-items.jsx:203 ~ setNavItems:`, setNavItems);
 
   useEffect(() => {
     try {

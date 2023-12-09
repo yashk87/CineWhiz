@@ -60,6 +60,7 @@ const Organisation = ({ item }) => {
           },
         }
       );
+      console.log(`🚀 ~ file: Organisation.jsx:63 ~ response:`, response);
       handleAlert(true, "success", "Organization deleted successfully");
       queryClient.invalidateQueries(["orgData"]);
     } catch (error) {
@@ -113,7 +114,7 @@ const Organisation = ({ item }) => {
           Description : {item.description}
         </Typography>
         <div className="space-x-4 p-2 pb-6">
-          <Link to={`/setup/add-roles/${item._id}`}>
+          <Link to={`/organisation/${item._id}/setup/add-roles`}>
             <Button size="small" className="cursor-pointer" variant="contained">
               Go to setuppage
             </Button>
