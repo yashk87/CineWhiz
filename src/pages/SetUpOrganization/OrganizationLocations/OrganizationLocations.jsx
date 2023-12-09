@@ -25,7 +25,7 @@ const OrganizationLocations = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { handleAlert } = useContext(TestContext);
-  const organizationId = useParams().id;
+  const organizationId = useParams().organisationId;
   let countryData = Country.getAllCountries();
   const continents = [
     { name: "Asia" },
