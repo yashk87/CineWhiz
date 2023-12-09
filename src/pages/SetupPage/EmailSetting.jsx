@@ -11,11 +11,10 @@ import Setup from "../SetUpOrganization/Setup";
 
 const EmailSetting = () => {
     const { organisationId } = useParams();
-    console.log(organisationId);
+    // console.log(organisationId);
     const { setAppAlert } = useContext(UseContext); // Use the setAppAlert function from UseContext
 
     const [email, setEmail] = useState('');
-    const [organizationId, setOrganizationId] = useState()
     const [error, setError] = useState('');
     // setorgId(id)
 

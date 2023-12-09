@@ -15,6 +15,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import BadgeOutlinedIcon from "@mui/icons-material/BadgeOutlined";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import Setup from "../SetUpOrganization/Setup";
 import { UseContext } from "../../State/UseState/UseContext";
 // import { tr } from "date-fns/locale";
@@ -22,6 +23,8 @@ import { UseContext } from "../../State/UseState/UseContext";
 
 const Designation = () => {
   const [click, setClick] = useState(false);
+  const {organisationId} = useParams()
+  console.log(organisationId);
   const [designationIdRequired, setDesignationIdRequired] = useState(false);
   const { setAppAlert } = useContext(UseContext);
 
@@ -253,6 +256,7 @@ const Designation = () => {
   const data = {
     designationName,
     designationId,
+    organizationId:organisationId
   };
 
   return (
