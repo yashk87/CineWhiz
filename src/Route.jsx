@@ -50,11 +50,20 @@ const App = () => {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/add-organisation" element={<AddOrganisation />} />
       <Route path="/add-department" element={<Department />} />
-      <Route path="/del-employee" element={<DeleteEmployee />} />
       <Route path="/userprofile" element={<UserProfile />} />
-
       <Route path="/organisation/:id" element={<SingleOrganisation />} />
-      <Route path="/organisation/:id/add-employee" element={<AddEmployee />} />
+      <Route
+        path="/organisation/:id/employee-onboarding"
+        element={<AddEmployee />}
+      />
+      <Route
+        path="/organisation/:id/employee-offboarding"
+        element={<DeleteEmployee />}
+      />
+      <Route
+        path="/organisation/:id/employee-list"
+        element={<EmployeeList />}
+      />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
       {/* set up routes*/}
       <Route
@@ -107,7 +116,6 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
-      <Route path="/employee-list" element={<EmployeeList />} />
 
       <Route
         path="/organisation/:id/department/:departmentId"
