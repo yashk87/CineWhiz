@@ -65,6 +65,10 @@ const App = () => {
         element={<EmployeeList />}
       />
       <Route path="/organisation/:id/add-profile" element={<AddProfile />} />
+      <Route
+        path="/organisation/:id/setup/input-field"
+        element={<Inputfield />}
+      />{" "}
       {/* set up routes*/}
       <Route
         path="/organisation/:organisationId/setup/set-shifts"
@@ -74,7 +78,10 @@ const App = () => {
         path="/organisation/:organisationId/setup/add-roles"
         element={<AddRoles />}
       />
-      <Route path="/organisation/:organisationId/setup/set-designation" element={<Designation />} />
+      <Route
+        path="/organisation/:organisationId/setup/set-designation"
+        element={<Designation />}
+      />
       <Route path="/set-shifts/:id" element={<Shifts />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
       <Route path="/setup/add-roles/:id" element={<AddRoles />} />
@@ -98,11 +105,9 @@ const App = () => {
         path="/setup/add-organization-locations/:id"
         element={<OrganizationLocations />}
       />
-
       <Route path="/setup/:id" element={<Setup />} />
       <Route path="/set-designation" element={<Designation />} />
       <Route path="/add-inputfield/:id" element={<Inputfield />} />
-
       <Route
         path="/setup/salary-input-selection/:id"
         element={<SalaryInput />}
@@ -112,8 +117,10 @@ const App = () => {
         element={<EmployeeCodeGenerator />}
       />
       <Route path="/setup/:id/public-holidays" element={<PublicHoliday />} />
-      <Route path="/organisation/:organisationId/setup/set-email" element={<EmailSetting />} />
-
+      <Route
+        path="/organisation/:organisationId/setup/set-email"
+        element={<EmailSetting />}
+      />
       <Route path="/notification" element={<Notification />} />
       <Route path="/application" element={<Application />} />
       <Route path="/leave" element={<LeaveRequisition />} />
@@ -121,7 +128,6 @@ const App = () => {
         path="/terms-and-conditions"
         element={<TermsAndConditionsPage />}
       />
-
       <Route
         path="/organisation/:id/department/:departmentId"
         element={<SingleDepartment />}

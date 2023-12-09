@@ -22,34 +22,32 @@ import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useMatch } from "react-router-dom";
 import { UseContext } from "../../../State/UseState/UseContext";
 import NavAccordian from "./accordian";
+import { isWednesday } from "date-fns/esm";
 
 const TestNavItems = ({ toggleDrawer }) => {
+  const [orgId, setOrgId] = useState(null);
   const { cookies } = useContext(UseContext);
   const token = cookies["aeigs"];
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
-
   const params3 = useLocation();
-  const pathname = params3.pathname; // Get the pathname from useLocation()
-  console.log(params3);
-  console.log(pathname);
+  const pathname = params3.pathname;
+
+  // Update organization ID when URL changes
+  useEffect(() => {
+    const id = getOrganizationIdFromPathname(pathname);
+    setOrgId(id);
+  }, [pathname]);
+  console.log(orgId);
   // Function to extract organization ID from pathname
   const getOrganizationIdFromPathname = (pathname) => {
-    const parts = pathname.split("/"); // Split the pathname by '/'
-    const orgIndex = parts.indexOf("organisation"); // Find the index of 'organisation' in the array
+    const parts = pathname.split("/");
+    const orgIndex = parts.indexOf("organisation");
     if (orgIndex !== -1 && parts.length > orgIndex + 1) {
-      return parts[orgIndex + 1]; // Return the ID located after 'organisation'
+      return parts[orgIndex + 1];
     }
-    return null; // Return null if the ID is not found
+    return null;
   };
-
-  // Get the organization ID
-  const ids = getOrganizationIdFromPathname(pathname);
-  console.log("Organization ID:", ids);
-
-  const decodedToken = token && jwtDecode(token);
-  const id = decodedToken?.user?.organizationId;
-  console.log(id);
   const [navItems, setNavItems] = useState({
     "Self Help": {
       open: true,
@@ -129,20 +127,20 @@ const TestNavItems = ({ toggleDrawer }) => {
       routes: [
         {
           key: "onboarding",
-          link: `organisation/${id}/employee-onboarding`,
+          link: `organisation/${orgId}/employee-onboarding`,
           icon: <PersonAdd className="text-white" />,
           text: "Onboarding",
         },
 
         {
           key: "offboarding",
-          link: `organisation/${id}/employee-offboarding`,
+          link: `organisation/${orgId}/employee-offboarding`,
           icon: <PersonRemove className="text-white" />,
           text: "Offboarding",
         },
         {
           key: "employeeList",
-          link: `organisation/${id}/employee-list`,
+          link: `organisation/${orgId}/employee-list`,
           icon: <Groups className="text-white" />,
           text: "Employee List",
         },
