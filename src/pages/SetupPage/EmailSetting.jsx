@@ -10,8 +10,8 @@ import { UseContext } from '../../State/UseState/UseContext'; // Adjust the path
 import Setup from "../SetUpOrganization/Setup";
 
 const EmailSetting = () => {
-    const { id } = useParams();
-    console.log(id);
+    const { organisationId } = useParams();
+    console.log(organisationId);
     const { setAppAlert } = useContext(UseContext); // Use the setAppAlert function from UseContext
 
     const [email, setEmail] = useState('');
@@ -40,9 +40,9 @@ const EmailSetting = () => {
 
         try {
             // Assuming the API call is successful
-            setOrganizationId(id)
+            // setOrganizationId(id)
             
-            await axios.post(`${process.env.REACT_APP_API}/route/email/create`, { email,organizationId });
+            await axios.post(`${process.env.REACT_APP_API}/route/email/create`, { email,organizationId:organisationId });
 
             // Show success alert
             setAppAlert({
