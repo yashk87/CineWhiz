@@ -25,6 +25,7 @@ import { useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import Tooltip from "@mui/material/Tooltip";
 import { useQuery } from "react-query";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -40,7 +41,7 @@ const AddEmployee = () => {
   const { cookies } = useContext(UseContext);
   const authToken = cookies["aeigs"];
   const { id } = useParams();
-  console.log(id);
+
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -194,6 +195,7 @@ const AddEmployee = () => {
     return response.data;
   });
 
+  console.log();
   const [availabelLocation, setAvailableLocation] = useState([]);
   const fetchAvailableLocation = async () => {
     try {
@@ -221,7 +223,7 @@ const AddEmployee = () => {
   const fetchAvailabeEmpTypes = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API}/route/employment-types`,
+        `${process.env.REACT_APP_API}/route/employment-types-organisation/${id}`,
         {
           headers: {
             Authorization: authToken,

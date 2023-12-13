@@ -24,6 +24,7 @@ const EmpTypeModal = ({ handleClose, open, id, empTypeId }) => {
   const authToken = cookies["aeigs"];
   const params = useParams();
   console.log(`🚀 ~ file: EmpTypeModal.jsx:26 ~ params:`, params);
+
   const { data } = useQuery(
     ["empType", empTypeId],
     async () => {

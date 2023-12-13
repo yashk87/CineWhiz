@@ -170,7 +170,7 @@ const AddProfile = () => {
     fetchAvailableProfiles();
     // eslint-disable-next-line
   }, [id]);
-
+  console.log(availableProfiles);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

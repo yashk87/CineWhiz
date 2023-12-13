@@ -30,9 +30,9 @@ const TestNavItems = ({ toggleDrawer }) => {
   const params = useMatch("/organisation/:id");
   const params2 = useMatch("/organisation/:id/department/:departmentId");
   const params3 = useLocation();
-  console.log(params3);
+  // console.log(params3);
   const pathname = params3.pathname;
-  console.log(pathname);
+  // console.log(pathname);
   // Update organization ID when URL changes
   useEffect(() => {
     const hasEmployeeOnboarding = pathname.includes("employee-onboarding");
@@ -53,8 +53,8 @@ const TestNavItems = ({ toggleDrawer }) => {
 
   const decodedToken = token && jwtDecode(token);
   const id = decodedToken?.user?.organizationId;
-  console.log(id);
-  console.log(orgId, "orgId");
+  // console.log(id);
+  // console.log(orgId, "orgId");
   const [navItems, setNavItems] = useState({
     "Self Help": {
       open: true,
