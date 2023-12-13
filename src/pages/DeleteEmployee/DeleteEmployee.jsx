@@ -18,6 +18,7 @@ import Setup from "../SetUpOrganization/Setup";
 import { Menu, MenuItem } from "@mui/material";
 import * as XLSX from "xlsx";
 import { GetApp, Publish } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 
 const DeleteEmployee = () => {
   const { handleAlert } = useContext(TestContext);
@@ -359,13 +360,42 @@ const DeleteEmployee = () => {
                 />
               </div>
               <div>
-                <Button
+                {/* <Button
                   className="!font-semibold !bg-sky-500 flex items-center gap-2"
                   variant="contained"
                   onClick={handleMenuClick}
                 >
                   Bulk Delete
-                </Button>
+                </Button> */}
+                <Tooltip
+                  title={
+                    <span>
+                      To perform bulk deletion:
+                      <ol>
+                        <li>Generate an Excel file with employee data.</li>
+                        <li>
+                          Write "delete" in front of user IDs in the Excel
+                          sheet.
+                        </li>
+                        <li>Save the file and upload it.</li>
+                        <li>
+                          Click on the delete button to execute bulk deletion.
+                        </li>
+                      </ol>
+                    </span>
+                  }
+                  arrow
+                >
+                  <div>
+                    <Button
+                      className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                      variant="contained"
+                      onClick={handleMenuClick}
+                    >
+                      Bulk Delete
+                    </Button>
+                  </div>
+                </Tooltip>
                 <Menu
                   anchorEl={anchorEl}
                   open={Boolean(anchorEl)}
@@ -401,13 +431,25 @@ const DeleteEmployee = () => {
                 </Menu>
               </div>
 
-              <Button
+              <Tooltip title="Check at least one checkbox to delete" arrow>
+                <div>
+                  <Button
+                    className="!font-semibold !bg-sky-500 flex items-center gap-2"
+                    variant="contained"
+                    onClick={handleDeleteMultiple}
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </Tooltip>
+
+              {/* <Button
                 className="!font-semibold !bg-sky-500 flex items-center gap-2"
                 variant="contained"
                 onClick={handleDeleteMultiple}
               >
                 Delete
-              </Button>
+              </Button> */}
             </div>
 
             <div className="overflow-auto !p-0  border-[.5px] border-gray-200">
